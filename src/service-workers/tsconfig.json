@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "lib/service-workers/",
+    "target": "ES6",
+    "module": "CommonJS",
+    "lib": ["ES6", "WebWorker"],
+    "declaration": true,
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "removeComments": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

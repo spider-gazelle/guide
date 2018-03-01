@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "lib/app/",
+    "target": "ES5",
+    "module": "ES2015",
+    "declaration": true,
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "removeComments": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
