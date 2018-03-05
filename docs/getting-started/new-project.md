@@ -35,6 +35,12 @@ Spider-Gazelle leverages crystal langs built in [testing libraries](https://crys
 
 * `crystal build ./src/app.cr`
 
+or
+
+* `shards build --production`
+  * grabs the latest dependencies before the build
+  * deploys the binary as per the compile target in your `shard.yml`
+
 once compiled there are a number of [command line options](https://github.com/spider-gazelle/spider-gazelle/blob/master/src/app.cr#L8)
 
 * execute `./app --help` to see the options
