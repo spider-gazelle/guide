@@ -15,6 +15,8 @@ Some useful online tools:
 
 ## Creating a Docker image
 
+This will create a docker image that is roughly 45 MiB in size, when using the default Dockerfile.
+
 1. in a terminal, `cd` into the application folder
 1. run: `docker build -t dhub-user/spider-gazelle:latest .` (latest is the default tag)
    * this will create a docker image and tag it
