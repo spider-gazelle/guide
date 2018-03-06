@@ -31,7 +31,7 @@
     "statistics-average-syllables-per-word": "info",
     "statistics-words-with-three-syllables": "info",
     "statistics-percentage-words-with-three-syllables": "info",
-    "statistics-flesch-kincaid-reading-ease": "info, warning < 50, error < 40",
+    "statistics-flesch-kincaid-reading-ease": "info, warning < 50, error < 30",
     "statistics-flesch-kincaid-grade-level": "info, warning > 12",
     "statistics-gunning-fog-score": "info, warning > 12",
     "statistics-coleman-liau-index": "info",

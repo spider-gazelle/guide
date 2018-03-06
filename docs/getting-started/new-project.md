@@ -45,4 +45,4 @@ once compiled there are a number of [command line options](https://github.com/sp
 
 * execute `./app --help` to see the options
 * viewing routes `./app --routes`
-* run on a different port or host `./app -h 0.0.0.0 -p 80`
+* run on a different port or host `./app -b 0.0.0.0 -p 80`
