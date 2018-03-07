@@ -1,11 +1,11 @@
 # Spider-Gazelle Developer Guide
 
-Looking for the docs? View the pretty version over at https://spider-gazelle.github.io
+Looking for the docs? View the pretty version over at https://spider-gazelle.net/
 
 
 ## Off-line Access
 
-After visiting the [Spider-Gazelle Developer Guide](https://spider-gazelle.github.io) with a modern browser, it will continue to load off-line. Magic.
+After visiting the [Spider-Gazelle Developer Guide](https://spider-gazelle.net/) with a modern browser, it will continue to load off-line. Magic.
 
 You can also find the plain text content in [docs/](docs/) if you'd prefer for readability, screen readers or printing on your favourite dot-matrix printer like a true modern hipster.
 
