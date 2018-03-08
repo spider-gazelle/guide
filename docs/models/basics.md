@@ -135,7 +135,7 @@ person.name = "Lisa"
 person.age = 4
 person.email = "lisa@gmail.com"
 person.valid? # => false : Bool
-person.person.errors[0] # => "Age must be greater than 5" : String
+person.person.errors[0].to_s # => "Age must be greater than 5" : String
 
 person.age = 6
 person.valid? # => true : Bool

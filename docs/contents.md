@@ -4,6 +4,7 @@
     + [Deploying your project](getting-started/deployment.md)
 - Models
     + [Model basics](models/basics.md)
+    + [Validations](models/validations.md)
 - Controllers
     + [Overview](controllers/overview.md)
     + [Routing](controllers/routing.md)
