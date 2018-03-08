@@ -12,7 +12,7 @@ Attribute methods are used to define attributes of the model.
 
 
 ```crystal
-class Person
+class Person < ActiveModel::Model
    attribute name : String
 
    # You can provide default values
@@ -48,7 +48,7 @@ It gives the ability to check whether an object has been changed or not. It also
 Let's consider the following Person class:
 
 ```crystal
-class Person
+class Person < ActiveModel::Model
    attribute first_name : String
    attribute last_name : String
    attribute children : Array(String) = [] of String
@@ -113,7 +113,7 @@ person.children_changed? # => true : Bool
 Validations ensure that the values in a model meet certain conditions and requirements.
 
 ```crystal
-class Person
+class Person < ActiveModel::Model
    attribute name : String
    attribute age : Int32
    attribute email : String
@@ -148,7 +148,7 @@ person.valid? # => true : Bool
 Provides basic serialization for your object. For example, consider the following object.
 
 ```crystal
-class Person
+class Person < ActiveModel::Model
    attribute name : String
    attribute age : Int32
    attribute password : String, mass_assignment: false
