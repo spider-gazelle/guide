@@ -117,7 +117,7 @@ the `:message` option isn't specified. Let's take a look at each one of the
 available helpers.
 
 
-### `presence`
+### presence
 
 This helper validates that the specified attributes are not empty. It checks for `nil`
 and then uses the `empty?` method to check if the value is a blank string or an empty array etc.
@@ -141,7 +141,7 @@ validates :email, presence: true, allow_blank: true
 The default error message is _"is required"_.
 
 
-### `absence`
+### absence
 
 This helper validates that the specified attributes are absent. It checks for `nil`
 and then uses the `empty?` method to check if the value is a blank string or an empty array etc.
@@ -149,7 +149,7 @@ and then uses the `empty?` method to check if the value is a blank string or an 
 The default error message is _"is present"_.
 
 
-### `numericality`
+### numericality
 
 This helper validates your attributes numeric values.
 Crystals type system will ensure they are the correct type.
@@ -185,7 +185,7 @@ end
 NOTE: By default, `numericality` doesn't allow `nil` values. You can use `allow_nil: true` option to permit it.
 
 
-### `confirmation`
+### confirmation
 
 You should use this helper when you have two text fields that should receive
 exactly the same content. For example, you may want to confirm an email address
@@ -224,7 +224,7 @@ end
 The default error message for this helper is _"doesn't match confirmation"_.
 
 
-### `format`
+### format
 
 This helper validates the attributes' values by testing whether they match a
 given regular expression, which is specified using the `:with` option.
@@ -242,7 +242,7 @@ Alternatively, you can require that the specified attribute does _not_ match the
 The default error message is _"is invalid"_.
 
 
-### `inclusion`
+### inclusion
 
 This helper validates that the attributes' values are included in a given set.
 In fact, this set can be any enumerable object.
@@ -262,7 +262,7 @@ use for the same purpose, if you'd like to.
 The default error message for this helper is _"is not included in the list"_.
 
 
-### `exclusion`
+### exclusion
 
 This helper validates that the attributes' values are not included in a given
 set. In fact, this set can be any enumerable object.
@@ -281,7 +281,7 @@ alias called `:within` that you can use for the same purpose, if you'd like to.
 The default error message is _"is reserved"_.
 
 
-### `length`
+### length
 
 This helper validates the length of the attributes' values. It provides a
 variety of options, so you can specify length constraints in different ways:
