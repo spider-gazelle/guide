@@ -313,6 +313,22 @@ end
 If a "before" filter renders or redirects, the action will not run.
 If there are additional filters scheduled to run after that filter, they are also cancelled.
 
+In this example the filter is added to `Application` and thus all controllers in the application inherit it.
+This will make everything in the application require the user to be logged in in order to use it.
+For obvious reasons (the user wouldn't be able to log in in the first place!), not all controllers or actions should require this.
+You can prevent filters from running before particular actions with `skip_action`:
+
+```crystal
+class LoginsController < Application
+  skip_action :require_login, only: [:new, :create]
+end
+
+```
+
+Now, the `LoginsController`'s `new` and `create` actions will work as before without requiring the user to be logged in.
+The `:only` option is used to skip this filter only for these actions, and there is also an `:except` option which works the other way.
+These options can be used when adding filters too, so you can add a filter which only runs for selected actions in the first place.
+
 
 ### After filters and around filters
 
