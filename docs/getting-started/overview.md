@@ -21,6 +21,7 @@ It's also very simple to deploy and distribute
 [ACA Projects](https://www.acaprojects.com/) are a fast-paced team of developers and designers based in Sydney and Brisbane, Australia.
 
 
-## Example production apps
+## Example apps
 
-* https://github.com/acaprojects/meraki-scanner
+* microservice: https://github.com/acaprojects/meraki-scanner
+* full stack: https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Crystal/spider-gazelle
