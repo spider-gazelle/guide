@@ -33,8 +33,6 @@ end
 
 `ApplicationController` inherits from `ActionController::Base`, which defines a number of helpful methods. This guide will cover most of these.
 
-Only public methods are callable as actions. It is a best practice to lower the visibility of methods (with `private` or `protected`) which are not intended to be actions, like auxiliary methods or filters.
-
 
 ## Parameters
 
@@ -176,8 +174,6 @@ Session values are stored using key/value pairs like a hash:
 ```crystal
 class Application < ActionController::Base
 
-  private
-
   # Finds the User with the ID stored in the session with the key
   # "current_user_id" This is a common way to handle user login in
   # a Spider-Gazelle application; logging in sets the session value
@@ -298,8 +294,6 @@ Filters are inherited, so if you set a filter on `Application`, it will be run o
 class Application < ActionController::Base
   before_action :require_login
 
-  private
-
   def require_login
     unless logged_in?
       # halts request cycle
@@ -343,8 +337,6 @@ For example, in a website where changes have an approval workflow an administrat
 ```crystal
 class ChangesController < Application
   around_action :wrap_in_transaction, only: :show
-
-  private
 
   def wrap_in_transaction
     Change.transaction do
@@ -398,8 +390,6 @@ Here's how you can use `rescue_from` to intercept all `RecordNotFound` errors an
 ```crystal
 class Application < ActionController::Base
   rescue_from RecordNotFound, with: :record_not_found
-
-  private
 
     def record_not_found
       render :not_found, text: "404 Not Found"
