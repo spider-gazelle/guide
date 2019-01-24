@@ -53,7 +53,7 @@ class Welcome < Application
 
   def show
     id = params["id"]
-    render html: partial("single_row.ecr")
+    render partial: "single_row.ecr"
   end
 end
 
@@ -96,14 +96,14 @@ class Welcome < Application
   layout "landing_page_layout.ecr"
 
   def index
-    render html: template("welcome.ecr")
+    render template: "welcome.ecr"
   end
 
   def show
     id = params["id"]
 
     # Overwrite the default layout for this request
-    render html: template("about_us.ecr", layout: "details_layout.ecr")
+    render template: "about_us.ecr", layout: "details_layout.ecr"
   end
 end
 

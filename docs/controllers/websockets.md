@@ -1,7 +1,8 @@
 # WebSockets
 
 Spider-Gazelle supports WebSockets as a first class construct.
-To create a WebSocket route in a controller:
+See the example below to create a WebSocket route in a controller.
+NOTE:: You should render any pre-condition failures (such as not authenticated) in a before action.
 
 ```crystal
 class ChatRoom < Application
