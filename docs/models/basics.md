@@ -5,6 +5,17 @@ build database object-relational mappings.
 
 It can also be used to validate and coerce values being passed to controllers.
 
+## ORMs
+
+Our libraries:
+
+* [RethinkDB ORM](https://github.com/spider-gazelle/rethinkdb-orm) built on SG ActiveModel
+
+3rd Party Recommendations:
+
+* [Redis](https://github.com/stefanwille/crystal-redis) not an ORM but we use it in production
+* [mysql, pg, sqlite](https://github.com/amberframework/granite) an ORM that works well for SQL servers
+
 
 ## Attribute Methods
 
@@ -192,4 +203,3 @@ To only serialize a select number of attributes
 person.attributes.select(:name, :age).to_json # => {"name":"Sarah","age":8} : String
 
 ```
-
