@@ -4,6 +4,8 @@ Here's an example of a very simple validation:
 
 ```crystal
 class Person < ActiveModel::Model
+  include ActiveModel::Validation
+  
   attribute name : String
   validates :name, presence: true
 end
@@ -61,6 +63,8 @@ As you saw above:
 
 ```crystal
 class Person < ActiveModel::Model
+  include ActiveModel::Validation
+
   attribute name : String
   validates :name, presence: true
 end
@@ -81,6 +85,8 @@ when `.valid?` is called.
 
 ```crystal
 class Person < ActiveModel::Model
+  include ActiveModel::Validation
+
   attribute name : String
   validates :name, presence: true
 end
@@ -124,8 +130,9 @@ and then uses the `empty?` method to check if the value is a blank string or an 
 
 ```crystal
 class Person < ActiveModel::Model
-  attribute login : String
+  include ActiveModel::Validation
 
+  attribute login : String
   validates :login, presence: true
 end
 
@@ -156,6 +163,8 @@ Crystals type system will ensure they are the correct type.
 
 ```crystal
 class Player < ActiveModel::Model
+  include ActiveModel::Validation
+
   attribute age : Int32
   validates :age, numericality: { greater_than: 3 }
 end
@@ -194,6 +203,8 @@ name of the field that has to be confirmed with "_confirmation"_ appended.
 
 ```crystal
 class Person < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :email, confirmation: true
 end
 
@@ -204,6 +215,8 @@ confirmation, make sure to add a presence check for the confirmation attribute.
 
 ```crystal
 class Person < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :email, confirmation: true
   validates :email_confirmation, presence: true
 end
@@ -216,6 +229,8 @@ true.
 
 ```crystal
 class Person < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :email, confirmation: { case_sensitive: false }
 end
 
@@ -231,6 +246,8 @@ given regular expression, which is specified using the `:with` option.
 
 ```crystal
 class Product < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :legacy_code, format: { with: /\A[a-zA-Z]+\z/,
     message: "only allows letters" }
 end
@@ -249,6 +266,8 @@ In fact, this set can be any enumerable object.
 
 ```crystal
 class Coffee < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :size, inclusion: { in: %w(small medium large),
     message: "is not a valid size" }
 end
@@ -269,6 +288,8 @@ set. In fact, this set can be any enumerable object.
 
 ```crystal
 class Account < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :subdomain, exclusion: { in: %w(www us ca jp) }
 end
 
@@ -288,6 +309,8 @@ variety of options, so you can specify length constraints in different ways:
 
 ```crystal
 class Person < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :name, length: { minimum: 2 }
   validates :bio, length: { maximum: 500 }
   validates :password, length: { in: 6..20 }
@@ -310,6 +333,8 @@ performed. You can personalize these messages using the `:wrong_length`,
 
 ```crystal
 class Person < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :bio, length: { maximum: 1000,
     too_long: "1000 characters is the maximum allowed" }
 end
@@ -334,6 +359,8 @@ This is the most commonly used option.
 
 ```crystal
 class Order < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :card_number, presence: true, if: :paid_with_card?
 
   def paid_with_card?
@@ -352,6 +379,8 @@ one-liners.
 
 ```crystal
 class Account < ActiveModel::Model
+  include ActiveModel::Validation
+
   validates :password, confirmation: true,
     unless: Proc.new(Account) { |a| a.password.blank? }
 end
