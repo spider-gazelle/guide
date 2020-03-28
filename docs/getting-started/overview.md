@@ -18,10 +18,11 @@ It's also very simple to deploy and distribute
 
 ## Who builds it?
 
-[ACA Projects](https://www.acaprojects.com/) are a fast-paced team of developers and designers based in Sydney and Brisbane, Australia.
+[Place Technology](https://place.technology/) are a fast-paced team of developers and designers based in Sydney and Brisbane, Australia.
 
 
 ## Example apps
 
+* PlaceOS: https://github.com/PlaceOS/rest-api
+  * Internal components: https://github.com/PlaceOS/core
 * microservice: https://github.com/acaprojects/meraki-scanner
-* full stack: https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Crystal/spider-gazelle
