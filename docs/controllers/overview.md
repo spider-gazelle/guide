@@ -389,11 +389,11 @@ Here's how you can use `rescue_from` to intercept all `RecordNotFound` errors an
 
 ```crystal
 class Application < ActionController::Base
-  rescue_from RecordNotFound, with: :record_not_found
+  rescue_from RecordNotFound, method: :record_not_found
 
-    def record_not_found
-      render :not_found, text: "404 Not Found"
-    end
+  def record_not_found
+    render :not_found, text: "404 Not Found"
+  end
 end
 ```
 
