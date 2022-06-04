@@ -1,4 +1,3 @@
-# Creating a new project
 
 1. Install [Crystal Lang](https://crystal-lang.org/)
 1. Clone the project template (and optionally mirror it)

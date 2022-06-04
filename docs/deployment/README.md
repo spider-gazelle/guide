@@ -55,10 +55,13 @@ To save this image for use in a deployment requires docker hub
 
 If you would like your docker image to be ready to deploy every time you commit a change
 
+### Github actions
+
+We use github actions and the github repository for automated builds.
 
 ### Codefresh
 
-We prefer [codefresh](https://codefresh.io/) for this job as the builds run faster when compared to docker hub.
+One option we used in the past was [codefresh](https://codefresh.io/) as it ran faster when compared to docker hub.
 
 1. Login using your browser
 1. Click "add repository"
@@ -72,4 +75,3 @@ We prefer [codefresh](https://codefresh.io/) for this job as the builds run fast
 1. Click "create automated build"
 1. select your git repository
 1. select your Dockerfile
-

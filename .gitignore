@@ -1,5 +1,5 @@
-node_modules/
-*.sublime-project
-*.sublime-workspace
+site/
+.venv/
 lib/
-dist/
+*.DS_Store
+
