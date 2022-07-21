@@ -25,6 +25,7 @@ Spider-Gazelle is a MVC based framework, as such, the logic to handle a given ro
 
 ```crystal
 require "action-controller"
+require "action-controller/server"
 
 # Define a controller
 class ExampleController < AC::Base
@@ -63,6 +64,7 @@ The method's return type adds some type safety to ensure the expected value is b
 
 ```crystal
 require "action-controller"
+require "action-controller/server"
 
 # base route is inferred off the class
 class Add < AC::Base
@@ -84,6 +86,7 @@ Route and query params are automatically inferred based on the route annotation 
 
 ```crystal
 require "action-controller"
+require "action-controller/server"
 
 class ExampleController < AC::Base
   base "/"
@@ -110,6 +113,7 @@ However it is recommended that the body be deserializing directly into an object
 require "json"
 require "yaml"
 require "action-controller"
+require "action-controller/server"
 
 struct UserName
   include JSON::Serializable
@@ -150,6 +154,7 @@ You can also use the `response` object to fully customize the response; such as 
 
 ```crystal
 require "action-controller"
+require "action-controller/server"
 require "yaml"
 
 abstract class MyApplication < AC::Base
@@ -183,6 +188,7 @@ Error handlers can be defined gloabally, in your abstract base class, or specifi
 
 ```crystal
 require "action-controller"
+require "action-controller/server"
 
 class Divide < AC::Base
   @[AC::Route::GET("/:num1/:num2")]
