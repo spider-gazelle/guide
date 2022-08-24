@@ -101,6 +101,26 @@ AC::Server.new.run
 # GET /?page=bar # => AC::Route::Param::ValueError<@message="invalid parameter value" @parameter="value1" @restriction="Int32">
 ```
 
+Params can be customised at the argument level too using the `@[AC::Param::Converter]` annotation
+
+```crystal
+require "action-controller"
+
+class ExampleController < AC::Base
+  base "/"
+
+  @[AC::Route::GET("/")]
+  def index(
+    @[AC::Param::Converter(class: OptionalConvertorKlass, config: {base: 16}, name: "customParamName")]
+    page : Int32
+  )
+    page
+  end
+end
+
+AC::Server.new.run
+```
+
 #### Body parsing
 
 The request body can be accessed via the helper method `request`, `request.body`
