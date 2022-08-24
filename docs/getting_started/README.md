@@ -25,7 +25,6 @@ Spider-Gazelle is a MVC based framework, as such, the logic to handle a given ro
 
 ```crystal
 require "action-controller"
-require "action-controller/server"
 
 # Define a controller
 class ExampleController < AC::Base
@@ -45,6 +44,7 @@ class ExampleController < AC::Base
 end
 
 # Run the server
+require "action-controller/server"
 AC::Server.new.run
 
 # GET / # => Hello World
@@ -64,7 +64,6 @@ The method's return type adds some type safety to ensure the expected value is b
 
 ```crystal
 require "action-controller"
-require "action-controller/server"
 
 # base route is inferred off the class
 class Add < AC::Base
@@ -75,6 +74,7 @@ class Add < AC::Base
   end
 end
 
+require "action-controller/server"
 AC::Server.new.run
 
 # GET /add/2/3               # => 5
@@ -86,7 +86,6 @@ Route and query params are automatically inferred based on the route annotation 
 
 ```crystal
 require "action-controller"
-require "action-controller/server"
 
 class ExampleController < AC::Base
   base "/"
@@ -97,6 +96,7 @@ class ExampleController < AC::Base
   end
 end
 
+require "action-controller/server"
 AC::Server.new.run
 
 # GET /          # => AC::Route::Param::MissingError<@message="missing required parameter" @parameter="value1" @restriction="Int32">
@@ -121,6 +121,7 @@ class ExampleController < AC::Base
   end
 end
 
+require "action-controller/server"
 AC::Server.new.run
 ```
 
@@ -133,7 +134,6 @@ However it is recommended that the body be deserializing directly into an object
 require "json"
 require "yaml"
 require "action-controller"
-require "action-controller/server"
 
 struct UserName
   include JSON::Serializable
@@ -152,6 +152,7 @@ class ExampleController < AC::Base
   end
 end
 
+require "action-controller/server"
 AC::Server.new.run
 
 # POST /data body: {"id":1,"name":"Jim"} # => Jim
@@ -174,7 +175,6 @@ You can also use the `response` object to fully customize the response; such as 
 
 ```crystal
 require "action-controller"
-require "action-controller/server"
 require "yaml"
 
 abstract class MyApplication < AC::Base
@@ -196,6 +196,7 @@ class ExampleController < MyApplication
   end
 end
 
+require "action-controller/server"
 AC::Server.new.run
 
 # GET / # => "--- Hello World"
@@ -208,7 +209,6 @@ Error handlers can be defined gloabally, in your abstract base class, or specifi
 
 ```crystal
 require "action-controller"
-require "action-controller/server"
 
 class Divide < AC::Base
   @[AC::Route::GET("/:num1/:num2")]
@@ -224,6 +224,7 @@ class Divide < AC::Base
   end
 end
 
+require "action-controller/server"
 AC::Server.new.run
 
 # GET /divide/10/0  # => {"error": "Division by 0"}
