@@ -4,6 +4,7 @@ An elegant web framework designed to be simple, powerful and fast.
 
 Spider-Gazelle employs some unique concepts, features, and design principles:
 
+* Self documenting, can generate an [OpenAPI](https://swagger.io/specification/) description of your project
 * Annotations are used to define & configure routes, filters and error handlers
 * Implements strong parameter typing with customisable parsing
 * Parses request bodies and serialises responses based on [Accept](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept) and [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) headers

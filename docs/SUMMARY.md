@@ -3,6 +3,7 @@
     * [Routing](getting_started/routing.md)
     * [Sessions and Cookies](getting_started/sessions.md)
     * [Writing Specs](getting_started/spec.md)
+    * [Self Documentation](getting_started/openapi.md)
 * [New Project](configuration/README.md)
     * [Logging and instrumentation](configuration/logging.md)
     * [Command line options](configuration/command_line.md)
