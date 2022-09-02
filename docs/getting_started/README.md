@@ -308,7 +308,7 @@ abstract class MyApplication < AC::Base
   base "/"
 
   getter! user : User
-  getter! comemnt : Comment
+  getter! comment : Comment
 
   @[AC::Route::Filter(:before_action, except: :login)]
   def get_current_user
