@@ -10,6 +10,24 @@ The source code is required to output OpenAPI as we extract descriptions from re
 
 You can then serve this document from your service when it's deployed if desirable.
 
+```crystal
+
+class OpenAPI < AC::Base
+  base "/openapi"
+
+  get "/docs" do
+    render yaml:  ActionController::OpenAPI.generate_open_api_docs(
+      title: "Application",
+      version: "0.0.1",
+      description: "App description for OpenAPI docs"
+    ).to_yaml
+  end  
+end
+
+```
+
+then visit your documentation at "http://localhost:3000/openapi/docs"
+
 ## Optimal results
 
 For optimal output it's recommended that you:
