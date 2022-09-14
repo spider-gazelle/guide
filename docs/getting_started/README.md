@@ -231,6 +231,44 @@ AC::Server.new.run
 # GET /divide_rescued/10/10 # => 1
 ```
 
+### CORS management
+
+CORS policy can be defined in a `before_action`
+
+```crystal
+require "action-controller"
+
+abstract class Application < AC::Base
+  before_action :enable_cors
+
+  def enable_cors
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Content-Type"] = "application/json"
+    response.headers["Access-Control-Allow-Methods"] = "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"
+  end
+end
+
+# Define a controller
+class ExampleController < Application
+  base "/"
+
+  @[AC::Route::OPTIONS("/")]
+  def cors
+  end
+
+  @[AC::Route::GET("/")]
+  def index
+    render json: {"message" => "Hello World"}
+  end
+end
+
+# Run the server
+require "action-controller/server"
+AC::Server.new.run
+
+```
+
 ### Logging
 
 Logging is handled via Crystal's [Log](https://crystal-lang.org/api/Log.html) module. Spider-Gazelle logs when a request matches a controller action, as well as any exception. This of course can be augmented with additional application specific messages.
