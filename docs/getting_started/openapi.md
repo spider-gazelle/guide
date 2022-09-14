@@ -15,12 +15,14 @@ You can then serve this document from your service when it's deployed if desirab
 class OpenAPI < AC::Base
   base "/openapi"
 
+  DOCS = ActionController::OpenAPI.generate_open_api_docs(
+    title: "Application",
+    version: "0.0.1",
+    description: "App description for OpenAPI docs"
+  ).to_yaml
+
   get "/docs" do
-    render yaml:  ActionController::OpenAPI.generate_open_api_docs(
-      title: "Application",
-      version: "0.0.1",
-      description: "App description for OpenAPI docs"
-    ).to_yaml
+    render yaml: DOCS
   end  
 end
 
