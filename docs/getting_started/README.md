@@ -162,7 +162,7 @@ AC::Server.new.run
 Spider-Gazelle configures a JSON parser by default, however you can add custom parsers, configure a new default and also remove the JSON parser
 
 ```crystal
-  abstract class AppBase < AC::Base
+  abstract class Application < AC::Base
     add_parser("application/yaml") { |klass, body_io| klass.from_yaml(body_io.gets_to_end) }
   end
 ```
@@ -178,7 +178,7 @@ You can also use the `response` object to fully customize the response; such as 
 require "action-controller"
 require "yaml"
 
-abstract class MyApplication < AC::Base
+abstract class Application < AC::Base
   # the responder block is run in the context of the current controller instance
   # if you need access to the `request` or `response` or any other helpers to render the response
   add_responder("application/yaml") { |io, result, _klass_symbol, _method_symbol| result.to_yaml(io) }
@@ -280,7 +280,7 @@ Here we're adding context to the logger that is valid for the lifetime of the re
 require "action-controller"
 require "uuid"
 
-abstract class MyApplication < AC::Base
+abstract class Application < AC::Base
   # NOTE:: you can chain this log from a base log instance
   Log = ::Log.for("myapplication.controller")
 
@@ -343,7 +343,7 @@ Filters are inherited, so if you set a filter on a base Controller, it will be r
 After filters can be used in the same way as before filters
 
 ```crystal
-abstract class MyApplication < AC::Base
+abstract class Application < AC::Base
   base "/"
 
   getter! user : User
@@ -371,7 +371,7 @@ end
 Around filters must yield to the action.
 
 ```crystal
-abstract class MyApplication < AC::Base
+abstract class Application < AC::Base
   base "/"
 
   @[AC::Route::Filter(:around_action, only: [:create, :update, :destroy])]
@@ -386,7 +386,7 @@ end
 If you have a filter on a base class like `get_current_user` above, you might want to skip this in another controller.
 
 ```crystal
-abstract class MyApplication < AC::Base
+abstract class Application < AC::Base
   getter! user : User
 
   @[AC::Route::Filter(:before_action, except: :login)]
