@@ -139,14 +139,14 @@ struct UserName
   include JSON::Serializable
   include YAML::Serializable
 
-  getter id : String
+  getter id : Int32
   getter name : String
 end
 
 class ExampleController < AC::Base
   base "/"
 
-  @[AC::Route::GET("/data", body: :user)]
+  @[AC::Route::POST("/data", body: :user)]
   def data(user : UserName) : String
     user.name
   end
@@ -156,6 +156,7 @@ require "action-controller/server"
 AC::Server.new.run
 
 # POST /data body: {"id":1,"name":"Jim"} # => Jim
+# curl -d '{"id":1,"name":"Jim"}' --header "Content-Type: application/json" http://localhost:3000/data => Jim
 ```
 
 Spider-Gazelle configures a JSON parser by default, however you can add custom parsers, configure a new default and also remove the JSON parser
