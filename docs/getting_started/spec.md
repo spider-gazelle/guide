@@ -63,7 +63,7 @@ describe YourController do
 
   # instantiate the controller you wish to unit test
   # the HTTP request constitues the server context, it is optional
-  controller = YourController.spec_instance(HTTP::Request.new("GET", "/"))
+  welcome = YourController.spec_instance(HTTP::Request.new("GET", "/"))
 
   it "should sum two numbers" do
     welcome.add(10, 30).should eq 40
