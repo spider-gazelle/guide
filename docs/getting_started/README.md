@@ -186,7 +186,7 @@ abstract class Application < AC::Base
 end
 
 # Define a controller
-class ExampleController < MyApplication
+class ExampleController < Application
   # defaults to "/example_controller" overwrite with this directive
   base "/"
 
@@ -282,7 +282,7 @@ require "uuid"
 
 abstract class Application < AC::Base
   # NOTE:: you can chain this log from a base log instance
-  Log = ::Log.for("myapplication.controller")
+  Log = ::Log.for("application.controller")
 
   @[AC::Route::Filter(:before_action)]
   def set_request_id
@@ -397,7 +397,7 @@ abstract class Application < AC::Base
   end
 end
 
-class PublicController < MyApplication
+class PublicController < Application
   base "/public"
 
   skip_action :get_current_user, only: :index
