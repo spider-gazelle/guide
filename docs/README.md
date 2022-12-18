@@ -25,3 +25,10 @@ Spider-Gazelle employs some unique concepts, features, and design principles:
 * [PlaceOS](https://github.com/PlaceOS/rest-api)
   * [Core](https://github.com/PlaceOS/core)
   * [Staff API](https://github.com/PlaceOS/staff-api)
+
+## Example OpenAPI docs
+
+Note that the editor allows you to generate API clients in many languages, which can be a massive time saver.
+
+* [PlaceOS](https://editor.swagger.io/?url=https://raw.githubusercontent.com/PlaceOS/rest-api/master/OPENAPI_DOC.yml)
+* [Staff-API](https://editor.swagger.io/?url=https://raw.githubusercontent.com/PlaceOS/staff-api/master/OPENAPI_DOC.yml)
