@@ -30,7 +30,7 @@ end
 class Articles < AC::Base
   base "/articles"
 
-  @[AC::Route::Post("/", body: :article)]
+  @[AC::Route::POST("/", body: :article)]
   def create(article : Article); end
 end
 

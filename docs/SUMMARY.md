@@ -9,6 +9,7 @@
 * [Self Documentation](openapi/README.md)
     * [Routes](openapi/route.md)
     * [Schema](openapi/schema.md)
+    * [Params](openapi/params.md)
 * [Deployment](deployment/README.md)
 * [Source Documentation](Config/environment.md)
     * [Aliases](ActionController/aliases.md)
