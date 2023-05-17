@@ -1,8 +1,7 @@
 Controllers describe and handle routes. There are three methods for defining routes
 
 * Strong Paramaters (recommended)
-* Macro DSL
-* Magic methods (legacy, remain for backwards compatibility, inspired by Rails)
+* Macro DSL (fine control)
 
 ## Strong Paramaters
 
@@ -238,45 +237,6 @@ class Features < Application
 end
 
 ```
-
-## Magic methods, legacy
-
-In Spider-Gazelle, a resourceful route provides a mapping between HTTP verbs and URLs to
-controller actions. By convention, each action also maps to a specific CRUD operation in
-a database.
-
-```crystal
-class MyPhotos < Application
-  # base route defaults to the class name underscored
-  # base 'my_photos'
-
-  # GET /my_photos/
-  def index; end
-
-  # POST /my_photos/
-  def create; end
-
-  # GET /my_photos/:id
-  def show; end
-end
-
-```
-
-The methods defined by the `MyPhotos` class define the routes that will be created.
-These are the routes that will be auto-generated if you define the appropriate method.
-
-| HTTP Verb | Path                  | `Controller#Action` | Used for                                     |
-| --------- | --------------------- | ------------------- | -------------------------------------------- |
-| GET       | `/my_photos/`         | `my_photos#index`   | display a list of all your photos            |
-| GET       | `/my_photos/new`      | `my_photos#new`     | return an HTML form for creating a new photo |
-| POST      | `/my_photos/`         | `my_photos#create`  | create a new photo                           |
-| GET       | `/my_photos/:id`      | `my_photos#show`    | display a specific photo                     |
-| GET       | `/my_photos/:id/edit` | `my_photos#edit`    | return an HTML form for editing a photo      |
-| PATCH     | `/my_photos/:id`      | `my_photos#update`  | update a specific photo (possibly meta data) |
-| PUT       | `/my_photos/:id`      | `my_photos#replace` | replace a specific photo                     |
-| DELETE    | `/my_photos/:id`      | `my_photos#destroy` | delete a specific photo                      |
-
-> Because the router uses the HTTP verb and URL to match inbound requests, four URLs map to eight different actions.
 
 ## Redirecting to other routes
 
