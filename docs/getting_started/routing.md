@@ -256,6 +256,44 @@ redirect_to Features.show("photo_id", "feature_id")
 
 ```
 
+## Files and other binary data
+
+The recommendation is to manually manage the response so it can be properly piped.
+Here are two seperate examples:
+
+```crystal
+# example of directly writing data, no streaming
+@[AC::Route::GET("/qr_code.png")]
+def png_qr(
+  @[AC::Param::Info(description: "the data in the QR code")]
+  content : String
+) : Nil
+  size = 256 # px
+  response.headers["Content-Disposition"] = "inline"
+  response.headers["Content-Type"] = "image/png"
+  @__render_called__ = true
+
+  png_bytes = QRCode.new(content).as_png(size: size)
+  response.write png_bytes
+end
+```
+
+example of streaming data from the filesystem:
+
+```crystal
+# example of streaming a file, ensuring low memory usage
+@[AC::Route::GET("/openapi.yaml")]
+def openapi
+  response.headers["Content-Disposition"] = %(attachment; filename="openapi.yml")
+  response.headers["Content-Type"] = "application/yaml"
+  @__render_called__ = true
+
+  File.open("/app/openapi.yml") do |file|
+    IO.copy(file, response)
+  end
+end
+```
+
 ## Inspecting routes
 
 To get a complete list of the available routes in your application
