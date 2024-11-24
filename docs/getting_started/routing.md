@@ -106,6 +106,7 @@ There are built in parsers for the following types
 * [Bool](https://crystal-lang.org/api/latest/Bool.html)
 * [Time](https://crystal-lang.org/api/latest/Time.html)
 * [Enum](https://crystal-lang.org/api/latest/Enum.html)
+* [UUID](https://crystal-lang.org/api/latest/UUID.html)
 
 You can find the [custom options here](https://github.com/spider-gazelle/action-controller/blob/master/src/action-controller/router/route_params.cr)
 
