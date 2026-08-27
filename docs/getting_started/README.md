@@ -10,7 +10,7 @@ Add the dependency to your `shard.yml`:
 dependencies:
   action-controller:
     github: spider-gazelle/action-controller
-    version: ~> 5.6
+    version: ~> 8.1
 ```
 
 Run `shards install`.
@@ -99,9 +99,9 @@ end
 require "action-controller/server"
 AC::Server.new.run
 
-# GET /          # => AC::Route::Param::MissingError<@message="missing required parameter" @parameter="value1" @restriction="Int32">
+# GET /          # => AC::Route::Param::MissingError<@message="missing required parameter" @parameter="page" @restriction="Int32">
 # GET /?page=10  # => 16 (as we configured the page param to accept hex values)
-# GET /?page=bar # => AC::Route::Param::ValueError<@message="invalid parameter value" @parameter="value1" @restriction="Int32">
+# GET /?page=bar # => AC::Route::Param::ValueError<@message="invalid parameter value" @parameter="page" @restriction="Int32">
 ```
 
 Params can be customised at the argument level too using the `@[AC::Param::Converter]` annotation
