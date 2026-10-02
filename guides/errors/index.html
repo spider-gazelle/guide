@@ -1,0 +1,2387 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A fast, type-safe Crystal web framework with built-in OpenAPI and MCP support">
+      
+      
+      
+        <link rel="canonical" href="https://spider-gazelle.net/guides/errors/">
+      
+      
+        <link rel="prev" href="../filters/">
+      
+      
+        <link rel="next" href="../sessions/">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
+    
+    
+      
+        <title>Error handling - Spider-Gazelle</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#errors" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Spider-Gazelle" class="md-header__button md-logo" aria-label="Spider-Gazelle" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Spider-Gazelle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Error handling
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark theme"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark theme" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light theme"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light theme" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/spider-gazelle/action-controller" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    spider-gazelle
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting_started/" class="md-tabs__link">
+          
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../" class="md-tabs__link">
+        
+  
+    
+  
+  Guides
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../openapi/" class="md-tabs__link">
+        
+  
+    
+  
+  OpenAPI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../mcp/" class="md-tabs__link">
+        
+  
+    
+  
+  MCP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../deployment/" class="md-tabs__link">
+        
+  
+    
+  
+  Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../ai/" class="md-tabs__link">
+        
+  
+    
+  
+  AI agents
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Config/environment/" class="md-tabs__link">
+          
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Spider-Gazelle" class="md-nav__button md-logo" aria-label="Spider-Gazelle" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    Spider-Gazelle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/spider-gazelle/action-controller" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    spider-gazelle
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting_started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Your first app
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting_started/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../routing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers & routing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameters/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../responses/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Responses
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../filters/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Filters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Error handling
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Error handling
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#exception-handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exception handlers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception handlers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generic-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generic exceptions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rescue_from" class="md-nav__link">
+    <span class="md-ellipsis">
+      rescue_from
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Built-in errors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handling-parameter-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Handling parameter errors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommended handlers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inheritance-and-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inheritance and order
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unhandled-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unhandled exceptions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      See also
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sessions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sessions & cookies
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../websockets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WebSockets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../openapi/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            OpenAPI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/descriptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Describing routes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/schemas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Schemas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/generating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generating and serving
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../mcp/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    MCP
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            MCP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prompts and visibility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/authentication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentication
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deployment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ai/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AI agents
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Config/environment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ActionController
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ActionController/aliases/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aliases
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Base
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Annotations
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            Annotations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Routes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Filter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Filters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Exception/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/WebSocket/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WebSocket
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Param/Info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Param info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_6" id="__nav_8_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Parameters
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_6">
+            <span class="md-nav__icon md-icon"></span>
+            Parameters
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/Conversion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conversion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/MissingError/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Missing parameter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/ValueError/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Invalid parameter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Error/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Errors
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Responders/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Responders
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Session/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Session
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ExecutionContext/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution contexts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../OpenAPI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_12" id="__nav_8_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    MCP server
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_12">
+            <span class="md-nav__icon md-icon"></span>
+            MCP server
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCPServer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PromptMessage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prompt messages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/ResourceMetadata/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resource metadata
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#exception-handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exception handlers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception handlers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generic-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generic exceptions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rescue_from" class="md-nav__link">
+    <span class="md-ellipsis">
+      rescue_from
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Built-in errors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handling-parameter-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Handling parameter errors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommended handlers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inheritance-and-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inheritance and order
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unhandled-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unhandled exceptions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      See also
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">#</a></h1>
+<p>Exception handlers turn exceptions into responses. Raise an error anywhere in a route,
+filter or the code they call, and a handler declared on the controller, or inherited
+from a parent, decides the status code and body. This page covers declaring handlers,
+the errors Spider-Gazelle raises, and what happens to exceptions nobody handles.</p>
+<div class="highlight"><pre><span></span><code><span class="k">require</span><span class="w"> </span><span class="s2">&quot;action-controller&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Divide</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="n">base</span><span class="w"> </span><span class="s2">&quot;/divide&quot;</span>
+
+<span class="w">  </span><span class="c1"># Divides one number by another</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::GET</span><span class="p">(</span><span class="s2">&quot;/:num1/:num2&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">divide</span><span class="p">(</span><span class="n">num1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Int32</span><span class="p">,</span><span class="w"> </span><span class="n">num2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Int32</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Int32</span>
+<span class="w">    </span><span class="n">num1</span><span class="w"> </span><span class="sr">//</span><span class="w"> </span><span class="n">num2</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># Responds 400 when dividing by zero</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">DivisionByZeroError</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">BAD_REQUEST</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">division_by_zero</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">NamedTuple</span><span class="p">(</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">String?</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;action-controller/server&quot;</span>
+<span class="n">AC</span><span class="o">::</span><span class="n">Server</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">run</span>
+
+<span class="c1"># GET /divide/10/2  # =&gt; 200 5</span>
+<span class="c1"># GET /divide/10/0  # =&gt; 400 {&quot;error&quot;:&quot;Division by 0&quot;}</span>
+</code></pre></div>
+<p>The handler's status code and return type are added to the responses of every route
+it covers in the <a href="../../openapi/">OpenAPI</a> document.</p>
+<h2 id="exception-handlers">Exception handlers<a class="headerlink" href="#exception-handlers" title="Permanent link">#</a></h2>
+<p>Annotate a method with <code>@[AC::Route::Exception(ErrorClass)]</code>. It handles that class and
+its subclasses, raised from any route or filter in the controller and its subclasses.</p>
+<ul>
+<li>The first argument is the exception. It's typed as the class in the annotation.</li>
+<li>The return value is rendered like a route's: serialised by the negotiated
+  <a href="../responses/#responders">responder</a>.</li>
+<li>If the client's <code>Accept</code> header can't be satisfied, the default responder is used,
+  so errors always get a response.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>status_code:</code></td>
+<td>The response status, <code>200 OK</code> if omitted, so always set it.</td>
+</tr>
+<tr>
+<td><code>content_type:</code></td>
+<td>Always respond with this content type, see <a href="../responses/#fixed-content-types">fixed content types</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>One method can handle several exception classes, each with its own status:</p>
+<div class="highlight"><pre><span></span><code><span class="k">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Application</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">NotFound</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">NOT_FOUND</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">Conflict</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">CONFLICT</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">resource_error</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span>
+<span class="w">    </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="ss">backtrace</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Handlers can take extra arguments, parsed like <a href="../parameters/">route parameters</a>. Make
+them nilable, as the failing request may not include them:</p>
+<div class="highlight"><pre><span></span><code><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">NotFound</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">NOT_FOUND</span><span class="p">)</span><span class="o">]</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">not_found</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Int64?</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">NamedTuple</span><span class="p">(</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">String?</span><span class="p">,</span><span class="w"> </span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">Int64?</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">id</span><span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Handlers can also call <a href="../responses/#render-head-and-redirect_to"><code>render</code>, <code>head</code> or <code>redirect_to</code></a>
+to take full control of the response.</p>
+<h3 id="generic-exceptions">Generic exceptions<a class="headerlink" href="#generic-exceptions" title="Permanent link">#</a></h3>
+<p>Exceptions can be generic, for example an error class parameterised by its status code.
+Handle one instance, or name the generic itself to handle every instance:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ApiError</span><span class="p">(</span><span class="nc">Code</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Exception</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">code</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Int32</span>
+<span class="w">    </span><span class="n">Code</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Application</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="c1"># handles ApiError(404) only</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">ApiError</span><span class="p">(</span><span class="mi">404</span><span class="p">),</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">NOT_FOUND</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">api_not_found</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span>
+<span class="w">    </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="ss">backtrace</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># handles every other ApiError, such as ApiError(400) and ApiError(409)</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">ApiError</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">BAD_REQUEST</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">api_error</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span>
+<span class="w">    </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="ss">backtrace</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The status code in the annotation is fixed. To respond with each error's own code, call
+<code>render status: error.code, json: ...</code> in the handler.</p>
+<h2 id="rescue_from"><code>rescue_from</code><a class="headerlink" href="#rescue_from" title="Permanent link">#</a></h2>
+<p>The <code>rescue_from</code> macro is an alternative that doesn't use annotations. Pass a method
+name, or a block:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Books</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="n">base</span><span class="w"> </span><span class="s2">&quot;/books&quot;</span>
+
+<span class="w">  </span><span class="n">rescue_from</span><span class="w"> </span><span class="n">KeyError</span><span class="p">,</span><span class="w"> </span><span class="ss">:missing_key</span>
+
+<span class="w">  </span><span class="n">rescue_from</span><span class="w"> </span><span class="n">IndexError</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">error</span><span class="o">|</span>
+<span class="w">    </span><span class="n">render</span><span class="w"> </span><span class="ss">:not_found</span><span class="p">,</span><span class="w"> </span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">missing_key</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<span class="w">    </span><span class="n">render</span><span class="w"> </span><span class="ss">:not_found</span><span class="p">,</span><span class="w"> </span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>A <code>rescue_from</code> handler must send its response with <code>render</code> or <code>head</code>: its return
+value isn't rendered, and it doesn't add a response to the OpenAPI document. Prefer
+the annotation.</p>
+<h2 id="built-in-errors">Built-in errors<a class="headerlink" href="#built-in-errors" title="Permanent link">#</a></h2>
+<p>Spider-Gazelle raises these while handling a request:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Raised when</th>
+<th>Suggested status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AC::Route::Param::MissingError</code></td>
+<td>a required parameter or header is missing</td>
+<td><code>422</code></td>
+</tr>
+<tr>
+<td><code>AC::Route::Param::ValueError</code></td>
+<td>a parameter can't be converted to its type</td>
+<td><code>400</code></td>
+</tr>
+<tr>
+<td><code>AC::Route::NotAcceptable</code></td>
+<td>no responder matches the <code>Accept</code> header</td>
+<td><code>406</code></td>
+</tr>
+<tr>
+<td><code>AC::Route::UnsupportedMediaType</code></td>
+<td>no parser matches the request body's <code>Content-Type</code></td>
+<td><code>415</code></td>
+</tr>
+</tbody>
+</table>
+<p>Both parameter errors inherit from <code>AC::Route::Param::Error</code>, which has <code>parameter</code>
+(the name) and <code>restriction</code> (the expected type). Both media type errors inherit from
+<code>AC::Route::Error</code>, which has <code>accepts</code>, the list of supported types.</p>
+<p>These are provided for your own code, with no built-in handlers:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Typical status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AC::Error::Unauthorized</code></td>
+<td><code>401</code></td>
+</tr>
+<tr>
+<td><code>AC::Error::Forbidden</code></td>
+<td><code>403</code></td>
+</tr>
+<tr>
+<td><code>AC::Error::NotFound</code></td>
+<td><code>404</code></td>
+</tr>
+<tr>
+<td><code>AC::Error::Conflict</code></td>
+<td><code>409</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="nb">raise</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">NotFound</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;no article with id </span><span class="si">#{</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><code>AC::Error</code> also provides response structs to return from handlers. All of them
+serialise to JSON and YAML:</p>
+<table>
+<thead>
+<tr>
+<th>Struct</th>
+<th>Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AC::Error::CommonResponse</code></td>
+<td><code>error</code>, and <code>backtrace</code> unless created with <code>backtrace: false</code></td>
+</tr>
+<tr>
+<td><code>AC::Error::ParameterResponse</code></td>
+<td><code>error</code>, <code>parameter</code>, <code>restriction</code></td>
+</tr>
+<tr>
+<td><code>AC::Error::ContentResponse</code></td>
+<td><code>error</code>, <code>accepts</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="handling-parameter-errors">Handling parameter errors<a class="headerlink" href="#handling-parameter-errors" title="Permanent link">#</a></h2>
+<p>Spider-Gazelle doesn't turn the built-in errors into responses for you. Without a
+handler, a missing parameter is a <code>500 Internal Server Error</code>. Handle them in your base
+class:</p>
+<div class="highlight"><pre><span></span><code><span class="k">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Application</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="c1"># a parameter is missing or can&#39;t be parsed</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Route</span><span class="o">::</span><span class="n">Param</span><span class="o">::</span><span class="n">MissingError</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">UNPROCESSABLE_ENTITY</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Route</span><span class="o">::</span><span class="n">Param</span><span class="o">::</span><span class="n">ValueError</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">BAD_REQUEST</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">invalid_param</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">ParameterResponse</span>
+<span class="w">    </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">ParameterResponse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+<span class="w">      </span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="kp">.as</span><span class="p">(</span><span class="n">String</span><span class="p">),</span>
+<span class="w">      </span><span class="ss">parameter</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">parameter</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">restriction</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">restriction</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># GET /search/books?q=crystal&amp;limit=many</span>
+<span class="c1"># =&gt; 400 {&quot;error&quot;:&quot;invalid parameter value for &#39;limit&#39;&quot;,&quot;parameter&quot;:&quot;limit&quot;,&quot;restriction&quot;:&quot;Int32&quot;}</span>
+</code></pre></div>
+<h2 id="recommended-handlers">Recommended handlers<a class="headerlink" href="#recommended-handlers" title="Permanent link">#</a></h2>
+<p>The <a href="../../getting_started/">application template</a> starts with handlers for the
+built-in errors. A complete base class, adding malformed JSON bodies and the
+<code>AC::Error</code> classes, looks like this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">require</span><span class="w"> </span><span class="s2">&quot;action-controller&quot;</span>
+
+<span class="k">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Application</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="c1"># no acceptable response format, or an unsupported request body format</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Route</span><span class="o">::</span><span class="n">NotAcceptable</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">NOT_ACCEPTABLE</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Route</span><span class="o">::</span><span class="n">UnsupportedMediaType</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">UNSUPPORTED_MEDIA_TYPE</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">bad_media_type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">ContentResponse</span>
+<span class="w">    </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">ContentResponse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="kp">.as</span><span class="p">(</span><span class="n">String</span><span class="p">),</span><span class="w"> </span><span class="ss">accepts</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">accepts</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># a parameter is missing or can&#39;t be parsed</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Route</span><span class="o">::</span><span class="n">Param</span><span class="o">::</span><span class="n">MissingError</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">UNPROCESSABLE_ENTITY</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Route</span><span class="o">::</span><span class="n">Param</span><span class="o">::</span><span class="n">ValueError</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">BAD_REQUEST</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">invalid_param</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">ParameterResponse</span>
+<span class="w">    </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">ParameterResponse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="kp">.as</span><span class="p">(</span><span class="n">String</span><span class="p">),</span><span class="w"> </span><span class="ss">parameter</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">parameter</span><span class="p">,</span><span class="w"> </span><span class="ss">restriction</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">restriction</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># the request body isn&#39;t valid JSON, or doesn&#39;t match the expected type</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">JSON</span><span class="o">::</span><span class="n">ParseException</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">BAD_REQUEST</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">invalid_json</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span>
+<span class="w">    </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="ss">backtrace</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">Unauthorized</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">UNAUTHORIZED</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">Forbidden</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">FORBIDDEN</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">NotFound</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">NOT_FOUND</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">Conflict</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">CONFLICT</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">app_error</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span>
+<span class="w">    </span><span class="n">AC</span><span class="o">::</span><span class="n">Error</span><span class="o">::</span><span class="n">CommonResponse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="ss">backtrace</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<h2 id="inheritance-and-order">Inheritance and order<a class="headerlink" href="#inheritance-and-order" title="Permanent link">#</a></h2>
+<p>Handlers are inherited, so declare common ones once in your base class. Two rules
+follow from how handlers are combined:</p>
+<ul>
+<li><strong>A parent's handler wins.</strong> If a parent and a subclass both handle the same
+  exception class, the parent's handler is used.</li>
+<li><strong>The first matching handler wins.</strong> Handlers are checked in order, parent classes
+  first. A parent handler for a broad class such as <code>Exception</code> catches everything,
+  including errors a subclass has a more specific handler for.</li>
+</ul>
+<p>So keep broad handlers out of your base class, or put them in the leaf controllers
+that need them. For a catch-all <code>500</code> response, rely on the
+<a href="#unhandled-exceptions">error handler</a> instead.</p>
+<p>If a response has already been sent when an exception is raised, for example from an
+after filter, the handler can't send another one, and the exception continues as if
+it was unhandled.</p>
+<h2 id="unhandled-exceptions">Unhandled exceptions<a class="headerlink" href="#unhandled-exceptions" title="Permanent link">#</a></h2>
+<p>An exception without a handler propagates out of the controller. Add
+<code>AC::ErrorHandler</code> to the server's handlers to turn it into a response. The
+<a href="../../getting_started/">application template</a> does this in <code>src/config.cr</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># App.running_in_production? is defined in the template&#39;s src/constants.cr</span>
+<span class="n">ActionController</span><span class="o">::</span><span class="n">Server</span><span class="o">.</span><span class="n">before</span><span class="p">(</span>
+<span class="w">  </span><span class="n">ActionController</span><span class="o">::</span><span class="n">ErrorHandler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">App</span><span class="o">.</span><span class="n">running_in_production?</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;X-Request-ID&quot;</span><span class="o">]</span><span class="p">),</span>
+<span class="w">  </span><span class="n">ActionController</span><span class="o">::</span><span class="n">LogHandler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bearer_token&quot;</span><span class="o">]</span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>development, <code>ErrorHandler.new(false)</code></td>
+<td><code>500</code> with an HTML page showing the exception and backtrace</td>
+</tr>
+<tr>
+<td>production, <code>ErrorHandler.new(true)</code></td>
+<td><code>500</code> with a <code>{}</code> body if the client accepts JSON, otherwise an empty body</td>
+</tr>
+</tbody>
+</table>
+<p>The second argument lists response headers to keep when the response is reset, such
+as a request ID set by a filter. Never run the development mode in production, as it
+exposes your source and backtraces.</p>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="../responses/">Responses</a>: status codes and responders</li>
+<li><a href="../parameters/">Parameters</a>: the source of parameter errors</li>
+<li><a href="../filters/">Filters</a>: raising errors to stop a request</li>
+<li><a href="../logging/">Logging</a>: how exceptions are logged</li>
+<li><a href="../../openapi/descriptions/#error-responses">OpenAPI: error responses</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../filters/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Filters">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Filters
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../sessions/" class="md-footer__link md-footer__link--next" aria-label="Next: Sessions &amp; cookies">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Sessions & cookies
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/spider-gazelle" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "navigation.top", "content.code.copy", "content.tabs.link", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
