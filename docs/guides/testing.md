@@ -173,11 +173,17 @@ end
 `socket.run` blocks until the socket closes, so close it from a callback once
 you've received what you expect.
 
-!!! warning
-    `establish_ws` waits for the server to switch protocols. If a filter rejects
-    the connection, for example with `head :unauthorized`, `establish_ws` can wait
-    forever. Test rejections with a plain `client.get` instead, as above. Filters
-    run before the upgrade, so a plain request receives the same `401`.
+If a filter rejects the connection, for example with `head :unauthorized`,
+`establish_ws` raises a `Socket::Error` with the status code. Test rejections with
+`expect_raises`, or with a plain `client.get` as above:
+
+```crystal
+it "requires a token" do
+  expect_raises(Socket::Error, /Status code was 401/) do
+    client.establish_ws("/notifications/")
+  end
+end
+```
 
 ## Testing your MCP server
 

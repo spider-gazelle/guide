@@ -302,9 +302,16 @@ end
 
 `public: true` also marks the response `Cache-Control: public`.
 
-!!! note
-    Always pass `last_modified:`. In 8.3.2, calling `stale?` with only `etag:` doesn't
-    compile.
+Pass either validator on its own, or both. When a client sends both `If-None-Match`
+and `If-Modified-Since`, both must match for a `304`:
+
+```crystal
+@[AC::Route::GET("/:id")]
+def show(id : Int64) : Comment?
+  comment = Comment.find!(id)
+  comment if stale?(etag: %("comment-#{id}-#{comment.version}"))
+end
+```
 
 ## Files and streams
 
@@ -386,14 +393,27 @@ class Admin < AC::Base
 end
 ```
 
-The protocol is read only from the `X-Forwarded-Proto` or `Forwarded` header, so this
-works behind a TLS-terminating proxy or load balancer. Make sure your proxy sets one
-of them. If the app serves TLS itself, without a proxy, requests carry neither header
-and are always redirected. `force_ssl` is an alias.
+Without `only:` or `except:`, every route in the controller requires TLS:
 
-!!! warning
-    In 8.3.2, `force_tls` without `only:` or `except:` has no effect. To cover every
-    route in a controller, pass an empty list: `force_tls except: [] of Symbol`.
+```crystal
+abstract class Application < AC::Base
+  force_tls
+end
+```
+
+How a request's protocol is determined:
+
+- **Behind a proxy:** the `X-Forwarded-Proto` or `Forwarded` header describes the
+  client's connection, so it takes precedence. Make sure your TLS-terminating proxy or
+  load balancer sets one of them.
+- **Serving TLS yourself:** a connection to a port that `ActionController::Server` bound
+  with TLS (`Server.new(ssl_context, ...)`) is HTTPS.
+
+`force_ssl` is an alias.
+
+!!! note
+    The no-options form and the TLS port detection need action-controller 8.3.3 or
+    later.
 
 ## See also
 

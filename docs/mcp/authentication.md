@@ -811,8 +811,10 @@ Other things to know:
 - **Mint your own tokens:** authly's own access tokens don't identify the user, so
   `AuthServer::Tokens` mints JWTs with `sub`, `aud` and a `typ` claim.
 - **Use one HS256 key:** the HS256 `secret_key` and `public_key` must be the same value.
-- **Rescue authly errors yourself:** `@[AC::Route::Exception(Authly::Error)]` can't be
-  used with authly's generic error class, so the token action rescues and re-raises.
+- **Convert authly errors:** authly raises the generic `Authly::Error(Code)`. The token
+  action rescues it and re-raises it as `AuthServer::Error` with the error's own status
+  code. An `@[AC::Route::Exception(Authly::Error)]` handler works too (action-controller
+  8.3.3+), but its status code is fixed.
 - **Annotate each controller:** controller-level `@[AC::MCP(hide: true)]` isn't
   inherited, so annotate each controller you want hidden.
 

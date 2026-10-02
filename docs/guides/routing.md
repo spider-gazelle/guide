@@ -270,7 +270,7 @@ end
 ```
 
 If a method has several routes, the helper builds just one of them: the first `GET`
-route in 8.3.2. Without a `GET`, it's the first route in verb order (`POST`, `PUT`,
+route. Without a `GET`, it's the first route in verb order (`POST`, `PUT`,
 `PATCH`, `DELETE`, `OPTIONS`), not source order. Build paths to the others yourself.
 
 ## Macro DSL

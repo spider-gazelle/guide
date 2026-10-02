@@ -176,7 +176,7 @@ end
 
 - Routes defined with the macro DSL (`get "/" do ... end`) aren't documented. Use
   annotations for anything you want described.
-- `@[AC::Route::OPTIONS]` routes aren't documented in 8.3.2.
+- `@[AC::Route::OPTIONS]` routes aren't documented.
 - Handlers registered with [`rescue_from`](../guides/errors.md#rescue_from) don't add
   responses. Only annotated exception handlers do.
 - MCP prompts (`@[AC::MCP(prompt: true)]`) aren't HTTP routes, so they aren't in the

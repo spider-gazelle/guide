@@ -69,8 +69,9 @@ def not_found(error) : ErrorBody                          # handlers are inherit
 
 - `render` and `head` short-circuit an action or filter, e.g. `head :unauthorized`.
 - Filters can take typed params, which also appear in OpenAPI and MCP.
-- `force_tls` (alias `force_ssl`) redirects plain HTTP to HTTPS. In 8.3.2 it needs
-  `only:` or `except:` to take effect, e.g. `force_tls except: [] of Symbol`.
+- `force_tls` (alias `force_ssl`) redirects plain HTTP to HTTPS. Without `only:`/`except:`
+  it covers every route. Proxy headers decide the protocol, otherwise a connection to a
+  port `Server` bound with TLS is HTTPS.
 
 ## Sessions and cookies
 
@@ -136,7 +137,6 @@ controller = Users.spec_instance(HTTP::Request.new("GET", "/"))   # unit test an
 | Generating docs from a deployed binary | generate at build time where the source and `crystal` are available |
 | An exposed route is unsafe for agents | `@[AC::MCP(hide: true)]` and protect it with filters |
 | Expecting `hide: true` to block access | it only hides the MCP tool; the HTTP route still works |
-| `force_tls` with no options | it has no effect in 8.3.2; use `force_tls except: [] of Symbol` |
 | No handler for `Param::MissingError` / `ValueError` | bad input becomes a `500`; add `@[AC::Route::Exception]` handlers in the base class |
 | Setting a cookie with `cookies["x"] = ...` | `cookies` is the request's; use `response.cookies << HTTP::Cookie.new(...)` |
 | `session["id"] = 42` (an `Int32`) | doesn't compile; store `42_i64` |

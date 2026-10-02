@@ -75,6 +75,36 @@ end
 Handlers can also call [`render`, `head` or `redirect_to`](responses.md#render-head-and-redirect_to)
 to take full control of the response.
 
+### Generic exceptions
+
+Exceptions can be generic, for example an error class parameterised by its status code.
+Handle one instance, or name the generic itself to handle every instance:
+
+```crystal
+class ApiError(Code) < Exception
+  def code : Int32
+    Code
+  end
+end
+
+abstract class Application < AC::Base
+  # handles ApiError(404) only
+  @[AC::Route::Exception(ApiError(404), status_code: HTTP::Status::NOT_FOUND)]
+  def api_not_found(error) : AC::Error::CommonResponse
+    AC::Error::CommonResponse.new(error, backtrace: false)
+  end
+
+  # handles every other ApiError, such as ApiError(400) and ApiError(409)
+  @[AC::Route::Exception(ApiError, status_code: HTTP::Status::BAD_REQUEST)]
+  def api_error(error) : AC::Error::CommonResponse
+    AC::Error::CommonResponse.new(error, backtrace: false)
+  end
+end
+```
+
+The status code in the annotation is fixed. To respond with each error's own code, call
+`render status: error.code, json: ...` in the handler.
+
 ## `rescue_from`
 
 The `rescue_from` macro is an alternative that doesn't use annotations. Pass a method
