@@ -1,7 +1,9 @@
-site_name: Spider Gazelle
+site_name: Spider-Gazelle
+site_description: A fast, type-safe Crystal web framework with built-in OpenAPI and MCP support
 use_directory_urls: true
-repo_url: https://github.com/spider-gazelle
-edit_uri: https://github.com/spider-gazelle/guide
+repo_url: https://github.com/spider-gazelle/action-controller
+repo_name: spider-gazelle
+edit_uri: https://github.com/spider-gazelle/guide/edit/master/docs/
 site_url: https://spider-gazelle.net
 
 theme:
@@ -25,6 +27,13 @@ theme:
     repo: fontawesome/brands/github
   features:
     - navigation.tabs
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - content.code.copy
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
   favicon: favicon.ico
   logo: img/logo.png
 
@@ -39,22 +48,82 @@ plugins:
   - literate-nav:
       nav_file: SUMMARY.md
   - section-index
+  - redirects:
+      redirect_maps:
+        getting_started/routing.md: guides/routing.md
+        getting_started/sessions.md: guides/sessions.md
+        getting_started/spec.md: guides/testing.md
+        configuration/README.md: getting_started/README.md
+        configuration/command_line.md: getting_started/configuration.md
+        configuration/logging.md: guides/logging.md
+        openapi/route.md: openapi/descriptions.md
+        openapi/params.md: openapi/descriptions.md
+        openapi/schema.md: openapi/schemas.md
+  - llmstxt:
+      markdown_description: >
+        Spider-Gazelle is a fast, type-safe web framework for Crystal (built on the
+        action-controller shard). Annotated controller methods are the routes, the
+        parameter validation, the OpenAPI operations and the MCP tools, all generated
+        from one source of truth.
+      full_output: llms-full.txt
+      sections:
+        Getting started:
+          - README.md
+          - getting_started/README.md
+          - getting_started/configuration.md
+        Guides:
+          - guides/README.md
+          - guides/routing.md
+          - guides/parameters.md
+          - guides/responses.md
+          - guides/filters.md
+          - guides/errors.md
+          - guides/sessions.md
+          - guides/websockets.md
+          - guides/logging.md
+          - guides/testing.md
+        OpenAPI:
+          - openapi/README.md
+          - openapi/descriptions.md
+          - openapi/schemas.md
+          - openapi/generating.md
+        MCP:
+          - mcp/README.md
+          - mcp/setup.md
+          - mcp/prompts.md
+          - mcp/authentication.md
+          - mcp/configuration.md
+        Deployment:
+          - deployment/*.md
+        AI agents:
+          - ai/*.md
   - mkdocstrings:
       default_handler: crystal
       handlers:
         crystal:
           crystal_docs_flags:
             - lib/action-controller/src/action-controller.cr
+            - lib/action-controller/src/action-controller/server.cr
+            - lib/action-controller/src/action-controller/mcp.cr
           source_locations:
             lib/action-controller: https://github.com/spider-gazelle/action-controller/blob/v{shard_version}/{file}#L{line}
 
 markdown_extensions:
   - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
   - callouts
   - pymdownx.highlight
   - pymdownx.magiclink
   - pymdownx.saneheaders
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - deduplicate-toc
   - toc:
       permalink: "#"

@@ -1,439 +1,213 @@
-Spider-Gazelle does not have any other dependencies outside of [Crystal](https://crystal-lang.org) and [Shards](https://crystal-lang.org/reference/the_shards_command/index.html).
-It is designed in such a way to be non-intrusive, and not require a strict organizational convention in regards to how a project is setup;
-this allows it to use a minimal amount of setup boilerplate while not preventing it for more complex projects.
+# Your first app
 
-## Installation
+This page takes you from an empty folder to a running Spider-Gazelle API. Start
+here if you're new to Spider-Gazelle, or new to Crystal.
 
-Add the dependency to your `shard.yml`:
+Spider-Gazelle doesn't depend on anything beyond [Crystal](https://crystal-lang.org)
+and its package manager, [Shards](https://crystal-lang.org/reference/the_shards_command/index.html).
+There are two ways to start:
+
+* **From the application template** (recommended). You get a project with logging,
+  sessions, error handling, specs, a Dockerfile, CI, OpenAPI docs and an MCP server
+  already wired up.
+* **From scratch.** You add the `action-controller` shard to a new Crystal project.
+  This is useful for learning, or for adding an HTTP API to an existing project.
+
+## Install Crystal
+
+Follow the [Crystal installation guide](https://crystal-lang.org/install/) for your
+operating system, then check it worked:
+
+```shell
+crystal --version
+shards --version
+```
+
+## Start from the template
+
+The [spider-gazelle template](https://github.com/spider-gazelle/spider-gazelle) is a
+complete, working application. Clone it into a folder named after your project, and
+give it a fresh git history:
+
+```shell
+git clone https://github.com/spider-gazelle/spider-gazelle.git my_app
+cd my_app
+rm -rf .git && git init
+
+shards install
+crystal run src/app.cr
+```
+
+The app compiles and starts listening:
+
+```text
+Launching Spider-Gazelle v2.0.0
+Listening on http://127.0.0.1:3000
+```
+
+Open <http://localhost:3000> and you'll see `"You're being trampled by Spider-Gazelle!"`.
+Try <http://localhost:3000/api/42> too, which returns `{"result":42}`.
+
+!!! note
+    Crystal is a compiled language, so `crystal run` compiles your app before it
+    starts. The first build takes a little longer, later builds are cached.
+
+### Project layout
+
+| Path | Purpose |
+|------|---------|
+| `src/app.cr` | Entry point. Parses the [command line options](configuration.md#command-line-options) and starts the server. |
+| `src/config.cr` | Requires your code and configures logging, middleware, sessions and the MCP server. |
+| `src/constants.cr` | App name, version and settings read from [environment variables](configuration.md#environment-variables). |
+| `src/controllers/application.cr` | `App::Base`, the abstract controller every other controller inherits from. Holds shared filters, responders and error handlers. |
+| `src/controllers/welcome.cr` | An example controller. |
+| `src/models/` | Your models. |
+| `spec/` | Your [specs](../guides/testing.md). |
+| `www/` | Static files, served when no route matches. |
+| `Dockerfile` | Builds a small production image, see [Deployment](../deployment/README.md). |
+| `.github/workflows/ci.yml` | Checks formatting and runs the specs on every push. |
+
+Change the app name in `src/constants.cr` (`NAME = "Spider-Gazelle"`) and the
+`name` in `shard.yml`. Before you deploy, set your own session secret, see
+[Configuration](configuration.md#sessions).
+
+## Start from scratch
+
+Create a new Crystal app and add `action-controller` to its `shard.yml`:
+
+```shell
+crystal init app my_app
+cd my_app
+```
 
 ```yaml
 dependencies:
   action-controller:
     github: spider-gazelle/action-controller
-    version: ~> 5.6
+    version: ~> 8.3
 ```
 
-Run `shards install`.
-
-## Usage
-
-Spider-Gazelle has a goal of being easy to start using for simple use cases, while still allowing flexibility/customizability for larger more complex use cases.
-
-### Routing
-
-Spider-Gazelle is a MVC based framework, as such, the logic to handle a given route is defined in an [ActionController::Base][] class.
+Run `shards install`, then replace `src/my_app.cr` with:
 
 ```crystal
 require "action-controller"
 
-# Define a controller
-class ExampleController < AC::Base
-  # defaults to "/example_controller" overwrite with this directive
+# Says hello
+class Hello < AC::Base
   base "/"
 
-  # Define an action to handle the related route
+  # Returns a friendly greeting
   @[AC::Route::GET("/")]
-  def index
-    "Hello World"
-  end
-
-  # The macro DSL can also be used
-  get "/dsl" do
-    render text: "Hello World"
+  def index : String
+    "Hello, World!"
   end
 end
 
-# Run the server
+# The server must be required after your controllers
 require "action-controller/server"
-AC::Server.new.run
 
-# GET / # => Hello World
+server = AC::Server.new(3000, "127.0.0.1")
+server.run { puts "Listening on #{server.print_addresses}" }
 ```
 
-Routing is handled via [LuckyRouter](https://github.com/luckyframework/lucky_router) for insanely fast route matching.
-See the routing [documentation](./routing.md) for more information.
+Start it with `crystal run src/my_app.cr` and request the route:
 
-Controllers are simply classes and routes are simply methods. Controllers and actions can be documented/tested as you would any Crystal class/method.
+```shell
+$ curl http://localhost:3000/
+"Hello, World!"
+```
 
-### Route and Query Parameters
+The response is `"Hello, World!"` with quotes because responses are JSON by default.
+The client's `Accept` header selects the format, see
+[Responses](../guides/responses.md).
 
-Arguments are converted to their expected types if possible, otherwise an error response is automatically returned.
-The values are provided directly as method arguments, thus preventing the need for `params["name"]` and any boilerplate related to it.
-Just like normal method arguments, default values can be defined.
-The method's return type adds some type safety to ensure the expected value is being returned, however it is optional.
+`AC` is an alias for `ActionController`, so `AC::Base` and
+`ActionController::Base` are the same class.
+
+## Your first route
+
+A controller is a class that inherits from `AC::Base`, and a route is a method
+with a route annotation. Add a second route to the `Hello` controller:
 
 ```crystal
-require "action-controller"
-
-# base route is inferred off the class
-class Add < AC::Base
-  @[AC::Route::GET("/:value1/:value2")]
-  def add(value1 : Int32, value2 : Int32, negative : Bool = false)
-    sum = value1 + value2
-    negative ? -sum : sum
-  end
-end
-
-require "action-controller/server"
-AC::Server.new.run
-
-# GET /add/2/3               # => 5
-# GET /add/5/5?negative=true # => -10
-# GET /add/foo/12            # => AC::Route::Param::ValueError<@message="invalid parameter value" @parameter="value1" @restriction="Int32">
-```
-
-Route and query params are automatically inferred based on the route annotation and map directly to the method's arguments. See the related annotation docs for more information.
-
-```crystal
-require "action-controller"
-
-class ExampleController < AC::Base
-  base "/"
-
-  @[AC::Route::GET("/", config: {page: {base: 16}})]
-  def index(page : Int32)
-    page
-  end
-end
-
-require "action-controller/server"
-AC::Server.new.run
-
-# GET /          # => AC::Route::Param::MissingError<@message="missing required parameter" @parameter="value1" @restriction="Int32">
-# GET /?page=10  # => 16 (as we configured the page param to accept hex values)
-# GET /?page=bar # => AC::Route::Param::ValueError<@message="invalid parameter value" @parameter="value1" @restriction="Int32">
-```
-
-Params can be customised at the argument level too using the `@[AC::Param::Converter]` annotation
-
-```crystal
-require "action-controller"
-
-class ExampleController < AC::Base
-  base "/"
-
-  @[AC::Route::GET("/")]
-  def index(
-    @[AC::Param::Converter(class: OptionalConvertorKlass, config: {base: 16}, name: "customParamName")]
-    page : Int32
-  )
-    page
-  end
-end
-
-require "action-controller/server"
-AC::Server.new.run
-```
-
-#### Body parsing
-
-The request body can be accessed via the helper method `request`, `request.body`
-However it is recommended that the body be deserializing directly into an object
-
-```crystal
-require "json"
-require "yaml"
-require "action-controller"
-
-struct UserName
-  include JSON::Serializable
-  include YAML::Serializable
-
-  getter id : Int32
-  getter name : String
-end
-
-class ExampleController < AC::Base
-  base "/"
-
-  @[AC::Route::POST("/data", body: :user)]
-  def data(user : UserName) : String
-    user.name
-  end
-end
-
-require "action-controller/server"
-AC::Server.new.run
-
-# POST /data body: {"id":1,"name":"Jim"} # => Jim
-# curl -d '{"id":1,"name":"Jim"}' --header "Content-Type: application/json" http://localhost:3000/data => Jim
-```
-
-Spider-Gazelle configures a JSON parser by default, however you can add custom parsers, configure a new default and also remove the JSON parser
-
-```crystal
-  abstract class Application < AC::Base
-    add_parser("application/yaml") { |klass, body_io| klass.from_yaml(body_io.gets_to_end) }
-  end
-```
-
-You then use the [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) header to specify the format of your request body
-
-### Responding
-
-Responses are automatically rendered via a responder and selected using the requests [Accept](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept) header
-You can also use the `response` object to fully customize the response; such as adding some one-off headers.
-
-```crystal
-require "action-controller"
-require "yaml"
-
-abstract class Application < AC::Base
-  # the responder block is run in the context of the current controller instance
-  # if you need access to the `request` or `response` or any other helpers to render the response
-  add_responder("application/yaml") { |io, result, _klass_symbol, _method_symbol| result.to_yaml(io) }
-  default_responder "application/yaml"
-end
-
-# Define a controller
-class ExampleController < Application
-  # defaults to "/example_controller" overwrite with this directive
-  base "/"
-
-  # Define an action to handle the related route
-  @[AC::Route::GET("/")]
-  def index
-    "Hello World"
-  end
-end
-
-require "action-controller/server"
-AC::Server.new.run
-
-# GET / # => "--- Hello World"
-```
-
-### Error Handling
-
-Unhandled exceptions are represented as a `500 Internal Server Error`
-Error handlers can be defined gloabally, in your abstract base class, or specificially to a controller.
-
-```crystal
-require "action-controller"
-
-class Divide < AC::Base
-  @[AC::Route::GET("/:num1/:num2")]
-  def divide(num1 : Int32, num2 : Int32) : Int32
-    num1 // num2
-  end
-
-  @[AC::Route::Exception(DivisionByZeroError, status_code: HTTP::Status::BAD_REQUEST)]
-  def division_by_zero(error)
-    {
-      error: error.message
-    }
-  end
-end
-
-require "action-controller/server"
-AC::Server.new.run
-
-# GET /divide/10/0  # => {"error": "Division by 0"}
-# GET /divide_rescued/10/10 # => 1
-```
-
-### CORS management
-
-CORS policy can be defined in a `before_action`
-
-```crystal
-require "action-controller"
-
-abstract class Application < AC::Base
-  before_action :enable_cors
-
-  def enable_cors
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    response.headers["Content-Type"] = "application/json"
-    response.headers["Access-Control-Allow-Methods"] = "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"
-  end
-end
-
-# Define a controller
-class ExampleController < Application
-  base "/"
-
-  @[AC::Route::OPTIONS("/")]
-  def cors
-  end
-
-  @[AC::Route::GET("/")]
-  def index
-    render json: {"message" => "Hello World"}
-  end
-end
-
-# Run the server
-require "action-controller/server"
-AC::Server.new.run
-
-```
-
-### Logging
-
-Logging is handled via Crystal's [Log](https://crystal-lang.org/api/Log.html) module. Spider-Gazelle logs when a request matches a controller action, as well as any exception. This of course can be augmented with additional application specific messages.
-
-Here we're adding context to the logger that is valid for the lifetime of the request.
-
-```crystal
-require "action-controller"
-require "uuid"
-
-abstract class Application < AC::Base
-  # NOTE:: you can chain this log from a base log instance
-  Log = ::Log.for("application.controller")
-
-  @[AC::Route::Filter(:before_action)]
-  def set_request_id
-    request_id = UUID.random.to_s
-    Log.context.set(
-      client_ip: client_ip,
-      request_id: request_id
-    )
-    response.headers["X-Request-ID"] = request_id
-  end
+# Greets someone by name, e.g. GET /greet/Steve?shout=true
+@[AC::Route::GET("/greet/:name")]
+def greet(name : String, shout : Bool = false) : String
+  greeting = "Hello, #{name}!"
+  shout ? greeting.upcase : greeting
 end
 ```
 
-A new log context is provided for every request. All logs made during the lifetime of the request will be tagged with anything added to it.
-
-### WebSockets
-
-websockets can be defined just like any other route, this is a very basic chat room app (probably should have some locks etc)
-
-```crystal
-require "action-controller"
-
-class ExampleController < AC::Base
-  base "/"
-
-  SOCKETS = Hash(String, Array(HTTP::WebSocket)) { |hash, key| hash[key] = [] of HTTP::WebSocket }
-
-  @[AC::Route::WebSocket("/websocket/:room")]
-  def websocket(socket, room : String)
-    puts "Socket opened"
-    sockets = SOCKETS[room]
-    sockets << socket
-
-    socket.on_message do |message|
-      sockets.each &.send("#{message} + #{@me}")
-    end
-
-    socket.on_close do
-      puts "Socket closed"
-      sockets.size == 1 ? SOCKETS.delete(room) : sockets.delete(socket)
-    end
-  end
-end
+```shell
+$ curl "http://localhost:3000/greet/Steve?shout=true"
+"HELLO, STEVE!"
 ```
 
-### Filtering
+There's no `params["name"]` boilerplate here:
 
-Filters are methods that are run "around", "before" or "after" a controller action.
+* `name` matches the `:name` segment in the route path.
+* `shout` isn't in the path, so it's read from the query string. It has a
+  default, so it's optional. A `Bool` is `true` when the value is `true` (in any
+  case) and `false` otherwise.
+* Values are converted to the argument type. If a value can't be converted, for
+  example `abc` for an `Int32` argument, Spider-Gazelle responds with an error
+  instead of calling your method.
 
-Filters are inherited, so if you set a filter on a base Controller, it will be run on every controller in your application.
+That one annotated method is also your documentation. The doc comment, argument
+types and return type become the [OpenAPI](../openapi/README.md) operation and the
+[MCP](../mcp/README.md) tool description, so your API docs and LLM tools can't
+drift from the code.
 
-* `around_action` wraps all the before filters and the request, useful for setup database transactions
-* `before_action` runs before the action method, useful for checking authentication, authorisation and loading resources required by the action (keep your code DRY)
-* `after_action` run after the response data has been sent to the client, has access to the response
+From here, read the guides:
 
-#### Before filters
+* [Routing](../guides/routing.md): controllers, base paths, HTTP verbs and the route DSL.
+* [Parameters](../guides/parameters.md): type conversion, `@[AC::Param::Info]` and request bodies.
+* [Responses](../guides/responses.md): response formats, status codes and headers.
+* [Filters](../guides/filters.md): run code before, around or after your routes.
+* [Errors](../guides/errors.md): turn exceptions into consistent error responses.
 
-After filters can be used in the same way as before filters
+## Run the specs
 
-```crystal
-abstract class Application < AC::Base
-  base "/"
+The template ships with specs that use Crystal's built-in
+[spec library](https://crystal-lang.org/reference/guides/testing.html):
 
-  getter! user : User
-  getter! comment : Comment
-
-  @[AC::Route::Filter(:before_action, except: :login)]
-  def get_current_user
-    user_id = session["user_id"]?
-    render :unauthorized unless user_id
-    @user = User.find!(user_id)
-  end
-
-  @[AC::Route::Filter(:before_action, only: [:update_comment, :delete_comment])]
-  def check_access(id : Int64?)
-    if id
-      @comment = Comment.find!(id)
-      render :forbidden unless comment.user_id == user.id
-    end
-  end
-end
+```shell
+crystal spec
 ```
 
-#### Around filters
+See [Testing](../guides/testing.md) to write your own.
 
-Around filters must yield to the action.
+## Reload while you develop
 
-```crystal
-abstract class Application < AC::Base
-  base "/"
+Crystal doesn't reload code at runtime. To rebuild and restart whenever a file
+changes, use a file watcher such as [watchexec](https://github.com/watchexec/watchexec)
+or [nodemon](https://nodemon.io/):
 
-  @[AC::Route::Filter(:around_action, only: [:create, :update, :destroy])]
-  def wrap_in_transaction
-    Database.transaction { yield }
-  end
-end
+```shell
+watchexec -r -e cr -- crystal run src/app.cr
+# or
+nodemon --watch src -e cr --exec crystal run src/app.cr
 ```
 
-#### Skipping filters
+## Build a binary
 
-If you have a filter on a base class like `get_current_user` above, you might want to skip this in another controller.
+For production, compile an optimised binary. With the template, `shards build`
+uses the `app` target in `shard.yml` and writes `bin/app`:
 
-```crystal
-abstract class Application < AC::Base
-  getter! user : User
-
-  @[AC::Route::Filter(:before_action, except: :login)]
-  def get_current_user
-    user_id = session["user_id"]?
-    render :unauthorized unless user_id
-    @user = User.find!(user_id)
-  end
-end
-
-class PublicController < Application
-  base "/public"
-
-  skip_action :get_current_user, only: :index
-
-  @[AC::Route::GET("/")]
-  def index
-    "Hello World"
-  end
-end
+```shell
+shards build --production --release
+./bin/app --help
 ```
 
-## Force HTTPS protocol
+The binary has options for the port, host, worker count, routes listing, health
+checks and generating the OpenAPI and MCP description files. See
+[Configuration](configuration.md#command-line-options). For containers, see
+[Deployment](../deployment/README.md).
 
-Sometime you might want to force a particular controller to only be accessible via an HTTPS protocol for security reasons. You can use the `force_ssl` method in your controller to enforce that:
+## See also
 
-```crystal
-class DinnerController < Application
-  force_ssl
-end
-
-```
-
-## The request and response objects
-
-In every controller there are two accessor methods pointing to the request and the response objects associated with the request cycle that is currently in execution.
-The `request` method contains an instance of [`HTTP::Request`](https://crystal-lang.org/api/latest/HTTP/Request.html) and the `response` method returns an instance of [`HTTP::Server::Response`](https://crystal-lang.org/api/latest/HTTP/Server/Response.html) representing what is going to be sent back to the client.
-
-### Setting custom headers
-
-If you want to set custom headers for a response then `response.headers` is the place to do it.
-The headers attribute is a hash which maps header names to their values, and Spider-Gazelle will set some of them automatically.
-If you want to add or change a header, just assign it to `response.headers` this way:
-
-```crystal
-response.headers["Content-Type"] = "application/pdf"
-
-```
-
-> in the above case it would make more sense to use the `response.content_type` setter directly.
+* [Configuration](configuration.md): environment variables, `config.cr` and command line options
+* [Routing](../guides/routing.md)
+* [Testing](../guides/testing.md)
+* [Deployment](../deployment/README.md)
+* [OpenAPI](../openapi/README.md) and [MCP](../mcp/README.md)

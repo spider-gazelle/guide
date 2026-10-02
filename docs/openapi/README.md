@@ -1,46 +1,77 @@
-Spider-Gazelle has the ability to ouput OpenAPI descriptions of the routes defined in your service.
+# OpenAPI
 
-## Output
-
-The source code is required to output OpenAPI as we extract descriptions from regular comments. The simplest way to generate the OpenAPI YAML is to call this :
-
-```crystal
-ActionController::OpenAPI.generate_open_api_docs(
-    title: "Application",
-    version: "0.0.1",
-    description: "App description for OpenAPI docs"
-  ).to_yaml
-```
-
-Like the OpenAPI specification, `title` and `version` fields are required. 
-For the other fields, you can refer to the [Info OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0#info-object)
-
-## Usage with spider-gazelle template
-
-1. build the application `shards build`
-2. generate the OpenAPI output `./bin/app --docs`
-   * If you would like a file then run `./bin/app --docs > ./bin/description.yml`
-
-## Usage with `action-controller` project
-
-You can then serve this document from your service when it's deployed if desirable.
+Spider-Gazelle generates an [OpenAPI 3](https://spec.openapis.org/oas/v3.0.3) description
+of your API from the code you already write: route annotations, method signatures and doc
+comments. There's no separate spec file to maintain.
 
 ```crystal
+# Manages the comments on articles
+class Comments < AC::Base
+  base "/articles/:article_id/comments"
 
-class OpenAPI < AC::Base
-  base "/openapi"
-
-  DOCS = ActionController::OpenAPI.generate_open_api_docs(
-    title: "Application",
-    version: "0.0.1",
-    description: "App description for OpenAPI docs"
-  ).to_yaml
-
-  get "/docs" do
-    render yaml: DOCS
-  end  
+  # Lists the comments on an article
+  #
+  # Comments are returned newest first.
+  @[AC::Route::GET("/")]
+  def index(
+    article_id : Int64,
+    @[AC::Param::Info(description: "only return comments by this author", example: "steve")]
+    author : String? = nil,
+  ) : Array(Comment)
+    Comment.for(article_id, author)
+  end
 end
-
 ```
 
-then visit your documentation at "http://localhost:3000/openapi/docs"
+That produces a `GET /articles/{article_id}/comments` operation with:
+
+- a summary ("Lists the comments on an article") and a description;
+- a required `article_id` path parameter (`integer`) and an optional, described
+  `author` query parameter;
+- a `200` response containing an array of `Comment`, with the `Comment` JSON schema
+  generated from the class;
+- a "Comments" tag, so the operation is grouped with the controller's other routes.
+
+## Where each part comes from
+
+| OpenAPI | Comes from |
+|---|---|
+| Path summary/description | doc comment on the controller class |
+| Operation summary | first line of the method's doc comment |
+| Operation description | the whole doc comment, when it's more than one line |
+| `operationId`, tags | `Controller_method`, and the controller's name |
+| Path parameters | `:name` (required) and `?:name` (optional) segments in the route |
+| Query parameters | other method arguments. Required unless nilable or defaulted |
+| Header parameters | `@[AC::Param::Info(header: "X-Name")]` |
+| Parameter description/example | `@[AC::Param::Info(description:, example:)]` |
+| Parameter schemas | argument types (`Int32`, `UUID`, enums, `Time`, ...) |
+| Request body | the `body:` argument's type, for each registered parser content type |
+| Responses | the return type, `status_code:` and `status:` maps, and your exception handlers |
+| Schemas | `JSON::Serializable` types via [json-schema](https://github.com/spider-gazelle/json-schema), with `@[JSON::Field]` hints |
+| Filter parameters | arguments of the filters that apply to the route |
+
+## Why it's worth it
+
+!!! tip "One source of truth"
+    The OpenAPI document is generated from the same code that handles requests, so it
+    can't describe a parameter that doesn't exist or miss one that does. Change a type
+    and the schema changes; rename an argument and the parameter is renamed. Reviewers
+    read one diff and the docs are always current.
+
+The document is generally useful too:
+
+- Browse and try your API in [Swagger UI](https://editor.swagger.io/), Redoc or Scalar.
+- Generate typed API clients for TypeScript, Python, Swift, Kotlin and more with
+  [OpenAPI Generator](https://openapi-generator.tech/).
+- Contract test, mock, and import into API gateways.
+
+The same metadata also powers the [MCP server](../mcp/README.md). Improving your OpenAPI
+descriptions improves the tools your AI agents see.
+
+## In this section
+
+- [Describing routes](descriptions.md): doc comments, parameters, headers, request
+  bodies and responses.
+- [Schemas](schemas.md): how types become JSON schema, and how to refine it.
+- [Generating and serving](generating.md): the CLI, Docker builds, serving the
+  document, client generation and troubleshooting.
