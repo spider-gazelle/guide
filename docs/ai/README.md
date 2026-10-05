@@ -1,6 +1,6 @@
 # Agent reference
 
-A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.3) for AI coding
+A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.4) for AI coding
 agents and experienced developers. Paste it into an agent's context, or point the agent at
 [`/llms.txt`](https://spider-gazelle.net/llms.txt) (an index of the site) or
 [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) (the whole site as Markdown).
@@ -118,6 +118,9 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
 - Tool calls run the real route in-process, with the same filters and the same auth.
   `Authorization`, `Cookie` and `X-API-Key` are forwarded.
 - Auth is optional: `auth_probe = "/users/current"`, plus `resource_metadata` for OAuth.
+- Tool results are `{status, headers, body}` (text and `structuredContent`). Headers
+  matching `excluded_response_headers` (noise, cookies, credentials, transport) are left
+  out, so return pagination as headers (`Link`, `X-Total-Count`) or in the body.
 
 ## Testing
 

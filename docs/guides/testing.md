@@ -226,7 +226,7 @@ describe "MCP server" do
     tools.should contain "welcome_api"
 
     result = rpc.call("tools/call", JSON.parse(%({"name": "welcome_api", "arguments": {"example": 42}})))
-    result["structuredContent"].should eq({"result" => 42})
+    result["structuredContent"].should eq({"status" => 200, "body" => {"result" => 42}})
   end
 end
 ```

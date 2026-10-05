@@ -21,6 +21,7 @@ end
 | `session_timeout` | `30.minutes` | idle sessions are discarded |
 | `allowed_origins` | `[]` | browser origins allowed in addition to same-origin. `"*"` allows any |
 | `forward_headers` | `["Authorization", "Cookie", "X-API-Key"]` | request headers copied onto tool calls and prompts |
+| `excluded_response_headers` | noise, credentials, transport and browser policy headers | response headers left out of [tool results](#tool-results), matched case-insensitively. A trailing `*` matches a prefix |
 
 ## Authentication
 
@@ -56,12 +57,47 @@ Authentication is optional and off by default. It's enabled when `auth_probe`,
   process. Deployments with multiple instances need sticky sessions.
 - **`Origin` headers:** must be same-origin or listed in `allowed_origins`, which
   protects against DNS rebinding.
-- **Tool results:** contain the response body as text. A JSON object response is also
-  returned as `structuredContent`. Responses with a status of 400 or above set `isError`
-  (except a `401` when authentication is enabled, which challenges the client to sign in
-  again).
 - **Unhandled exceptions:** are logged and returned as a generic `500` tool error.
   `Server.before` handlers (such as `ErrorHandler`) don't run for in-process tool calls.
+
+## Tool results
+
+A tool call returns the route's response as `{status, headers, body}`. The same JSON is
+the text content (which most clients give the model) and `structuredContent`:
+
+```json
+{
+  "status": 200,
+  "headers": {"X-Total-Count": "120", "Link": "</api/users?page=2>; rel=\"next\""},
+  "body": [{"id": 1, "name": "Steve"}]
+}
+```
+
+- **`status`:** the HTTP status code.
+- **`headers`:** the response headers, minus those matching `excluded_response_headers`.
+  Left out when there are none. This is how the model sees pagination (`Link`,
+  `X-Total-Count`, `Content-Range`), `Location` after a create, `Retry-After` and `ETag`.
+- **`body`:** the parsed JSON, or the text of any other response. Left out when empty.
+- **Errors:** a status of 400 or above sets `isError`, and the error body is returned in
+  the same shape. A `401` when authentication is enabled challenges the client to sign in
+  again instead.
+- **Images and audio:** returned as an `image` or `audio` content block, followed by the
+  envelope without a body.
+
+By default these headers are excluded:
+
+| Kind | Headers |
+|---|---|
+| Noise | `Date`, `Content-Length`, `X-Request-ID`, `Content-Type`, `Server`, `Vary`, `Cache-Control`, `Pragma`, `Expires`, `Alt-Svc` |
+| Credentials | `Set-Cookie`, `Cookie`, `Authorization`, `WWW-Authenticate`, `Proxy-*` |
+| Transport | `Connection`, `Keep-Alive`, `Transfer-Encoding`, `Content-Encoding`, `Trailer`, `Upgrade` |
+| Browser policy | `Strict-Transport-Security`, `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Access-Control-*` |
+
+Add to the list, rather than replacing it, so credentials stay excluded:
+
+```crystal
+ActionController::MCPServer.excluded_response_headers += ["X-Runtime", "X-Internal-*"]
+```
 
 ## See also
 
