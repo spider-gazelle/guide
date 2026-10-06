@@ -1,6 +1,6 @@
 # Agent reference
 
-A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.6) for AI coding
+A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.7) for AI coding
 agents and experienced developers. Paste it into an agent's context, or point the agent at
 [`/llms.txt`](https://spider-gazelle.net/llms.txt) (an index of the site) or
 [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) (the whole site as Markdown).
@@ -109,6 +109,7 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
 @[AC::MCP(hide: true)]            # exclude a route/controller
 @[AC::MCP(root: true)]            # available without opening the toolbox
 @[AC::MCP(read_only: false)]      # a GET with side effects (true: a POST that only reads)
+@[AC::MCP(endpoint: true)]        # class only: also its own MCP server at <base>/mcp, base path params bound from the URL
 @[AC::MCP(prompt: true)]          # a prompt; must return String or Array(AC::PromptMessage)
 ```
 

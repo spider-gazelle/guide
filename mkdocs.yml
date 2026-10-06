@@ -91,6 +91,7 @@ plugins:
           - mcp/README.md
           - mcp/setup.md
           - mcp/prompts.md
+          - mcp/endpoints.md
           - mcp/authentication.md
           - mcp/configuration.md
         Deployment:

@@ -8,6 +8,7 @@
 | `root: true` | controllers or methods | always available, without opening the toolbox |
 | `hide: true` | controllers or methods | not exposed over MCP |
 | `read_only: Bool` | controllers or methods | whether a tool only reads data. Defaults to `true` for GET routes |
+| `endpoint: true` | controllers | also serves the controller as its own MCP server, see [controller endpoints](endpoints.md) |
 
 On a controller, `root`, `hide` and `read_only` apply to every route and prompt in it. They aren't
 inherited by subclasses, so annotate each controller. A method level annotation takes

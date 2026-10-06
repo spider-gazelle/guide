@@ -19,6 +19,7 @@
 * [MCP](mcp/README.md)
     * [Setup](mcp/setup.md)
     * [Prompts and visibility](mcp/prompts.md)
+    * [Controller endpoints](mcp/endpoints.md)
     * [Authentication](mcp/authentication.md)
     * [Configuration](mcp/configuration.md)
 * [Deployment](deployment/README.md)
