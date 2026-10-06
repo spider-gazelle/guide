@@ -33,16 +33,22 @@ Large APIs have hundreds of routes, and listing them all would fill the model's 
 before it does any work. Spider-Gazelle uses **progressive disclosure** instead:
 
 - **Toolboxes:** each controller is a toolbox, described by the controller's doc comment.
-- **Starting tools:** a session starts with just three tools:
+- **Starting tools:** a session starts with just four tools:
 
   | Tool | Purpose |
   |---|---|
   | `list_toolboxes` | lists the toolboxes, their descriptions, and tool and prompt counts |
-  | `open_toolbox(name)` | adds a toolbox's tools and prompts to the session |
+  | `open_toolbox(name)` | adds a toolbox's tools and prompts to the session, returning the tool definitions |
   | `close_toolbox(name)` | removes them again |
+  | `call_tool(name, arguments)` | runs a tool from an open toolbox |
 
 - **Loading on demand:** the model opens only the toolboxes it needs. The client is
   notified (`tools/list_changed`) and refreshes its tool list.
+- **Clients that don't refresh:** some clients (currently including Claude and ChatGPT)
+  ignore `tools/list_changed`, so opened tools never appear. `open_toolbox` also returns
+  each tool's name, description and input schema, and the model runs them through
+  `call_tool`. Proxied calls behave exactly like direct ones. Turn it off with
+  `tool_proxy = false` once your clients support `list_changed`.
 - **Root items:** anything marked `root: true` is always available without opening a
   toolbox. Use it for the few tools and prompts most sessions need.
 

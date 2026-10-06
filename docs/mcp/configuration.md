@@ -7,6 +7,8 @@ All options are class properties on `ActionController::MCPServer`, usually set i
 ActionController::MCPServer.tap do |mcp|
   mcp.server_name = "my-app"
   mcp.server_version = "1.0.0"
+  # describe your domain, then how to use toolboxes (which mentions call_tool when enabled)
+  mcp.instructions = "Manages meeting rooms and bookings.\n\n#{mcp.toolbox_instructions}"
 end
 ```
 
@@ -16,7 +18,8 @@ end
 |---|---|---|
 | `server_name` | `"action-controller"` | reported to clients on `initialize` |
 | `server_version` | `"1.0.0"` | reported to clients on `initialize` |
-| `instructions` | toolbox usage guidance | text given to the model on `initialize`. Describe your domain here |
+| `instructions` | `nil` (`toolbox_instructions`) | text given to the model on `initialize`. Describe your domain here and append `toolbox_instructions`. `""` sends none |
+| `tool_proxy` | `true` | adds the `call_tool` meta tool, for clients that ignore `tools/list_changed` |
 | `description_path` | `"mcp.yml"` | the generated tool descriptions, relative to the working directory |
 | `session_timeout` | `30.minutes` | idle sessions are discarded |
 | `allowed_origins` | `[]` | browser origins allowed in addition to same-origin. `"*"` allows any |
