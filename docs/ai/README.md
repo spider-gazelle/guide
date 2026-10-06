@@ -1,6 +1,6 @@
 # Agent reference
 
-A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.5) for AI coding
+A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.6) for AI coding
 agents and experienced developers. Paste it into an agent's context, or point the agent at
 [`/llms.txt`](https://spider-gazelle.net/llms.txt) (an index of the site) or
 [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) (the whole site as Markdown).
@@ -108,6 +108,7 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
 
 @[AC::MCP(hide: true)]            # exclude a route/controller
 @[AC::MCP(root: true)]            # available without opening the toolbox
+@[AC::MCP(read_only: false)]      # a GET with side effects (true: a POST that only reads)
 @[AC::MCP(prompt: true)]          # a prompt; must return String or Array(AC::PromptMessage)
 ```
 
@@ -119,8 +120,9 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
   `Authorization`, `Cookie` and `X-API-Key` are forwarded.
 - Auth is optional: `auth_probe = "/users/current"`, plus `resource_metadata` for OAuth.
 - Meta tools: `list_toolboxes`, `open_toolbox` (returns tool definitions), `close_toolbox`
-  and `call_tool(name, arguments)`, a proxy for clients that ignore `tools/list_changed`
-  (`tool_proxy = false` disables it). Custom `instructions` should append
+  and two proxies for clients that ignore `tools/list_changed`: `call_read_only` (read only
+  tools, `readOnlyHint: true`) and `call_tool` (anything). `tool_proxy = false` disables them.
+  Read only = GET unless overridden with `read_only:`. Custom `instructions` should append
   `MCPServer.toolbox_instructions`.
 - Tool results are `{status, headers, body}` (text and `structuredContent`). Headers
   matching `excluded_response_headers` (noise, cookies, credentials, transport) are left
@@ -144,6 +146,7 @@ controller = Users.spec_instance(HTTP::Request.new("GET", "/"))   # unit test an
 | Generating docs from a deployed binary | generate at build time where the source and `crystal` are available |
 | An exposed route is unsafe for agents | `@[AC::MCP(hide: true)]` and protect it with filters |
 | Expecting `hide: true` to block access | it only hides the MCP tool; the HTTP route still works |
+| A GET route that changes data | mark it `@[AC::MCP(read_only: false)]`, or `call_read_only` runs it without confirmation |
 | No handler for `Param::MissingError` / `ValueError` | bad input becomes a `500`; add `@[AC::Route::Exception]` handlers in the base class |
 | Setting a cookie with `cookies["x"] = ...` | `cookies` is the request's; use `response.cookies << HTTP::Cookie.new(...)` |
 | `session["id"] = 42` (an `Int32`) | doesn't compile; store `42_i64` |

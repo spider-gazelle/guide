@@ -7,8 +7,9 @@
 | `prompt: true` | methods | the method is an MCP prompt rather than a route |
 | `root: true` | controllers or methods | always available, without opening the toolbox |
 | `hide: true` | controllers or methods | not exposed over MCP |
+| `read_only: Bool` | controllers or methods | whether a tool only reads data. Defaults to `true` for GET routes |
 
-On a controller, `root` and `hide` apply to every route and prompt in it. They aren't
+On a controller, `root`, `hide` and `read_only` apply to every route and prompt in it. They aren't
 inherited by subclasses, so annotate each controller. A method level annotation takes
 precedence, so you can hide a controller but expose one route:
 
@@ -132,6 +133,40 @@ end
     `hide: true` only removes a tool from the MCP listing; the HTTP route still works.
     Protect routes with [filters](../guides/filters.md) as usual. Tool calls run your
     filters too.
+
+## Read only tools
+
+A tool is read only if its route is a GET. Read only tools are hinted to clients
+(`readOnlyHint`), and clients that can't see opened tools run them through
+`call_read_only`, which ChatGPT, for example, runs without asking the user to confirm.
+Everything else goes through `call_tool`. See [how agents see your API](README.md#how-agents-see-your-api).
+
+Override it when the verb is misleading:
+
+```crystal
+class Reports < AC::Base
+  base "/reports"
+
+  # a search that takes its query in the body, it doesn't change anything
+  @[AC::MCP(read_only: true)]
+  @[AC::Route::POST("/search", body: :query)]
+  def search(query : ReportQuery) : Array(Report)
+    Report.search(query)
+  end
+
+  # generating a report is recorded and emails the owner
+  @[AC::MCP(read_only: false)]
+  @[AC::Route::GET("/:id/generate")]
+  def generate(id : Int64) : Report
+    Report.find!(id).generate!
+  end
+end
+```
+
+!!! warning "Mark GET routes with side effects"
+    `call_read_only` runs any read only tool without the client asking for
+    confirmation. If a GET route changes data, sends messages or runs commands, mark it
+    `read_only: false`.
 
 ## See also
 
