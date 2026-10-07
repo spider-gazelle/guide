@@ -1,4 +1,4 @@
-# Prompts and visibility
+# Annotation options
 
 `@[AC::MCP]` controls how a controller or method appears to MCP clients:
 
@@ -7,14 +7,16 @@
 | `prompt: true` | methods | the method is an MCP prompt rather than a route |
 | `root: true` | controllers or methods | always available, without opening the toolbox |
 | `hide: true` | controllers or methods | not exposed over MCP |
-| `read_only: Bool` | controllers or methods | whether a tool only reads data. Defaults to `true` for GET routes |
+| `title: "Book a room"` | methods | the tool or prompt's display name |
+| `behaviour: :read_only` | controllers or methods | what the tool does, see [behaviour](#behaviour) |
+| `visibility: :card` | controllers or methods | who can call the tool: `:model`, `:card` or both (the default) |
 | `endpoint: true` | controllers | also serves the controller as its own MCP server, see [controller endpoints](endpoints.md) |
 | `ui: "path.html"` | controllers or methods | renders an HTML card for the tool's results, see [UI cards](ui.md) |
-| `card_only: true` | controllers or methods | only cards can call the tool, it's hidden from the model |
 
-Tools with `ui:` or `card_only: true` are root items unless annotated `root: false`.
+Tools with `ui:` or `visibility: :card` are root items unless annotated `root: false`.
+Icons have their own annotation, see [icons](#icons).
 
-On a controller, `root`, `hide` and `read_only` apply to every route and prompt in it. They aren't
+On a controller, `root`, `hide`, `behaviour` and `visibility` apply to every route and prompt in it. They aren't
 inherited by subclasses, so annotate each controller. A method level annotation takes
 precedence, so you can hide a controller but expose one route:
 
@@ -139,28 +141,36 @@ end
     Protect routes with [filters](../guides/filters.md) as usual. Tool calls run your
     filters too.
 
-## Read only tools
+## Behaviour
 
-A tool is read only if its route is a GET. Read only tools are hinted to clients
-(`readOnlyHint`), and clients that can't see opened tools run them through
-`call_read_only`, which ChatGPT, for example, runs without asking the user to confirm.
-Everything else goes through `call_tool`. See [how agents see your API](README.md#how-agents-see-your-api).
+Hosts use a tool's behaviour to decide what to confirm with the user. It's inferred from
+the HTTP verb:
 
-Override it when the verb is misleading:
+| Verb | Behaviour |
+|---|---|
+| GET | `:read_only` |
+| PUT | `:idempotent` |
+| DELETE | `[:destructive, :idempotent]` |
+| POST, PATCH | none |
+
+Set `behaviour:` when the verb is misleading. It's a symbol or an array of `:read_only`,
+`:additive`, `:destructive`, `:idempotent`, `:open_world` and `:closed_world`, and it
+replaces the inferred behaviour. Contradictions, such as `:read_only` with
+`:destructive`, are compile errors.
 
 ```crystal
 class Reports < AC::Base
   base "/reports"
 
   # a search that takes its query in the body, it doesn't change anything
-  @[AC::MCP(read_only: true)]
+  @[AC::MCP(behaviour: :read_only)]
   @[AC::Route::POST("/search", body: :query)]
   def search(query : ReportQuery) : Array(Report)
     Report.search(query)
   end
 
   # generating a report is recorded and emails the owner
-  @[AC::MCP(read_only: false)]
+  @[AC::MCP(behaviour: [:additive, :open_world])]
   @[AC::Route::GET("/:id/generate")]
   def generate(id : Int64) : Report
     Report.find!(id).generate!
@@ -168,10 +178,51 @@ class Reports < AC::Base
 end
 ```
 
+| Behaviour | Hint sent to the host |
+|---|---|
+| `:read_only` | `readOnlyHint: true`, otherwise `false` |
+| `:destructive` / `:additive` | `destructiveHint: true` / `false` |
+| `:idempotent` | `idempotentHint: true` |
+| `:open_world` / `:closed_world` | `openWorldHint: true` / `false`, whether it reaches outside your system |
+
+Clients that can't see opened tools run read only tools through `call_read_only`, which
+ChatGPT, for example, runs without asking the user to confirm. Everything else goes
+through `call_tool`. See [how agents see your API](README.md#how-agents-see-your-api).
+
 !!! warning "Mark GET routes with side effects"
     `call_read_only` runs any read only tool without the client asking for
-    confirmation. If a GET route changes data, sends messages or runs commands, mark it
-    `read_only: false`.
+    confirmation. If a GET route changes data, sends messages or runs commands, give it a
+    `behaviour:`, such as `[:additive, :open_world]`.
+
+## Titles
+
+Tools and prompts are named `<toolbox>_<method>`. Give them a display name with `title:`,
+which hosts show instead:
+
+```crystal
+@[AC::MCP(title: "Book a room")]
+@[AC::Route::POST("/")]
+def create(booking : Booking) : Booking
+```
+
+## Icons
+
+Add icons with `@[AC::Icon]`, repeated for different sizes or themes:
+
+```crystal
+@[AC::Icon(src: "icons/book.svg", sizes: ["any"])]
+@[AC::Icon(src: "icons/book-dark.svg", sizes: ["any"], theme: "dark")]
+@[AC::Route::POST("/")]
+def create(booking : Booking) : Booking
+```
+
+- **`src`:** `https:` and `data:` URLs are sent as is. A file in the
+  [UI folder](ui.md) (`ui_base`) is sent as a `data:` URL. Anything else is a path on the
+  current host, `https://<host>/icons/book.svg`.
+- **Other arguments** (`sizes`, `theme`, `mimeType`) are passed through as is.
+- **On a controller,** icons are the default for its tools and prompts, and the icon of
+  its toolbox and its [endpoint](endpoints.md) server.
+- **The server's icon:** `ActionController::MCPServer.icon "icons/logo.svg", sizes: ["any"]`.
 
 ## See also
 

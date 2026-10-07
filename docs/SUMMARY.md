@@ -18,7 +18,7 @@
     * [Generating and serving](openapi/generating.md)
 * [MCP](mcp/README.md)
     * [Setup](mcp/setup.md)
-    * [Prompts and visibility](mcp/prompts.md)
+    * [Annotation options](mcp/prompts.md)
     * [Controller endpoints](mcp/endpoints.md)
     * [UI cards](mcp/ui.md)
     * [Authentication](mcp/authentication.md)

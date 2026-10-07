@@ -114,23 +114,24 @@ or for a single card, with a `.meta.json` file next to it, which replaces the de
 
 ## Tools only cards call
 
-Mark tools a card uses, but the model shouldn't, with `card_only: true`. Hosts hide them
+Mark tools a card uses, but the model shouldn't, with `visibility: :card`. Hosts hide them
 from the model:
 
 ```crystal
 # Checks in to a booking
-@[AC::MCP(card_only: true)]
+@[AC::MCP(visibility: :card)]
 @[AC::Route::POST("/:id/check_in")]
 def check_in(id : String) : Booking
 ```
 
-They're still ordinary routes, protected by your filters.
+They're still ordinary routes, protected by your filters. The opposite, `visibility: :model`, stops cards calling a
+tool. Hosts enforce visibility, so it isn't access control.
 
 ## Things to know
 
 - **Root by default:** hosts only render cards for, and let cards call, the tools in
   their tool list, and some clients don't refresh their tools when a toolbox opens. So
-  tools with `ui:` or `card_only: true` are root items, always listed, unless you annotate
+  tools with `ui:` or `visibility: :card` are root items, always listed, unless you annotate
   them `root: false`.
 - **Caching:** hosts cache cards by URI, so tools advertise
   `ui://bookings/card.html?v=<content hash>`. Deploying a changed card changes its URI.

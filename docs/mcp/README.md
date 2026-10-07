@@ -48,7 +48,7 @@ before it does any work. Spider-Gazelle uses **progressive disclosure** instead:
 - **Clients that don't refresh:** some clients (currently including Claude and ChatGPT)
   ignore `tools/list_changed`, so opened tools never appear. `open_toolbox` also returns
   each tool's name, description, input schema and the proxy to run it with:
-  `call_read_only` for [read only tools](prompts.md#read-only-tools), which clients can
+  `call_read_only` for [read only tools](prompts.md#behaviour), which clients can
   run without asking for confirmation, and `call_tool` for the rest. Proxied calls behave
   exactly like direct ones. Turn them off with `tool_proxy = false` once your clients
   support `list_changed`.
@@ -101,7 +101,7 @@ clients, see [Authentication](authentication.md).
 
 - [Setup](setup.md): mounting the server, generating `mcp.yml`, connecting clients and
   testing.
-- [Prompts and visibility](prompts.md): prompts, `root`, and `hide`.
+- [Annotation options](prompts.md): prompts, `root`, `hide`, behaviour, titles and icons.
 - [Authentication](authentication.md): API keys, and OAuth sign-in with multi_auth and
   authly.
 - [Configuration](configuration.md): every option, and transport details.

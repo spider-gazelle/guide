@@ -1,6 +1,6 @@
 # Agent reference
 
-A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.11) for AI coding
+A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.14) for AI coding
 agents and experienced developers. Paste it into an agent's context, or point the agent at
 [`/llms.txt`](https://spider-gazelle.net/llms.txt) (an index of the site) or
 [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) (the whole site as Markdown).
@@ -118,10 +118,12 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
 
 @[AC::MCP(hide: true)]            # exclude a route/controller
 @[AC::MCP(root: true)]            # available without opening the toolbox
-@[AC::MCP(read_only: false)]      # a GET with side effects (true: a POST that only reads)
+@[AC::MCP(behaviour: [:additive, :open_world])] # replaces the verb's: :read_only :additive :destructive :idempotent :open_world :closed_world
+@[AC::MCP(title: "Book a room")]  # display name
+@[AC::Icon(src: "icons/x.svg", sizes: ["any"])]  # repeatable; https:/data: as is, ui_base file -> data:, else https://<host>/src
 @[AC::MCP(endpoint: true)]        # class only: also its own MCP server at <base>/mcp, base path params bound from the URL
 @[AC::MCP(ui: "x/card.html")]     # MCP Apps card in MCPServer.ui_base, rendered for the results (root by default)
-@[AC::MCP(card_only: true)]        # only cards call it, hidden from the model (root by default)
+@[AC::MCP(visibility: :card)]     # only cards call it, hidden from the model (root by default); :model = cards can't
 @[AC::MCP(prompt: true)]          # a prompt; must return String or Array(AC::PromptMessage)
 ```
 
@@ -135,7 +137,7 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
 - Meta tools: `list_toolboxes`, `open_toolbox` (returns tool definitions), `close_toolbox`
   and two proxies for clients that ignore `tools/list_changed`: `call_read_only` (read only
   tools, `readOnlyHint: true`) and `call_tool` (anything). `tool_proxy = false` disables them.
-  Read only = GET unless overridden with `read_only:`. Custom `instructions` should append
+  Read only = GET unless overridden with `behaviour:`. Custom `instructions` should append
   `MCPServer.toolbox_instructions`.
 - Tool results are `{status, headers, body}` (text and `structuredContent`). Headers
   matching `excluded_response_headers` (noise, cookies, credentials, transport) are left

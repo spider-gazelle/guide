@@ -46,7 +46,8 @@ client connecting to `/rooms/boardroom/mcp` sees two tools, `state()` and
   clients that ignore `tools/list_changed`.
 - **Visibility:** an endpoint controller is hidden from the global server. Annotate it
   `@[AC::MCP(endpoint: true, hide: false)]` to keep it there too. A method annotated
-  `hide: true` is hidden from both. `read_only:` and `prompt: true` work as usual.
+  `hide: true` is hidden from both. `behaviour:`, `title:`, icons and `prompt: true` work as usual, and the
+  controller's icons are the endpoint server's icon.
 - **Descriptions:** `write_description` includes the endpoints in `mcp.yml`. If a
   deployed `mcp.yml` is missing an endpoint, the description is regenerated without
   comments and a warning is logged.
@@ -91,6 +92,6 @@ assistant endpoint.
 ## See also
 
 - [MCP overview](README.md)
-- [Prompts and visibility](prompts.md)
+- [Annotation options](prompts.md)
 - [Authentication](authentication.md)
 - [Configuration](configuration.md)
