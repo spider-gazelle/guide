@@ -102,9 +102,9 @@ end
   (nested too). Nilable refs are `allOf` + `type` + `nullable`, and self-referencing
   types work. Component names come from the full type name: `Shop::Item` → `Shop.Item`,
   `Page(Shop::Item)` → `Page-oShop.Item-c`.
-- Optional (`?:`) and glob (`*:`) segments are matched after the required ones, wherever
-  they're written; the document lists a path per matched route (`<operationId>_without_<x>`
-  for the shorter ones). `Param::Info` examples are written as in a URL and typed by the
+- Optional (`?:`) segments match where they're written, one after another, and a glob
+  (`*:`) may be left off; the document lists a path per matched route
+  (`<operationId>_without_<x>` for the shorter ones). `Param::Info` examples are written as in a URL and typed by the
   schema; array query params are comma separated (`explode: false`).
 
 ## MCP

@@ -199,11 +199,9 @@ A method argument receives the path parameter with the same name. An optional
 parameter's argument must be nilable or have a default. Path parameters take
 precedence over query parameters with the same name.
 
-!!! warning "Optional segments go at the end"
-    The router matches optional segments after the required ones, wherever they're
-    written: `/users/?:user_id/groups` matches `/users/groups` and `/users/groups/5`, not
-    `/users/5/groups`. Write optional segments (and the glob) last so the route reads the
-    way it matches. The OpenAPI document and MCP tools list them in matching order.
+Optional segments match where they're written, one after another:
+`/users/?:user_id/groups/?:group_id` matches `/users/groups`, `/users/5/groups` and
+`/users/5/groups/9`. The OpenAPI document lists each of these paths.
 
 Paths without parameters match with or without a trailing `/`.
 
@@ -227,10 +225,10 @@ class Groups < AC::Base
 end
 ```
 
-When the paths differ only by a trailing segment, `?:name` is simpler:
-`/groups/?:user_id` matches both `/groups` and `/groups/5`. Stacked annotations suit
-paths with different shapes, such as `/users/:user_id/groups` and `/groups` above, or
-routes that need different options such as `config:`.
+When the paths differ only by an optional segment, `?:name` is simpler:
+`/users/?:user_id/groups` matches both `/users/groups` and `/users/5/groups`. Stacked
+annotations suit paths with different shapes, or routes that need different options
+such as `config:`.
 
 - Each annotation is a separate operation in the OpenAPI document.
 - In [MCP](../mcp/README.md), a method is a single tool however many routes it has. The
