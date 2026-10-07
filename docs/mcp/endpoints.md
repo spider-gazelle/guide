@@ -36,7 +36,7 @@ client connecting to `/rooms/boardroom/mcp` sees two tools, `state()` and
 | URL | `/mcp` (configurable) | `<base>/mcp`, or `<base>/sub/path` with `endpoint: "/sub/path"` |
 | Tools | toolboxes, opened on demand, plus the proxies | every route and prompt of the controller, listed directly |
 | Tool names | `<toolbox>_<method>` | `<method>` |
-| Instructions | `MCPServer.instructions` | the controller's doc comment |
+| Instructions | `MCPServer.instructions` | the controller's doc comment, or its [`instructions` method](#dynamic-instructions) |
 | Server name | `MCPServer.server_name` | the controller's toolbox name, i.e. `room` |
 
 - **Bound path params:** path params in the base path (`:room_id`) are taken from the
@@ -51,6 +51,36 @@ client connecting to `/rooms/boardroom/mcp` sees two tools, `state()` and
 - **Descriptions:** `write_description` includes the endpoints in `mcp.yml`. If a
   deployed `mcp.yml` is missing an endpoint, the description is regenerated without
   comments and a warning is logged.
+
+## Dynamic instructions
+
+The instructions tell the model what it's working with. To build them for each session,
+for example from the room's name and features, define an `instructions` method on the
+endpoint controller:
+
+```crystal
+@[AC::MCP(endpoint: true)]
+class Room < AC::Base
+  base "/rooms/:room_id"
+
+  # runs like a route when a client connects
+  def instructions(room_id : String) : String
+    room = RoomModel.find!(room_id)
+    "You control #{room.name}, which has #{room.features.join(", ")}. Look up its state before changing it."
+  end
+end
+```
+
+- **It runs like a route:** before filters run first, so authentication, `current_user`
+  and resource lookups work, and path params can be arguments.
+- **It's internal:** it isn't an HTTP route, a tool or a prompt.
+- **Failures stop the connection:** if it doesn't succeed, for example a filter responds
+  403 or the room doesn't exist, `initialize` returns the error and no session is
+  created. A 401 challenges the client to sign in again.
+- **It must return a `String`:** this is checked at compile time. Return an empty string
+  for no instructions.
+
+Without the method, the controller's doc comment is used.
 
 ## Access control
 
