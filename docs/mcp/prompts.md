@@ -16,7 +16,8 @@
 Tools with `ui:` or `visibility: :card` are root items unless annotated `root: false`.
 Icons have their own annotation, see [icons](#icons).
 
-On a controller, `root`, `hide`, `behaviour` and `visibility` apply to every route and prompt in it. They aren't
+On a controller, `root` and `hide` apply to every route and prompt in it, and `behaviour`,
+`visibility` and `ui` to every route. `title:` is only read on methods. They aren't
 inherited by subclasses, so annotate each controller. A method level annotation takes
 precedence, so you can hide a controller but expose one route:
 
@@ -194,6 +195,20 @@ through `call_tool`. See [how agents see your API](README.md#how-agents-see-your
     confirmation. If a GET route changes data, sends messages or runs commands, give it a
     `behaviour:`, such as `[:additive, :open_world]`.
 
+## Visibility
+
+In hosts that support [UI cards](ui.md), `visibility:` controls who can call a tool:
+
+| Visibility | Model | Cards |
+|---|---|---|
+| both (the default) | yes | yes |
+| `:card` | no, hidden from the model | yes |
+| `:model` | yes | no |
+
+Card only tools are root items by default, so cards can call them in any client, and the
+`call_tool` and `call_read_only` proxies refuse them. It isn't access control: a client can
+still call them by name, so protect them with filters like any other route.
+
 ## Titles
 
 Tools and prompts are named `<toolbox>_<method>`. Give them a display name with `title:`,
@@ -223,6 +238,18 @@ def create(booking : Booking) : Booking
 - **On a controller,** icons are the default for its tools and prompts, and the icon of
   its toolbox and its [endpoint](endpoints.md) server.
 - **The server's icon:** `ActionController::MCPServer.icon "icons/logo.svg", sizes: ["any"]`.
+
+## Upgrading from earlier releases
+
+These options were replaced in action-controller 8.14, and the old names are compile errors:
+
+| Before | Now |
+|---|---|
+| `read_only: true` | `behaviour: :read_only` |
+| `read_only: false` | a `behaviour:` without `:read_only`, e.g. `[:additive]` |
+| `card_only: true` / `app_only: true` | `visibility: :card` |
+
+Regenerate `mcp.yml` after upgrading.
 
 ## See also
 

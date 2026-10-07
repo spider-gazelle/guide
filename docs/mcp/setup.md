@@ -35,7 +35,9 @@ server.run
 
 `mount` registers `POST`, `GET` and `DELETE` handlers at the path for the
 [Streamable HTTP](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#streamable-http)
-transport. In the template the path comes from `SG_MCP_PATH`; set it to an empty string
+transport, the OAuth protected resource metadata at
+`/.well-known/oauth-protected-resource<path>`, and any
+[controller endpoints](endpoints.md) (`endpoints: false` skips them). In the template the path comes from `SG_MCP_PATH`; set it to an empty string
 to disable MCP.
 
 ## 3. Generate the tool descriptions

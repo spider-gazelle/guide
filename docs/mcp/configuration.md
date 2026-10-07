@@ -45,7 +45,10 @@ Authentication is optional and off by default. It's enabled when `auth_probe`,
 | Method | Purpose |
 |---|---|
 | `mount(router, path = "/mcp", endpoints = true)` | registers the endpoint (and the protected resource metadata), plus the [controller endpoints](endpoints.md) |
+| `mount_endpoints(router)` | registers just the [controller endpoints](endpoints.md) |
 | `endpoint_paths` | the path templates of the controller endpoints |
+| `icon(src, **fields)` | adds an icon for the global server, see [icons](prompts.md#icons) |
+| `toolbox_instructions` | the toolbox usage instructions, to append to your own `instructions` |
 | `write_description(path)` | generates `mcp.yml` from the code. Needs the source code |
 | `generate_description` | the same, returning the `Description` |
 | `description=` | replaces the loaded description (`nil` reloads it), useful in specs |

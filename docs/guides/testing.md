@@ -242,7 +242,7 @@ end
   still work but have no descriptions, and a warning is logged. Generate it with
   `crystal run src/app.cr -- --mcp=mcp.yml` if your specs check descriptions.
 
-The template's spec also checks [prompts](../mcp/README.md) with `prompts/list` and
+The template's spec also checks [prompts](../mcp/prompts.md#prompts) with `prompts/list` and
 `prompts/get`, and that routes hidden with `@[AC::MCP(hide: true)]` aren't listed.
 
 ## Running specs

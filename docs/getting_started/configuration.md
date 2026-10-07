@@ -48,6 +48,7 @@ the port, host and worker count.
 | `COOKIE_SESSION_SECRET` | a fixed example value | Secret that encrypts and signs the session cookie. Must be at least 32 bytes. |
 | `SG_MCP_PATH` | `/mcp` | Path of the [MCP](../mcp/README.md) endpoint. An empty string disables it. |
 | `SG_MCP_DESCRIPTION` | `mcp.yml` | Location of the generated MCP tool descriptions. |
+| `SG_MCP_UI` | `./cards` | Folder of [UI cards](../mcp/ui.md), HTML rendered by MCP clients for tool results. |
 
 !!! warning
     The default `COOKIE_SESSION_SECRET` is in the public template, so anyone can
@@ -157,6 +158,10 @@ ActionController::MCPServer.tap do |mcp|
   mcp.server_name = NAME
   mcp.server_version = VERSION
   mcp.description_path = ENV["SG_MCP_DESCRIPTION"]? || "mcp.yml"
+
+  # UI cards, `@[AC::MCP(ui: "welcome/result.html")]` renders cards/welcome/result.html
+  mcp.ui_base = MCP_UI_PATH if File.directory?(MCP_UI_PATH)
+  mcp.ui_meta = ActionController::MCPServer::UIMeta.new(prefers_border: true)
 end
 ```
 

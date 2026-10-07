@@ -133,10 +133,12 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
 - WebSocket, `OPTIONS` and DSL routes aren't exposed as tools.
 - Tool calls run the real route in-process, with the same filters and the same auth.
   `Authorization`, `Cookie` and `X-API-Key` are forwarded.
-- Auth is optional: `auth_probe = "/users/current"`, plus `resource_metadata` for OAuth.
+- Auth is optional: `auth_probe = "/users/current"` (or a custom `authenticator`), plus
+  `resource_metadata` for OAuth.
 - Meta tools: `list_toolboxes`, `open_toolbox` (returns tool definitions), `close_toolbox`
   and two proxies for clients that ignore `tools/list_changed`: `call_read_only` (read only
-  tools, `readOnlyHint: true`) and `call_tool` (anything). `tool_proxy = false` disables them.
+  tools, `readOnlyHint: true`) and `call_tool` (any tool the model can see; `visibility: :card`
+  tools are refused by both). `tool_proxy = false` disables them.
   Read only = GET unless overridden with `behaviour:`. Custom `instructions` should append
   `MCPServer.toolbox_instructions`.
 - Tool results are `{status, headers, body}` (text and `structuredContent`). Headers
@@ -161,7 +163,7 @@ controller = Users.spec_instance(HTTP::Request.new("GET", "/"))   # unit test an
 | Generating docs from a deployed binary | generate at build time where the source and `crystal` are available |
 | An exposed route is unsafe for agents | `@[AC::MCP(hide: true)]` and protect it with filters |
 | Expecting `hide: true` to block access | it only hides the MCP tool; the HTTP route still works |
-| A GET route that changes data | mark it `@[AC::MCP(read_only: false)]`, or `call_read_only` runs it without confirmation |
+| A GET route that changes data | give it a `behaviour:`, e.g. `@[AC::MCP(behaviour: [:additive, :open_world])]`, or `call_read_only` runs it without confirmation |
 | No handler for `Param::MissingError` / `ValueError` | bad input becomes a `500`; add `@[AC::Route::Exception]` handlers in the base class |
 | Setting a cookie with `cookies["x"] = ...` | `cookies` is the request's; use `response.cookies << HTTP::Cookie.new(...)` |
 | `session["id"] = 42` (an `Int32`) | doesn't compile; store `42_i64` |

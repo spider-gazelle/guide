@@ -116,7 +116,8 @@ A small notes API that MCP clients sign in to with GitHub. It's one app that is 
 **resource server** (the API and `/mcp`) and the **authorization server**.
 
 !!! success "Tested"
-    This example was built and tested end to end with action-controller 8.3.2, authly
+    This example was built and tested end to end with action-controller 8.3.2 (the MCP
+    authentication options it uses are unchanged in 8.14), authly
     `master` (`3e96031`) and multi_auth `master` (`f1f60bf`). The test covered
     registration, sign-in, consent, PKCE token exchange, MCP calls with the token,
     refresh, and rejection of replayed codes, forged `state` and wrong verifiers.
@@ -144,7 +145,7 @@ A small notes API that MCP clients sign in to with GitHub. It's one app that is 
     dependencies:
       action-controller:
         github: spider-gazelle/action-controller
-        version: ~> 8.3
+        version: ~> 8.14
 
       # OAuth 2 authorization server library
       authly:

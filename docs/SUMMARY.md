@@ -37,6 +37,7 @@
         * [WebSocket](Route/WebSocket/index.md)
         * [Param info](Param/Info/index.md)
         * [MCP](MCP/index.md)
+        * [Icon](Icon/index.md)
     * Parameters
         * [Conversion](Route/Param/Conversion/index.md)
         * [Missing parameter](Route/Param/MissingError/index.md)
@@ -50,3 +51,5 @@
         * [MCPServer](MCPServer/index.md)
         * [Prompt messages](PromptMessage/index.md)
         * [Resource metadata](MCPServer/ResourceMetadata/index.md)
+        * [UI card settings](MCPServer/UIMeta/index.md)
+        * [UI card CSP](MCPServer/UICSP/index.md)

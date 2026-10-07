@@ -33,7 +33,7 @@ client connecting to `/rooms/boardroom/mcp` sees two tools, `state()` and
 
 | | Global server | Controller endpoint |
 |---|---|---|
-| URL | `/mcp` (configurable) | `<base>/mcp`, or `endpoint: "/sub/path"` |
+| URL | `/mcp` (configurable) | `<base>/mcp`, or `<base>/sub/path` with `endpoint: "/sub/path"` |
 | Tools | toolboxes, opened on demand, plus the proxies | every route and prompt of the controller, listed directly |
 | Tool names | `<toolbox>_<method>` | `<method>` |
 | Instructions | `MCPServer.instructions` | the controller's doc comment |
@@ -46,8 +46,8 @@ client connecting to `/rooms/boardroom/mcp` sees two tools, `state()` and
   clients that ignore `tools/list_changed`.
 - **Visibility:** an endpoint controller is hidden from the global server. Annotate it
   `@[AC::MCP(endpoint: true, hide: false)]` to keep it there too. A method annotated
-  `hide: true` is hidden from both. `behaviour:`, `title:`, icons and `prompt: true` work as usual, and the
-  controller's icons are the endpoint server's icon.
+  `hide: true` is hidden from both. `behaviour:`, `visibility:`, `title:`, `ui:`, icons and `prompt: true` work as
+  usual, and the controller's icons are the endpoint server's icon.
 - **Descriptions:** `write_description` includes the endpoints in `mcp.yml`. If a
   deployed `mcp.yml` is missing an endpoint, the description is regenerated without
   comments and a warning is logged.

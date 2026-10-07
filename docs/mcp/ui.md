@@ -124,8 +124,14 @@ from the model:
 def check_in(id : String) : Booking
 ```
 
-They're still ordinary routes, protected by your filters. The opposite, `visibility: :model`, stops cards calling a
-tool. Hosts enforce visibility, so it isn't access control.
+They're still ordinary routes, protected by your filters. The opposite,
+`visibility: :model`, stops cards calling a tool. Hosts enforce visibility, and the
+`call_tool` and `call_read_only` proxies refuse card only tools, but it isn't access
+control: a client can still call a tool by name. In the tool definition, `:card` is sent
+as the spec's `"app"` (`_meta.ui.visibility: ["app"]`).
+
+Card metadata is sent to every client. Hosts that support cards don't always advertise
+it, and hosts that don't support them ignore it and show the text result.
 
 ## Things to know
 

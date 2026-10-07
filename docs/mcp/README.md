@@ -33,15 +33,16 @@ Large APIs have hundreds of routes, and listing them all would fill the model's 
 before it does any work. Spider-Gazelle uses **progressive disclosure** instead:
 
 - **Toolboxes:** each controller is a toolbox, described by the controller's doc comment.
-- **Starting tools:** a session starts with just five tools:
+- **Starting tools:** a session starts with just five tools (three with
+  `tool_proxy = false`), plus any [root items](prompts.md):
 
   | Tool | Purpose |
   |---|---|
   | `list_toolboxes` | lists the toolboxes, their descriptions, and tool and prompt counts |
   | `open_toolbox(name)` | adds a toolbox's tools and prompts to the session, returning the tool definitions |
   | `close_toolbox(name)` | removes them again |
-  | `call_read_only(name, arguments)` | runs a read only tool from an open toolbox |
-  | `call_tool(name, arguments)` | runs any tool from an open toolbox |
+  | `call_read_only(name, arguments)` | runs a read only tool from an open toolbox, or a root tool |
+  | `call_tool(name, arguments)` | runs any tool from an open toolbox, or a root tool. Tools marked `visibility: :card` are refused by both proxies |
 
 - **Loading on demand:** the model opens only the toolboxes it needs. The client is
   notified (`tools/list_changed`) and refreshes its tool list.
@@ -101,7 +102,11 @@ clients, see [Authentication](authentication.md).
 
 - [Setup](setup.md): mounting the server, generating `mcp.yml`, connecting clients and
   testing.
-- [Annotation options](prompts.md): prompts, `root`, `hide`, behaviour, titles and icons.
+- [Annotation options](prompts.md): prompts, `root`, `hide`, behaviour, visibility,
+  titles and icons.
+- [Controller endpoints](endpoints.md): serving a controller as its own MCP server, such
+  as one per room or account.
+- [UI cards](ui.md): interactive HTML cards for tool results (MCP Apps).
 - [Authentication](authentication.md): API keys, and OAuth sign-in with multi_auth and
   authly.
 - [Configuration](configuration.md): every option, and transport details.
