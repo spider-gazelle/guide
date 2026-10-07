@@ -42,9 +42,12 @@ File.write("openapi.yml", docs.to_yaml)
 ```
 
 `title` and `version` are required. Any other
-[info object](https://spec.openapis.org/oas/v3.0.3#info-object) fields, such as
+[info object](https://spec.openapis.org/oas/v3.1.0#info-object) fields, such as
 `description`, `termsOfService` or `contact`, can be passed as named arguments. The result
 is a `NamedTuple`, so `.to_json` works too.
+
+The document is OpenAPI 3.1. Pass `openapi: "3.0.3"` for tools that only read 3.0. See
+[how 3.0 schemas differ](schemas.md#openapi-30).
 
 ## In Docker builds
 

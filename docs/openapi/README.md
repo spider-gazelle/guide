@@ -1,6 +1,6 @@
 # OpenAPI
 
-Spider-Gazelle generates an [OpenAPI 3](https://spec.openapis.org/oas/v3.0.3) description
+Spider-Gazelle generates an [OpenAPI 3.1](https://spec.openapis.org/oas/v3.1.0) description
 of your API from the code you already write: route annotations, method signatures and doc
 comments. There's no separate spec file to maintain.
 

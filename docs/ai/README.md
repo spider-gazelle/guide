@@ -1,6 +1,6 @@
 # Agent reference
 
-A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.9) for AI coding
+A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.10) for AI coding
 agents and experienced developers. Paste it into an agent's context, or point the agent at
 [`/llms.txt`](https://spider-gazelle.net/llms.txt) (an index of the site) or
 [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) (the whole site as Markdown).
@@ -93,13 +93,15 @@ end
 ## OpenAPI
 
 - `ActionController::OpenAPI.generate_open_api_docs(title:, version:, **info)` returns a
-  NamedTuple; call `.to_yaml` on it.
+  NamedTuple; call `.to_yaml` on it. It's OpenAPI 3.1 (JSON Schema 2020-12 schemas) by
+  default; pass `openapi: "3.0.3"` for 3.0 tooling.
 - It needs the source code and `crystal docs` (comments are extracted at generation
   time), so generate at build time: `./app --docs --file=openapi.yml`.
 - Only annotated routes are documented, not the DSL `get "/" do`. `OPTIONS` routes
   aren't documented either.
 - Every `JSON::Serializable` type and enum is one component, `$ref`'d wherever it's used
-  (nested too). Nilable refs are `allOf` + `type` + `nullable`, and self-referencing
+  (nested too). Nilable refs are `anyOf` with `{type: "null"}` (3.0.3: `allOf` + `type` +
+  `nullable`), and self-referencing
   types work. Component names come from the full type name: `Shop::Item` → `Shop.Item`,
   `Page(Shop::Item)` → `Page-oShop.Item-c`.
 - Optional (`?:`) segments match where they're written, one after another, and a glob

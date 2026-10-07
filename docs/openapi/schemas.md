@@ -19,7 +19,7 @@ so they always match your actual types.
 | `Array(T)`, `Set(T)`, `Tuple` | `array` |
 | `Hash(String, T)` | `object` with `additionalProperties` |
 | `NamedTuple`, `JSON::Serializable` | `object` with `properties` and `required` |
-| `A | B` | `anyOf`. A nilable `T?` is marked `nullable` |
+| `A | B` | `anyOf`. A nilable `T?` includes `{type: "null"}` |
 
 Enums and `JSON::Serializable` types are defined once as named components and referenced
 wherever they're used. See [how schemas appear in the document](#how-schemas-appear-in-the-document).
@@ -190,10 +190,9 @@ components:
         status:
           $ref: '#/components/schemas/Shop.Status'
         replaces:
-          allOf:
+          anyOf:
+          - type: "null"
           - $ref: '#/components/schemas/Shop.Order'
-          type: object
-          nullable: true
       required: [items, status]
       description: An order placed in the shop
     Shop.Item:
@@ -213,10 +212,8 @@ components:
 
 - **Nested types are referenced too.** `Shop::Item` only ever appears inside `Order`, and
   it's still a component of its own. The type's doc comment becomes its description.
-- **Nilable references** such as `replaces : Order?` are wrapped in `allOf`, with `type`
-  and `nullable` alongside. OpenAPI 3.0 ignores anything placed next to a bare `$ref`, and
-  only applies `nullable` when `type` is present. The optional `status` parameter is
-  wrapped the same way.
+- **Nilable references** such as `replaces : Order?` are an `anyOf` of the reference and
+  `{type: "null"}`. The optional `status` parameter is described the same way.
 - **Self-referencing types**, like `Order` above, work.
 - **Enums are referenced by type.** Two enums with the same members stay separate
   components.
@@ -239,6 +236,24 @@ a name:
 
 `::` becomes `.`. In generic types, `(`, `)`, `, ` and ` | ` become `-o`, `-c`, `-n` and
 `-p`. Any other character becomes `-u` followed by its six digit hex code.
+
+### OpenAPI 3.0
+
+The document is OpenAPI 3.1 by default, whose schemas are standard JSON Schema 2020-12.
+For tools that only read OpenAPI 3.0, ask for 3.0.3:
+
+```crystal
+ActionController::OpenAPI.generate_open_api_docs(title: "Shop", version: "1.0", openapi: "3.0.3")
+```
+
+OpenAPI 3.0 has its own dialect of JSON Schema, so a few things are written differently:
+
+| | 3.1 (default) | 3.0.3 |
+|---|---|---|
+| A nilable `T?` | `anyOf` with `{type: "null"}` | `nullable: true` |
+| A nilable or described reference | `anyOf` with `{type: "null"}`, or `$ref` beside `description` | `allOf: [$ref]` with `type`, `nullable` and `description` |
+| `Tuple(A, B)` | `prefixItems: [A, B]` | `items: {anyOf: [A, B]}` with `minItems`/`maxItems` |
+| `exclusive_minimum: 5` | `exclusiveMinimum: 5` | `minimum: 5, exclusiveMinimum: true` |
 
 ### MCP tools
 
