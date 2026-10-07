@@ -47,7 +47,7 @@ That produces a `GET /articles/{article_id}/comments` operation with:
 | Parameter schemas | argument types (`Int32`, `UUID`, enums, `Time`, ...) |
 | Request body | the `body:` argument's type, for each registered parser content type |
 | Responses | the return type, `status_code:` and `status:` maps, and your exception handlers |
-| Schemas | `JSON::Serializable` types via [json-schema](https://github.com/spider-gazelle/json-schema), with `@[JSON::Field]` hints |
+| Schemas | `JSON::Serializable` types and enums via [json-schema](https://github.com/spider-gazelle/json-schema), with `@[JSON::Field]` hints. Each is defined once under `components/schemas`, and referenced with `$ref` wherever it's used, including when nested |
 | Filter parameters | arguments of the filters that apply to the route |
 
 ## Why it's worth it

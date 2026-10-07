@@ -21,6 +21,9 @@ so they always match your actual types.
 | `NamedTuple`, `JSON::Serializable` | `object` with `properties` and `required` |
 | `A | B` | `anyOf`. A nilable `T?` is marked `nullable` |
 
+Enums and `JSON::Serializable` types are defined once as named components and referenced
+wherever they're used. See [how schemas appear in the document](#how-schemas-appear-in-the-document).
+
 ## Your models
 
 Include `JSON::Serializable` and the schema follows your class. Required properties are
@@ -107,14 +110,141 @@ struct Money
 end
 ```
 
+A type like `Money` is inlined wherever it's used. If a `JSON::Serializable` type or
+an enum defines `self.json_schema`, it still gets its own component (see below), and
+that method provides the definition.
+
 ## How schemas appear in the document
 
-Request and response types are listed once under `components/schemas` and referenced
-with `$ref`, so shared models are described in one place. Parameter schemas are inlined.
+Every `JSON::Serializable` type and enum is defined once under `components/schemas`.
+Everywhere it's used, it's referenced with `$ref`: in request bodies, responses,
+parameters, and nested inside other types. Each model is described in one place, so
+client generators produce one named type per model rather than an anonymous copy at
+every use.
 
-In [MCP tools](../mcp/README.md), each tool's input schema is self-contained: the
-referenced schemas are included as `$defs`, and nullable types are expressed in standard
-JSON Schema.
+```crystal
+module Shop
+  # A line on an order
+  struct Item
+    include JSON::Serializable
+
+    getter sku : String
+    getter quantity : Int32
+  end
+
+  enum Status
+    Pending
+    Shipped
+  end
+
+  # An order placed in the shop
+  class Order
+    include JSON::Serializable
+
+    getter items : Array(Item)
+    getter status : Status
+    getter replaces : Order?
+  end
+
+  struct Page(T)
+    include JSON::Serializable
+
+    getter results : Array(T)
+    getter total : Int32
+  end
+end
+
+class Orders < AC::Base
+  base "/orders"
+
+  @[AC::Route::GET("/")]
+  def index(status : Shop::Status? = nil) : Shop::Page(Shop::Order)
+    raise NotImplementedError.new("load the orders")
+  end
+end
+```
+
+The generated components:
+
+```yaml
+components:
+  schemas:
+    Shop.Page-oShop.Order-c:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shop.Order'
+        total:
+          type: integer
+          format: Int32
+      required: [results, total]
+    Shop.Order:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shop.Item'
+        status:
+          $ref: '#/components/schemas/Shop.Status'
+        replaces:
+          allOf:
+          - $ref: '#/components/schemas/Shop.Order'
+          type: object
+          nullable: true
+      required: [items, status]
+      description: An order placed in the shop
+    Shop.Item:
+      type: object
+      properties:
+        sku:
+          type: string
+        quantity:
+          type: integer
+          format: Int32
+      required: [sku, quantity]
+      description: A line on an order
+    Shop.Status:
+      type: string
+      enum: [pending, shipped]
+```
+
+- **Nested types are referenced too.** `Shop::Item` only ever appears inside `Order`, and
+  it's still a component of its own. The type's doc comment becomes its description.
+- **Nilable references** such as `replaces : Order?` are wrapped in `allOf`, with `type`
+  and `nullable` alongside. OpenAPI 3.0 ignores anything placed next to a bare `$ref`, and
+  only applies `nullable` when `type` is present. The optional `status` parameter is
+  wrapped the same way.
+- **Self-referencing types**, like `Order` above, work.
+- **Enums are referenced by type.** Two enums with the same members stay separate
+  components.
+- **Everything else is inlined where it's used:** strings, numbers, arrays, hashes,
+  unions and tuples, and custom types like `Money`.
+
+### Component names
+
+A component's name is derived from the type's full name. Only the characters OpenAPI
+allows are used, and the conversion is reversible, so two different types never share
+a name:
+
+| Type | Component name |
+|---|---|
+| `Item` | `Item` |
+| `Shop::Item` | `Shop.Item` |
+| `Shop::Page(Shop::Order)` | `Shop.Page-oShop.Order-c` |
+| `Pair(A::B, C)` | `Pair-oA.B-nC-c` |
+| `Pair(A, B::C)` | `Pair-oA-nB.C-c` |
+
+`::` becomes `.`. In generic types, `(`, `)`, `, ` and ` | ` become `-o`, `-c`, `-n` and
+`-p`. Any other character becomes `-u` followed by its six digit hex code.
+
+### MCP tools
+
+In [MCP tools](../mcp/README.md), each tool's input schema is self-contained. The
+components it references, including nested ones, are included as `$defs`, and nullable
+types are expressed in standard JSON Schema.
 
 ## See also
 

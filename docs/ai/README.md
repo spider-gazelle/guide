@@ -1,6 +1,6 @@
 # Agent reference
 
-A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.7) for AI coding
+A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.8) for AI coding
 agents and experienced developers. Paste it into an agent's context, or point the agent at
 [`/llms.txt`](https://spider-gazelle.net/llms.txt) (an index of the site) or
 [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) (the whole site as Markdown).
@@ -98,6 +98,10 @@ end
   time), so generate at build time: `./app --docs --file=openapi.yml`.
 - Only annotated routes are documented, not the DSL `get "/" do`. `OPTIONS` routes
   aren't documented either.
+- Every `JSON::Serializable` type and enum is one component, `$ref`'d wherever it's used
+  (nested too). Nilable refs are `allOf` + `type` + `nullable`, and self-referencing
+  types work. Component names come from the full type name: `Shop::Item` → `Shop.Item`,
+  `Page(Shop::Item)` → `Page-oShop.Item-c`.
 
 ## MCP
 
