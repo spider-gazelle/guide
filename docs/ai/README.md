@@ -1,6 +1,6 @@
 # Agent reference
 
-A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.8) for AI coding
+A dense, self-contained summary of Spider-Gazelle (action-controller ~> 8.9) for AI coding
 agents and experienced developers. Paste it into an agent's context, or point the agent at
 [`/llms.txt`](https://spider-gazelle.net/llms.txt) (an index of the site) or
 [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) (the whole site as Markdown).
@@ -102,6 +102,10 @@ end
   (nested too). Nilable refs are `allOf` + `type` + `nullable`, and self-referencing
   types work. Component names come from the full type name: `Shop::Item` → `Shop.Item`,
   `Page(Shop::Item)` → `Page-oShop.Item-c`.
+- Optional (`?:`) and glob (`*:`) segments are matched after the required ones, wherever
+  they're written; the document lists a path per matched route (`<operationId>_without_<x>`
+  for the shorter ones). `Param::Info` examples are written as in a URL and typed by the
+  schema; array query params are comma separated (`explode: false`).
 
 ## MCP
 

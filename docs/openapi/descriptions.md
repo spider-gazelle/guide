@@ -57,7 +57,7 @@ Every method argument is a parameter. Its location comes from the route:
 | Argument | Location | Required |
 |---|---|---|
 | Matches a `:name` segment | path | yes |
-| Matches a `?:name` segment | path | no |
+| Matches a `?:name` or `*:name` segment | path, see below | yes, in the paths that include it |
 | Has `@[AC::Param::Info(header: "X-Name")]` | header | unless nilable or defaulted |
 | The `body:` argument | request body | yes |
 | Anything else | query (or form data) | unless nilable or defaulted |
@@ -81,7 +81,7 @@ def index(
 | `Param::Info` option | Effect |
 |---|---|
 | `description:` | parameter description |
-| `example:` | example value, as a string |
+| `example:` | example value, written as it appears in a URL. The document gives it the parameter's type: `"20"` becomes `20`, `"true"` becomes `true`, and `"a,b"` for an array becomes `["a", "b"]` |
 | `name:` | the public parameter name, when it differs from the argument (`?q=` → `query`) |
 | `header:` | read from this request header rather than the query string |
 | `class:`, `config:` | a [custom converter](../guides/parameters.md) and its options. The schema still comes from the argument type |
@@ -90,6 +90,26 @@ def index(
     Whether a parameter is required comes from the type: nilable or defaulted
     arguments are optional, everything else is required. There's no `required:`
     option to keep in sync.
+
+### Optional path segments
+
+OpenAPI path parameters are always required, so a route with optional (`?:name`) or
+glob (`*:name`) segments is listed once for each path the router matches. The path
+without them comes first, then each segment is added in turn:
+
+| Route | Paths in the document | `operationId` |
+|---|---|---|
+| `/eink/:item_id/?:expires_after` | `/eink/{item_id}` | `Signage_eink_without_expires_after` |
+| | `/eink/{item_id}/{expires_after}` | `Signage_eink` |
+
+The full path keeps the method's `operationId`. A shorter path gets
+`_without_` and the name of the first segment it leaves out.
+
+### Array parameters
+
+An array parameter is sent as a single comma separated value, `?tags=a,b`, so the
+document marks it `style: form` and `explode: false`. Client generators then build the
+query string the way action-controller reads it.
 
 ### Parameters from filters
 

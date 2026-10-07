@@ -39,8 +39,8 @@ That produces a `GET /articles/{article_id}/comments` operation with:
 | Path summary/description | doc comment on the controller class |
 | Operation summary | first line of the method's doc comment |
 | Operation description | the whole doc comment, when it's more than one line |
-| `operationId`, tags | `Controller_method`, and the controller's name |
-| Path parameters | `:name` (required) and `?:name` (optional) segments in the route |
+| `operationId`, tags | `Controller_method`, and the controller's name. Repeats get a `_2`, `_3`... suffix |
+| Path parameters | `:name` segments in the route. Optional `?:name` and glob `*:name` segments are [listed as separate paths](descriptions.md#optional-path-segments) |
 | Query parameters | other method arguments. Required unless nilable or defaulted |
 | Header parameters | `@[AC::Param::Info(header: "X-Name")]` |
 | Parameter description/example | `@[AC::Param::Info(description:, example:)]` |
