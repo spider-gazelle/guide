@@ -12,7 +12,7 @@ class Bookings < AC::Base
   base "/bookings"
 
   # Shows a booking
-  @[AC::MCP(ui: "bookings/card.html", root: true)]
+  @[AC::MCP(ui: "bookings/card.html")]
   @[AC::Route::GET("/:id")]
   def show(id : String) : Booking
     Booking.find!(id)
@@ -128,10 +128,10 @@ They're still ordinary routes, protected by your filters.
 
 ## Things to know
 
-- **Rendering needs a listed tool:** hosts only render cards for tools in their tool
-  list. Some clients don't refresh their tools when a toolbox opens, and call them through
-  `call_tool` instead, which has no card. Mark card tools `root: true`, or serve them from
-  a [controller endpoint](endpoints.md).
+- **Root by default:** hosts only render cards for, and let cards call, the tools in
+  their tool list, and some clients don't refresh their tools when a toolbox opens. So
+  tools with `ui:` or `app_only: true` are root items, always listed, unless you annotate
+  them `root: false`.
 - **Caching:** hosts cache cards by URI, so tools advertise
   `ui://bookings/card.html?v=<content hash>`. Deploying a changed card changes its URI.
 - **Safety:** `ui:` paths must be relative `.html` paths (checked at compile time), and

@@ -12,6 +12,8 @@
 | `ui: "path.html"` | controllers or methods | renders an HTML card for the tool's results, see [UI cards](ui.md) |
 | `app_only: true` | controllers or methods | only cards can call the tool, it's hidden from the model |
 
+Tools with `ui:` or `app_only: true` are root items unless annotated `root: false`.
+
 On a controller, `root`, `hide` and `read_only` apply to every route and prompt in it. They aren't
 inherited by subclasses, so annotate each controller. A method level annotation takes
 precedence, so you can hide a controller but expose one route:
