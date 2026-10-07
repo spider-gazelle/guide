@@ -121,7 +121,7 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
 @[AC::MCP(read_only: false)]      # a GET with side effects (true: a POST that only reads)
 @[AC::MCP(endpoint: true)]        # class only: also its own MCP server at <base>/mcp, base path params bound from the URL
 @[AC::MCP(ui: "x/card.html")]     # MCP Apps card in MCPServer.ui_base, rendered for the results (root by default)
-@[AC::MCP(app_only: true)]        # only cards call it, hidden from the model (root by default)
+@[AC::MCP(card_only: true)]        # only cards call it, hidden from the model (root by default)
 @[AC::MCP(prompt: true)]          # a prompt; must return String or Array(AC::PromptMessage)
 ```
 
