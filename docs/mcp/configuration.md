@@ -19,6 +19,8 @@ end
 | `server_name` | `"action-controller"` | reported to clients on `initialize` |
 | `server_version` | `"1.0.0"` | reported to clients on `initialize` |
 | `instructions` | `nil` (`toolbox_instructions`) | text given to the model on `initialize`. Describe your domain here and append `toolbox_instructions`. `""` sends none |
+| `ui_base` | `nil` | the folder of [UI cards](ui.md), `ui://` paths resolve against it |
+| `ui_meta` | `nil` | the default card settings (`UIMeta`: CSP domains, permissions, border) |
 | `tool_proxy` | `true` | adds the `call_read_only` and `call_tool` meta tools, for clients that ignore `tools/list_changed` |
 | `description_path` | `"mcp.yml"` | the generated tool descriptions, relative to the working directory |
 | `session_timeout` | `30.minutes` | idle sessions are discarded |

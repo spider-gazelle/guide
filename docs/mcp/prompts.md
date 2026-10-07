@@ -9,6 +9,8 @@
 | `hide: true` | controllers or methods | not exposed over MCP |
 | `read_only: Bool` | controllers or methods | whether a tool only reads data. Defaults to `true` for GET routes |
 | `endpoint: true` | controllers | also serves the controller as its own MCP server, see [controller endpoints](endpoints.md) |
+| `ui: "path.html"` | controllers or methods | renders an HTML card for the tool's results, see [UI cards](ui.md) |
+| `app_only: true` | controllers or methods | only cards can call the tool, it's hidden from the model |
 
 On a controller, `root`, `hide` and `read_only` apply to every route and prompt in it. They aren't
 inherited by subclasses, so annotate each controller. A method level annotation takes

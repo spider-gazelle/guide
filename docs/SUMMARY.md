@@ -20,6 +20,7 @@
     * [Setup](mcp/setup.md)
     * [Prompts and visibility](mcp/prompts.md)
     * [Controller endpoints](mcp/endpoints.md)
+    * [UI cards](mcp/ui.md)
     * [Authentication](mcp/authentication.md)
     * [Configuration](mcp/configuration.md)
 * [Deployment](deployment/README.md)
