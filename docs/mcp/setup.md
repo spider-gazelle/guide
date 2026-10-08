@@ -160,6 +160,7 @@ See the template's `spec/mcp_spec.cr` for tool calls and prompts.
 
 ## See also
 
+- [Composable applications](../guides/composition.md): a global MCP server for combined apps
 - [Annotation options](prompts.md)
 - [Authentication](authentication.md)
 - [Configuration](configuration.md)

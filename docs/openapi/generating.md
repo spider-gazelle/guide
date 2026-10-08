@@ -124,6 +124,7 @@ API change gives you compile errors exactly where your frontend needs updating.
 
 ## See also
 
+- [Composable applications](../guides/composition.md): one document for selected apps and mounted paths
 - [Describing routes](descriptions.md)
 - [MCP setup](../mcp/setup.md), which uses the same build step for `mcp.yml`
 - [Deployment](../deployment/README.md)

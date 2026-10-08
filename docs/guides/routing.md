@@ -318,6 +318,7 @@ and `AC::Server.print_routes` prints them as a table. The
 
 ## See also
 
+- [Composable applications](composition.md): mounting and combining controller subtrees
 - [Parameters](parameters.md): types, converters, headers and request bodies
 - [Responses](responses.md): status codes, responders and content types
 - [Filters](filters.md): code that runs before, around and after routes
