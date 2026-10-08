@@ -1,0 +1,2474 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A fast, type-safe Crystal web framework with built-in OpenAPI and MCP support">
+      
+      
+      
+        <link rel="canonical" href="https://spider-gazelle.net/guides/logging/">
+      
+      
+        <link rel="prev" href="../websockets/">
+      
+      
+        <link rel="next" href="../testing/">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
+    
+    
+      
+        <title>Logging - Spider-Gazelle</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#logging" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Spider-Gazelle" class="md-header__button md-logo" aria-label="Spider-Gazelle" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Spider-Gazelle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Logging
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark theme"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark theme" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light theme"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light theme" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/spider-gazelle/action-controller" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    spider-gazelle
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting_started/" class="md-tabs__link">
+          
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../" class="md-tabs__link">
+        
+  
+    
+  
+  Guides
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../openapi/" class="md-tabs__link">
+        
+  
+    
+  
+  OpenAPI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../mcp/" class="md-tabs__link">
+        
+  
+    
+  
+  MCP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../deployment/" class="md-tabs__link">
+        
+  
+    
+  
+  Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../ai/" class="md-tabs__link">
+        
+  
+    
+  
+  AI agents
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Config/environment/" class="md-tabs__link">
+          
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Spider-Gazelle" class="md-nav__button md-logo" aria-label="Spider-Gazelle" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    Spider-Gazelle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/spider-gazelle/action-controller" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    spider-gazelle
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting_started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Your first app
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting_started/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../routing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers & routing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../composition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Composable applications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameters/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../responses/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Responses
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../filters/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Filters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../errors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Error handling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sessions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sessions & cookies
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../websockets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WebSockets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Log sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring output
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring output">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request logging
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Request logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-sensitive-params" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtering sensitive params
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request IDs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changing-the-log-level-at-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changing the log level at runtime
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      See also
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../openapi/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            OpenAPI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/descriptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Describing routes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/schemas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Schemas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/generating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generating and serving
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../mcp/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    MCP
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            MCP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Annotation options
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/endpoints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller endpoints
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/ui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI cards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/authentication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentication
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deployment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ai/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AI agents
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Config/environment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ActionController
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ActionController/aliases/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aliases
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Base
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Annotations
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            Annotations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Routes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Filter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Filters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Exception/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/WebSocket/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WebSocket
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Param/Info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Param info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Icon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Icon
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_6" id="__nav_8_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Parameters
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_6">
+            <span class="md-nav__icon md-icon"></span>
+            Parameters
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/Conversion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conversion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/MissingError/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Missing parameter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/ValueError/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Invalid parameter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Error/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Errors
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Responders/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Responders
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Session/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Session
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ExecutionContext/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution contexts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../OpenAPI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_12" id="__nav_8_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    MCP server
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_12">
+            <span class="md-nav__icon md-icon"></span>
+            MCP server
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCPServer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PromptMessage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prompt messages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/ResourceMetadata/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resource metadata
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/UIMeta/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI card settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/UICSP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI card CSP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Log sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring output
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring output">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request logging
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Request logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-sensitive-params" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtering sensitive params
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request IDs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changing-the-log-level-at-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changing the log level at runtime
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      See also
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">#</a></h1>
+<p>Spider-Gazelle logs through Crystal's standard
+<a href="https://crystal-lang.org/api/latest/Log.html"><code>Log</code></a> module. This page covers
+logging from your controllers, request logging, request IDs, output formats,
+redacting sensitive params and changing the log level while the app runs.</p>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h2>
+<p>Give your base controller a <code>Log</code>, and tag every log entry made during a request
+with a request ID:</p>
+<div class="highlight"><pre><span></span><code><span class="k">require</span><span class="w"> </span><span class="s2">&quot;action-controller&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;uuid&quot;</span>
+
+<span class="k">module</span><span class="w"> </span><span class="nn">App</span>
+<span class="w">  </span><span class="no">NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my_app&quot;</span>
+<span class="w">  </span><span class="n">Log</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">for</span><span class="p">(</span><span class="no">NAME</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nn">App::</span><span class="nc">Base</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AC</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="c1"># Logs from controllers use the source &quot;my_app.controller&quot;</span>
+<span class="w">  </span><span class="n">Log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">App</span><span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">for</span><span class="p">(</span><span class="s2">&quot;controller&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Filter</span><span class="p">(</span><span class="ss">:before_action</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">set_request_id</span>
+<span class="w">    </span><span class="n">request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;X-Request-ID&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">UUID</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">to_s</span>
+<span class="w">    </span><span class="n">Log</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="ss">client_ip</span><span class="p">:</span><span class="w"> </span><span class="n">client_ip</span><span class="p">,</span><span class="w"> </span><span class="ss">request_id</span><span class="p">:</span><span class="w"> </span><span class="n">request_id</span><span class="p">)</span>
+<span class="w">    </span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;X-Request-ID&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request_id</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nn">App::</span><span class="nc">Orders</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="n">base</span><span class="w"> </span><span class="s2">&quot;/orders&quot;</span>
+
+<span class="w">  </span><span class="c1"># Creates an order</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::POST</span><span class="p">(</span><span class="s2">&quot;/:product_id&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="n">product_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Int64</span><span class="p">,</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Int32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">NamedTuple</span><span class="p">(</span><span class="ss">product_id</span><span class="p">:</span><span class="w"> </span><span class="n">Int64</span><span class="p">,</span><span class="w"> </span><span class="ss">quantity</span><span class="p">:</span><span class="w"> </span><span class="n">Int32</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Log</span><span class="o">.</span><span class="n">info</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;creating order&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Log</span><span class="o">.</span><span class="n">debug</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;quantity </span><span class="si">#{</span><span class="n">quantity</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">{</span><span class="ss">product_id</span><span class="p">:</span><span class="w"> </span><span class="n">product_id</span><span class="p">,</span><span class="w"> </span><span class="ss">quantity</span><span class="p">:</span><span class="w"> </span><span class="n">quantity</span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># Configure where logs go and at what level</span>
+<span class="n">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ActionController</span><span class="o">.</span><span class="n">default_backend</span>
+<span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">setup</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="n">backend</span>
+<span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">bind</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">App</span><span class="o">::</span><span class="no">NAME</span><span class="si">}</span><span class="s2">.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:debug</span><span class="p">,</span><span class="w"> </span><span class="n">backend</span>
+</code></pre></div>
+<p>With the template's <code>LogHandler</code> in place (see <a href="#request-logging">Request logging</a>),
+<code>POST /orders/42?quantity=3</code> logs:</p>
+<div class="highlight"><pre><span></span><code>level=[I] time=2026-10-02T06:23:18Z program=app source=my_app.controller message=&quot;creating order&quot; client_ip=127.0.0.1 request_id=c6595fb2-7808-41bc-98e7-4be557b552c5
+level=[D] time=2026-10-02T06:23:18Z program=app source=my_app.controller message=&quot;quantity 3&quot; client_ip=127.0.0.1 request_id=c6595fb2-7808-41bc-98e7-4be557b552c5
+level=[I] time=2026-10-02T06:23:18Z program=app source=action-controller client_ip=127.0.0.1 request_id=c6595fb2-7808-41bc-98e7-4be557b552c5 event=response method=POST path=/orders/42?quantity=3 status=200 duration=50.4µs
+</code></pre></div>
+<p>The <a href="https://github.com/spider-gazelle/spider-gazelle">application template</a> sets
+all of this up for you, in <code>src/constants.cr</code>, <code>src/config.cr</code> and
+<code>src/controllers/application.cr</code>.</p>
+<h2 id="log-sources">Log sources<a class="headerlink" href="#log-sources" title="Permanent link">#</a></h2>
+<p>Every log entry has a <strong>source</strong>, a dotted name that says where it came from. You
+configure levels per source.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>What logs there</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>action-controller</code></td>
+<td>Request logging from <code>LogHandler</code>, and framework warnings</td>
+</tr>
+<tr>
+<td><code>action-controller.session</code></td>
+<td>Session cookies that can't be decoded</td>
+</tr>
+<tr>
+<td><code>action-controller.mcp</code></td>
+<td>The <a href="../../mcp/">MCP server</a></td>
+</tr>
+<tr>
+<td><code>&lt;your app name&gt;.*</code></td>
+<td>Your code, if you create loggers with <code>App::Log.for(...)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Create a logger for your own code with <code>Log.for</code>. Chaining from an app-wide <code>Log</code>
+puts everything under one prefix, so you can set its level with a single
+<code>"my_app.*"</code> binding:</p>
+<div class="highlight"><pre><span></span><code><span class="k">module</span><span class="w"> </span><span class="nn">App</span>
+<span class="w">  </span><span class="n">Log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">for</span><span class="p">(</span><span class="s2">&quot;my_app&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nn">App::</span><span class="nc">Billing</span>
+<span class="w">  </span><span class="n">Log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">App</span><span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">for</span><span class="p">(</span><span class="s2">&quot;billing&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1"># source &quot;my_app.billing&quot;</span>
+<span class="k">end</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Define <code>Log</code> in your base controller. If you don't, <code>Log</code> inside a controller
+resolves to the top-level <code>::Log</code>, whose source is empty, so you can't
+filter those entries by source.</p>
+</div>
+<p>Write entries with the usual <code>Log</code> methods. Pass a block, so the message is only
+built when that level is enabled:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Log</span><span class="o">.</span><span class="n">trace</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;very detailed&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="n">Log</span><span class="o">.</span><span class="n">debug</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;useful while developing&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="n">Log</span><span class="o">.</span><span class="n">info</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;something happened&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="n">Log</span><span class="o">.</span><span class="n">warn</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;something looks wrong&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="n">Log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="ss">exception</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;something failed&quot;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<h2 id="configuring-output">Configuring output<a class="headerlink" href="#configuring-output" title="Permanent link">#</a></h2>
+<p><code>Log.setup</code> sets the default level and backend for every source. <code>Log.builder.bind</code>
+then sets the level for specific sources. The template's <code>src/config.cr</code> does this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="n">running_in_production?</span>
+<span class="w">  </span><span class="n">log_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">Log</span><span class="o">::</span><span class="n">Severity</span><span class="o">::</span><span class="n">Info</span>
+<span class="w">  </span><span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">setup</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:warn</span><span class="p">,</span><span class="w"> </span><span class="no">LOG_BACKEND</span>
+<span class="k">else</span>
+<span class="w">  </span><span class="n">log_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">Log</span><span class="o">::</span><span class="n">Severity</span><span class="o">::</span><span class="n">Debug</span>
+<span class="w">  </span><span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">setup</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:info</span><span class="p">,</span><span class="w"> </span><span class="no">LOG_BACKEND</span>
+<span class="k">end</span>
+<span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">bind</span><span class="w"> </span><span class="s2">&quot;action-controller.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">log_level</span><span class="p">,</span><span class="w"> </span><span class="no">LOG_BACKEND</span>
+<span class="o">::</span><span class="n">Log</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">bind</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">NAME</span><span class="si">}</span><span class="s2">.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">log_level</span><span class="p">,</span><span class="w"> </span><span class="no">LOG_BACKEND</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Your app and action-controller</th>
+<th>Everything else (shards)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>development</td>
+<td><code>debug</code></td>
+<td><code>info</code></td>
+</tr>
+<tr>
+<td>production (<code>SG_ENV=production</code>)</td>
+<td><code>info</code></td>
+<td><code>warn</code></td>
+</tr>
+</tbody>
+</table>
+<p>A pattern such as <code>"my_app.*"</code> matches <code>my_app</code> and every source below it.</p>
+<h3 id="formats">Formats<a class="headerlink" href="#formats" title="Permanent link">#</a></h3>
+<p><code>ActionController.default_backend(io = STDOUT, formatter = default_formatter)</code>
+returns a <code>Log::IOBackend</code>. Two formatters are provided:</p>
+<ul>
+<li><code>ActionController.default_formatter</code>: <code>key=value</code> text, shown above. Easy to
+  read and to grep.</li>
+<li><code>ActionController.json_formatter</code>: one JSON object per line, for log tools such
+  as Logstash, Loki or CloudWatch.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="no">LOG_BACKEND</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ActionController</span><span class="o">.</span><span class="n">default_backend</span><span class="p">(</span><span class="ss">formatter</span><span class="p">:</span><span class="w"> </span><span class="n">ActionController</span><span class="o">.</span><span class="n">json_formatter</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="s2">&quot;app&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2026-10-02T16:23:18+10:00&quot;</span><span class="p">,</span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="s2">&quot;my_app.controller&quot;</span><span class="p">,</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;creating order&quot;</span><span class="p">,</span><span class="nt">&quot;client_ip&quot;</span><span class="p">:</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="s2">&quot;c6595fb2-7808-41bc-98e7-4be557b552c5&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>Both include the context (such as <code>request_id</code>), any data passed to the entry, and
+the exception backtrace if there is one. <code>program</code> is <code>Log.progname</code>, which
+defaults to the name of the executable.</p>
+<h2 id="request-logging">Request logging<a class="headerlink" href="#request-logging" title="Permanent link">#</a></h2>
+<p><code>ActionController::LogHandler</code> is an HTTP handler that logs each request. Add it
+with <code>ActionController::Server.before</code>, before the server is created:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ActionController</span><span class="o">::</span><span class="n">Server</span><span class="o">.</span><span class="n">before</span><span class="p">(</span>
+<span class="w">  </span><span class="n">ActionController</span><span class="o">::</span><span class="n">ErrorHandler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">App</span><span class="o">.</span><span class="n">running_in_production?</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;X-Request-ID&quot;</span><span class="o">]</span><span class="p">),</span>
+<span class="w">  </span><span class="n">ActionController</span><span class="o">::</span><span class="n">LogHandler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bearer_token&quot;</span><span class="o">]</span><span class="p">),</span>
+<span class="w">  </span><span class="n">HTTP</span><span class="o">::</span><span class="n">CompressHandler</span><span class="o">.</span><span class="n">new</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>It logs one <code>info</code> entry per response, with the method, path, status and
+duration. If a route raises an unhandled exception, it logs an <code>error</code> entry
+instead, with <code>status=500</code> and the backtrace.</p>
+<p><code>LogHandler.new</code> takes:</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td><code>[] of String</code></td>
+<td>Query string params whose values are logged as <code>[FILTERED]</code>.</td>
+</tr>
+<tr>
+<td><code>log</code></td>
+<td><code>Event::Response</code></td>
+<td>Which events to log. <code>Event::Request | Event::Response</code> (or <code>Event::All</code>) also logs an entry when each request arrives.</td>
+</tr>
+<tr>
+<td><code>ms</code></td>
+<td><code>false</code></td>
+<td>Log durations as a plain number of milliseconds, e.g. <code>0.0504</code>, instead of with a unit, e.g. <code>50.4µs</code>. Simpler for monitoring tools to parse.</td>
+</tr>
+<tr>
+<td><code>generate_id</code></td>
+<td><code>true</code></td>
+<td>When request events are logged, add a random <code>request_id</code> to the log context.</td>
+</tr>
+</tbody>
+</table>
+<p>The events are <code>ActionController::LogHandler::Event</code> values.</p>
+<p>The handler wraps each request in its own log context. Anything your controller
+adds with <code>Log.context.set</code> appears on the handler's response entry too, as in
+the example at the top of this page.</p>
+<h3 id="filtering-sensitive-params">Filtering sensitive params<a class="headerlink" href="#filtering-sensitive-params" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">ActionController</span><span class="o">::</span><span class="n">LogHandler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bearer_token&quot;</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
+<p><code>GET /login?user=steve&amp;password=hunter2</code> is logged as
+<code>path=/login?user=steve&amp;password=[FILTERED]</code>.</p>
+<p>The filter only applies to the query string in the logged path. <code>LogHandler</code>
+never logs request bodies or headers, but your own log calls might, so take care
+not to log passwords or tokens yourself.</p>
+<h2 id="request-ids">Request IDs<a class="headerlink" href="#request-ids" title="Permanent link">#</a></h2>
+<p>A request ID ties together every log entry made while handling one request, and
+lets clients quote it when reporting a problem. The template's base controller
+sets one in a <code>before_action</code> filter:</p>
+<div class="highlight"><pre><span></span><code><span class="o">@[</span><span class="nd">AC::Route::Filter</span><span class="p">(</span><span class="ss">:before_action</span><span class="p">)</span><span class="o">]</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_request_id</span>
+<span class="w">  </span><span class="n">request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">to_s</span>
+<span class="w">  </span><span class="n">Log</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+<span class="w">    </span><span class="ss">client_ip</span><span class="p">:</span><span class="w"> </span><span class="n">client_ip</span><span class="p">,</span>
+<span class="w">    </span><span class="ss">request_id</span><span class="p">:</span><span class="w"> </span><span class="n">request_id</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;X-Request-ID&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request_id</span>
+<span class="k">end</span>
+</code></pre></div>
+<ul>
+<li><code>Log.context.set</code> tags every later entry in this request, from any logger.</li>
+<li>The <code>X-Request-ID</code> response header lets the client see the ID.</li>
+<li>The template passes <code>["X-Request-ID"]</code> to <code>ErrorHandler</code>, so the header is kept
+  on <code>500</code> responses, which is when it's needed most.</li>
+<li><code>client_ip</code> reads the <code>X-Forwarded-For</code>, <code>X-Real-IP</code> or <code>Forwarded</code> headers set
+  by proxies, falling back to the connection's address.</li>
+</ul>
+<p>In a microservice, reuse the ID sent by the caller so one ID follows the request
+across services, and send it on to services you call:</p>
+<div class="highlight"><pre><span></span><code><span class="n">request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;X-Request-ID&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">UUID</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">to_s</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you log request events with <code>Event::Request</code>, the handler adds its own
+<code>request_id</code> before your filter runs, and the filter then replaces it. The
+request entry and the response entry end up with different IDs. Use one
+source of IDs: pass <code>generate_id: false</code>, or read the existing ID with
+<code>Log.context.metadata[:request_id]?</code> in your filter.</p>
+</div>
+<h2 id="changing-the-log-level-at-runtime">Changing the log level at runtime<a class="headerlink" href="#changing-the-log-level-at-runtime" title="Permanent link">#</a></h2>
+<p>The template lets you turn on <code>trace</code> logging in a running process without a
+restart, which is useful when debugging production. Send the process the <code>USR1</code>
+signal:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">kill</span><span class="w"> </span>-USR1<span class="w"> </span>&lt;pid&gt;
+</code></pre></div>
+<p>The process prints <code>&gt; Log level changed to Trace</code>. Send <code>USR1</code> again to go back to
+<code>info</code> in production, or <code>debug</code> in development.</p>
+<p>This is implemented by <code>App.register_severity_switch_signals</code> in the template's
+<code>src/constants.cr</code>, and called from <code>src/app.cr</code>. It only changes the level of
+your app's sources (<code>"#{NAME}.*"</code>), not action-controller's or other shards'.
+It's not available on Windows.</p>
+<p>With several <a href="../../getting_started/configuration/#workers-and-threads">workers</a>,
+each worker is a separate process, so signal each one you want to change.</p>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="../../getting_started/configuration/">Configuration</a></li>
+<li><a href="../filters/">Filters</a></li>
+<li><a href="../errors/">Errors</a></li>
+<li><a href="../../deployment/">Deployment</a></li>
+<li><a href="https://crystal-lang.org/api/latest/Log.html">Crystal's <code>Log</code> documentation</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../websockets/" class="md-footer__link md-footer__link--prev" aria-label="Previous: WebSockets">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                WebSockets
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../testing/" class="md-footer__link md-footer__link--next" aria-label="Next: Testing">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Testing
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/spider-gazelle" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "navigation.top", "content.code.copy", "content.tabs.link", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

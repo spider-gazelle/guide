@@ -1,0 +1,52 @@
+# Spider-Gazelle
+
+> A fast, type-safe Crystal web framework with built-in OpenAPI and MCP support
+
+Spider-Gazelle is a fast, type-safe web framework for Crystal (built on the action-controller shard). Annotated controller methods are the routes, the parameter validation, the OpenAPI operations and the MCP tools, all generated from one source of truth.
+
+
+## Getting started
+
+- [Home](https://spider-gazelle.net/index.md)
+- [Your first app](https://spider-gazelle.net/getting_started/index.md)
+- [Configuration](https://spider-gazelle.net/getting_started/configuration/index.md)
+
+## Guides
+
+- [Guides](https://spider-gazelle.net/guides/index.md)
+- [Controllers & routing](https://spider-gazelle.net/guides/routing/index.md)
+- [Composable applications](https://spider-gazelle.net/guides/composition/index.md)
+- [Parameters](https://spider-gazelle.net/guides/parameters/index.md)
+- [Responses](https://spider-gazelle.net/guides/responses/index.md)
+- [Filters](https://spider-gazelle.net/guides/filters/index.md)
+- [Error handling](https://spider-gazelle.net/guides/errors/index.md)
+- [Sessions & cookies](https://spider-gazelle.net/guides/sessions/index.md)
+- [WebSockets](https://spider-gazelle.net/guides/websockets/index.md)
+- [Logging](https://spider-gazelle.net/guides/logging/index.md)
+- [Testing](https://spider-gazelle.net/guides/testing/index.md)
+
+## OpenAPI
+
+- [OpenAPI](https://spider-gazelle.net/openapi/index.md)
+- [Describing routes](https://spider-gazelle.net/openapi/descriptions/index.md)
+- [Schemas](https://spider-gazelle.net/openapi/schemas/index.md)
+- [Generating and serving](https://spider-gazelle.net/openapi/generating/index.md)
+
+## MCP
+
+- [MCP](https://spider-gazelle.net/mcp/index.md)
+- [Setup](https://spider-gazelle.net/mcp/setup/index.md)
+- [Annotation options](https://spider-gazelle.net/mcp/prompts/index.md)
+- [Controller endpoints](https://spider-gazelle.net/mcp/endpoints/index.md)
+- [UI cards](https://spider-gazelle.net/mcp/ui/index.md)
+- [Authentication](https://spider-gazelle.net/mcp/authentication/index.md)
+- [Configuration](https://spider-gazelle.net/mcp/configuration/index.md)
+
+## Deployment
+
+- [Deployment](https://spider-gazelle.net/deployment/index.md)
+
+## AI agents
+
+- [AI agents](https://spider-gazelle.net/ai/index.md)
+

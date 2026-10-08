@@ -1,0 +1,3189 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A fast, type-safe Crystal web framework with built-in OpenAPI and MCP support">
+      
+      
+      
+        <link rel="canonical" href="https://spider-gazelle.net/mcp/authentication/">
+      
+      
+        <link rel="prev" href="../ui/">
+      
+      
+        <link rel="next" href="../configuration/">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
+    
+    
+      
+        <title>Authentication - Spider-Gazelle</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#authentication" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Spider-Gazelle" class="md-header__button md-logo" aria-label="Spider-Gazelle" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Spider-Gazelle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Authentication
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark theme"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark theme" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light theme"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light theme" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/spider-gazelle/action-controller" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    spider-gazelle
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting_started/" class="md-tabs__link">
+          
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../guides/" class="md-tabs__link">
+        
+  
+    
+  
+  Guides
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../openapi/" class="md-tabs__link">
+        
+  
+    
+  
+  OpenAPI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../" class="md-tabs__link">
+        
+  
+    
+  
+  MCP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../deployment/" class="md-tabs__link">
+        
+  
+    
+  
+  Deployment
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../ai/" class="md-tabs__link">
+        
+  
+    
+  
+  AI agents
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Config/environment/" class="md-tabs__link">
+          
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Spider-Gazelle" class="md-nav__button md-logo" aria-label="Spider-Gazelle" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    Spider-Gazelle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/spider-gazelle/action-controller" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    spider-gazelle
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting_started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Your first app
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting_started/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/routing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers & routing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/composition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Composable applications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/parameters/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/responses/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Responses
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/filters/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Filters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/errors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Error handling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/sessions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sessions & cookies
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/websockets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WebSockets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/logging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../openapi/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            OpenAPI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/descriptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Describing routes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/schemas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Schemas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openapi/generating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generating and serving
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    MCP
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            MCP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Annotation options
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../endpoints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller endpoints
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI cards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Authentication
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Authentication
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-an-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choosing an approach
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-mcp-needs-more-than-route-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why MCP needs more than route auth
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      API keys
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oauth-sign-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      OAuth sign-in
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OAuth sign-in">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How it works
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-multi_auth-authly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Worked example: multi_auth + authly
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worked example: multi_auth + authly">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-signing-in-with-multi_auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Signing in with multi_auth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-the-authorization-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. The authorization server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-the-protected-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. The protected API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-authly-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. authly fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-try-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Try it
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#production-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production checklist
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      See also
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deployment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ai/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AI agents
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Config/environment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ActionController
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ActionController/aliases/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aliases
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Base
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Annotations
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            Annotations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Routes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Filter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Filters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Exception/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/WebSocket/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WebSocket
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Param/Info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Param info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Icon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Icon
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_6" id="__nav_8_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Parameters
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_6">
+            <span class="md-nav__icon md-icon"></span>
+            Parameters
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/Conversion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conversion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/MissingError/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Missing parameter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Route/Param/ValueError/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Invalid parameter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Error/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Errors
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Responders/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Responders
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Session/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Session
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ExecutionContext/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Execution contexts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../OpenAPI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_12" id="__nav_8_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    MCP server
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_12">
+            <span class="md-nav__icon md-icon"></span>
+            MCP server
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCPServer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PromptMessage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prompt messages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/ResourceMetadata/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resource metadata
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/UIMeta/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI card settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MCPServer/UICSP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI card CSP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-an-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choosing an approach
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-mcp-needs-more-than-route-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why MCP needs more than route auth
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      API keys
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oauth-sign-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      OAuth sign-in
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OAuth sign-in">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How it works
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-multi_auth-authly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Worked example: multi_auth + authly
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worked example: multi_auth + authly">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-signing-in-with-multi_auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Signing in with multi_auth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-the-authorization-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. The authorization server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-the-protected-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. The protected API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-authly-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. authly fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-try-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Try it
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#production-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production checklist
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      See also
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">#</a></h1>
+<p>By default your MCP endpoint is open, and each tool call is authenticated by your routes'
+own filters, using the headers the client sends. That's enough for many apps. This page
+covers the options, from API keys up to a complete OAuth sign-in for MCP clients, built
+with <a href="https://github.com/msa7/multi_auth">multi_auth</a> and
+<a href="https://github.com/azutoolkit/authly">authly</a>.</p>
+<h2 id="choosing-an-approach">Choosing an approach<a class="headerlink" href="#choosing-an-approach" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Use it when</th>
+<th>Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Route auth only</strong></td>
+<td>the API is public, or every client can send a fixed header</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td><strong>API keys</strong></td>
+<td>agents and scripts with long lived credentials</td>
+<td><code>auth_probe</code>, and the client sends a header</td>
+</tr>
+<tr>
+<td><strong>OAuth sign-in</strong></td>
+<td>people connect from Claude, VS Code, Cursor, ... and sign in with their own account</td>
+<td><code>auth_probe</code> + <code>resource_metadata</code>, and an OAuth authorization server</td>
+</tr>
+</tbody>
+</table>
+<p>Whichever you choose, tool calls run your real routes with the client's <code>Authorization</code>,
+<code>Cookie</code> and <code>X-API-Key</code> headers. Permissions are enforced exactly as they are for HTTP
+requests. Your MCP server can't do anything the user couldn't do with the API directly.</p>
+<h2 id="why-mcp-needs-more-than-route-auth">Why MCP needs more than route auth<a class="headerlink" href="#why-mcp-needs-more-than-route-auth" title="Permanent link">#</a></h2>
+<p>MCP clients only sign in, or refresh an expired token, when the <strong>MCP endpoint itself</strong>
+responds with HTTP <code>401</code> and a <code>WWW-Authenticate</code> challenge. With route auth alone,
+connecting always succeeds, and a <code>401</code> from a route reaches the model as a failed tool
+call it can't fix. Enabling authentication moves the check to the endpoint:</p>
+<ul>
+<li><strong>Every request is checked:</strong> <code>initialize</code>, tool calls, and the notification stream.
+  Failures get a real <code>401</code>.</li>
+<li><strong>Token expiry is caught:</strong> if a route rejects a tool call with <code>401</code> (an expired
+  token, say), the endpoint answers <code>401</code> so the client refreshes and retries.</li>
+<li><strong>Checks are cached:</strong> successful checks are cached for each credential for
+  <code>auth_cache_ttl</code> (1 minute), so your auth route isn't called on every message.</li>
+</ul>
+<h2 id="api-keys">API keys<a class="headerlink" href="#api-keys" title="Permanent link">#</a></h2>
+<p>Point <code>auth_probe</code> at any route that requires authentication. It's called in-process with
+the client's headers, and a 2xx response means the request is authenticated:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ActionController</span><span class="o">::</span><span class="n">MCPServer</span><span class="o">.</span><span class="n">auth_probe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/api/users/current&quot;</span>
+</code></pre></div>
+<p>Clients send their key on every request:</p>
+<div class="highlight"><pre><span></span><code>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>my-app<span class="w"> </span>https://my-app.example.com/mcp<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--header<span class="w"> </span><span class="s2">&quot;X-API-Key: &lt;key&gt;&quot;</span>
+</code></pre></div>
+<p>Need logic that isn't a route? Use <code>authenticator</code> instead:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ActionController</span><span class="o">::</span><span class="n">MCPServer</span><span class="o">.</span><span class="n">authenticator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">request</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Request</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="n">ApiKey</span><span class="o">.</span><span class="n">valid?</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;X-API-Key&quot;</span><span class="o">]?</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<h2 id="oauth-sign-in">OAuth sign-in<a class="headerlink" href="#oauth-sign-in" title="Permanent link">#</a></h2>
+<p>For people, OAuth is seamless: they add your server's URL to their client, a browser
+opens, they sign in and approve the client, and they're connected. Tokens refresh
+automatically.</p>
+<h3 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h3>
+<p>MCP builds on standard OAuth: protected resource metadata
+(<a href="https://www.rfc-editor.org/rfc/rfc9728">RFC 9728</a>), authorization server metadata
+(<a href="https://www.rfc-editor.org/rfc/rfc8414">RFC 8414</a>), dynamic client registration
+(<a href="https://www.rfc-editor.org/rfc/rfc7591">RFC 7591</a>) and the authorization code flow with
+<a href="https://www.rfc-editor.org/rfc/rfc7636">PKCE</a>:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant C as MCP client
+    participant S as Your app (/mcp)
+    participant A as Authorization server
+    participant P as GitHub (via multi_auth)
+    C-&gt;&gt;S: initialize
+    S--&gt;&gt;C: 401 + resource_metadata URL
+    C-&gt;&gt;S: GET /.well-known/oauth-protected-resource/mcp
+    C-&gt;&gt;A: GET /.well-known/oauth-authorization-server
+    C-&gt;&gt;A: POST /oauth/register (dynamic registration)
+    C-&gt;&gt;A: browser: /oauth/authorize (PKCE, resource)
+    A-&gt;&gt;P: not signed in: sign in with GitHub
+    P--&gt;&gt;A: callback, user identified
+    A--&gt;&gt;C: consent approved: redirect with code
+    C-&gt;&gt;A: POST /oauth/token (code + verifier)
+    A--&gt;&gt;C: access + refresh tokens
+    C-&gt;&gt;S: initialize (Authorization: Bearer ...)</code></pre>
+<p>Spider-Gazelle provides the first half: the challenge and the protected resource metadata
+are served by <code>MCPServer</code> once you configure <code>resource_metadata</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ActionController</span><span class="o">::</span><span class="n">MCPServer</span><span class="o">.</span><span class="n">tap</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">mcp</span><span class="o">|</span>
+<span class="w">  </span><span class="n">mcp</span><span class="o">.</span><span class="n">auth_probe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/api/users/current&quot;</span>
+<span class="w">  </span><span class="n">mcp</span><span class="o">.</span><span class="n">resource_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">request</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Request</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="n">ActionController</span><span class="o">::</span><span class="n">MCPServer</span><span class="o">::</span><span class="n">ResourceMetadata</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+<span class="w">      </span><span class="ss">authorization_servers</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;https://</span><span class="si">#{</span><span class="n">request</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">]</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">scopes_supported</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;api&quot;</span><span class="o">]</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The authorization server is either an existing identity platform that supports dynamic
+client registration, or part of your app. The rest of this page builds one into your app:
+<strong>multi_auth</strong> answers "who is this person?" (GitHub, Google, and other providers) and
+<strong>authly</strong> answers "give this MCP client a token".</p>
+<h2 id="worked-example-multi_auth-authly">Worked example: multi_auth + authly<a class="headerlink" href="#worked-example-multi_auth-authly" title="Permanent link">#</a></h2>
+<p>A small notes API that MCP clients sign in to with GitHub. It's one app that is both the
+<strong>resource server</strong> (the API and <code>/mcp</code>) and the <strong>authorization server</strong>.</p>
+<div class="admonition success">
+<p class="admonition-title">Tested</p>
+<p>This example was built and tested end to end with action-controller 8.3.2 (the MCP
+authentication options it uses are unchanged in 8.14), authly
+<code>master</code> (<code>3e96031</code>) and multi_auth <code>master</code> (<code>f1f60bf</code>). The test covered
+registration, sign-in, consent, PKCE token exchange, MCP calls with the token,
+refresh, and rejection of replayed codes, forged <code>state</code> and wrong verifiers.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/config.cr</code></td>
+<td>configures the session, authly, multi_auth and the MCP server</td>
+</tr>
+<tr>
+<td><code>src/controllers/api.cr</code></td>
+<td>the protected API, verifying access tokens in a <code>before_action</code></td>
+</tr>
+<tr>
+<td><code>src/controllers/sessions.cr</code></td>
+<td>signs users in with multi_auth, checking <code>state</code></td>
+</tr>
+<tr>
+<td><code>src/controllers/authorization.cr</code></td>
+<td>metadata, registration, authorize (with consent) and token endpoints</td>
+</tr>
+<tr>
+<td><code>src/oauth/*.cr</code></td>
+<td>client registry, token minting and the authly fixes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-dependencies">1. Dependencies<a class="headerlink" href="#1-dependencies" title="Permanent link">#</a></h3>
+<details class="example" open="open">
+<summary>shard.yml</summary>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mcp-auth-example</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1.0</span>
+
+<span class="nt">targets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">main</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">src/app.cr</span>
+
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">action-controller</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">github</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spider-gazelle/action-controller</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~&gt; 8.14</span>
+
+<span class="w">  </span><span class="c1"># OAuth 2 authorization server library</span>
+<span class="w">  </span><span class="nt">authly</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">github</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azutoolkit/authly</span>
+<span class="w">    </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span>
+
+<span class="w">  </span><span class="c1"># sign in with GitHub, Google, etc. master adds `state` to `authorize_uri`</span>
+<span class="w">  </span><span class="nt">multi_auth</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">github</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msa7/multi_auth</span>
+<span class="w">    </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span>
+</code></pre></div>
+</details>
+<div class="admonition warning">
+<p class="admonition-title">Use <code>master</code> for both shards</p>
+<p>multi_auth's tagged release can't pass a <code>state</code> to the provider, which you need for
+CSRF protection. The authly fixes below target <code>master</code>.</p>
+</div>
+<h3 id="2-configuration">2. Configuration<a class="headerlink" href="#2-configuration" title="Permanent link">#</a></h3>
+<p>The app is its own issuer, and the MCP server advertises it in the protected resource
+metadata:</p>
+<details class="example" open="open">
+<summary>src/config.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="k">require</span><span class="w"> </span><span class="s2">&quot;action-controller&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;action-controller/mcp&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;authly&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;multi_auth&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;multi_auth/providers/github&quot;</span>
+
+<span class="k">module</span><span class="w"> </span><span class="nn">App</span>
+<span class="w">  </span><span class="c1"># the public URL of this app, it&#39;s both the MCP resource and the OAuth issuer</span>
+<span class="w">  </span><span class="no">URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;APP_URL&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;http://localhost:3000&quot;</span>
+
+<span class="w">  </span><span class="c1"># the scope MCP clients request</span>
+<span class="w">  </span><span class="no">SCOPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;api&quot;</span>
+
+<span class="w">  </span><span class="c1"># DEVELOPMENT ONLY: adds a &quot;dev&quot; sign in that skips the identity provider</span>
+<span class="w">  </span><span class="no">DEV_LOGIN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;DEV_LOGIN&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+
+<span class="w">  </span><span class="c1"># is this a resource indicator (RFC 8707) for this app?</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">resource?</span><span class="p">(</span><span class="n">resource</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Bool</span>
+<span class="w">    </span><span class="n">resource</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="no">URL</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">resource</span><span class="o">.</span><span class="n">starts_with?</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">URL</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;./models/*&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;./oauth/*&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;./controllers/application&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;./controllers/*&quot;</span>
+
+<span class="c1"># the server is required after the controllers</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;action-controller/server&quot;</span>
+
+<span class="n">ActionController</span><span class="o">::</span><span class="n">Server</span><span class="o">.</span><span class="n">before</span><span class="p">(</span>
+<span class="w">  </span><span class="n">ActionController</span><span class="o">::</span><span class="n">ErrorHandler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;SG_ENV&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;X-Request-ID&quot;</span><span class="o">]</span><span class="p">),</span>
+<span class="w">  </span><span class="n">ActionController</span><span class="o">::</span><span class="n">LogHandler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;code&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;code_verifier&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;refresh_token&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;state&quot;</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="ss">ms</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">ActionController</span><span class="o">::</span><span class="n">Session</span><span class="o">.</span><span class="n">configure</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">settings</span><span class="o">|</span>
+<span class="w">  </span><span class="n">settings</span><span class="o">.</span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;_mcp_example_session&quot;</span>
+<span class="w">  </span><span class="n">settings</span><span class="o">.</span><span class="n">secret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;SESSION_SECRET&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">Random</span><span class="o">::</span><span class="n">Secure</span><span class="o">.</span><span class="n">hex</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+<span class="w">  </span><span class="n">settings</span><span class="o">.</span><span class="n">secure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="n">URL</span><span class="o">.</span><span class="n">starts_with?</span><span class="p">(</span><span class="s2">&quot;https://&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="c1"># the OAuth authorization server</span>
+<span class="n">Authly</span><span class="o">.</span><span class="n">configure</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">config</span><span class="o">|</span>
+<span class="w">  </span><span class="c1"># HS256 signs and verifies with the same key</span>
+<span class="w">  </span><span class="n">jwt_secret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;JWT_SECRET&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">Random</span><span class="o">::</span><span class="n">Secure</span><span class="o">.</span><span class="n">hex</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">config</span><span class="o">.</span><span class="n">secret_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwt_secret</span>
+<span class="w">  </span><span class="n">config</span><span class="o">.</span><span class="n">public_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jwt_secret</span>
+<span class="w">  </span><span class="n">config</span><span class="o">.</span><span class="n">issuer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="no">URL</span>
+<span class="w">  </span><span class="n">config</span><span class="o">.</span><span class="n">code_ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="o">.</span><span class="n">minutes</span>
+<span class="w">  </span><span class="n">config</span><span class="o">.</span><span class="n">access_ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">.</span><span class="n">hour</span>
+<span class="w">  </span><span class="n">config</span><span class="o">.</span><span class="n">refresh_ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span><span class="o">.</span><span class="n">days</span>
+<span class="w">  </span><span class="n">config</span><span class="o">.</span><span class="n">clients</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AuthServer</span><span class="o">::</span><span class="no">CLIENTS</span>
+<span class="k">end</span>
+
+<span class="c1"># users sign in with GitHub</span>
+<span class="n">MultiAuth</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;github&quot;</span><span class="p">,</span><span class="w"> </span><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;GITHUB_CLIENT_ID&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;GITHUB_CLIENT_SECRET&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># the MCP server challenges clients that don&#39;t present a valid access token</span>
+<span class="n">ActionController</span><span class="o">::</span><span class="n">MCPServer</span><span class="o">.</span><span class="n">tap</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">mcp</span><span class="o">|</span>
+<span class="w">  </span><span class="n">mcp</span><span class="o">.</span><span class="n">server_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;notes&quot;</span>
+<span class="w">  </span><span class="n">mcp</span><span class="o">.</span><span class="n">auth_probe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/api/users/current&quot;</span>
+<span class="w">  </span><span class="n">mcp</span><span class="o">.</span><span class="n">resource_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">_request</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Request</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="n">ActionController</span><span class="o">::</span><span class="n">MCPServer</span><span class="o">::</span><span class="n">ResourceMetadata</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+<span class="w">      </span><span class="ss">authorization_servers</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="n">App</span><span class="o">::</span><span class="no">URL</span><span class="o">]</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">scopes_supported</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="n">App</span><span class="o">::</span><span class="no">SCOPE</span><span class="o">]</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>src/app.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="k">require</span><span class="w"> </span><span class="s2">&quot;./config&quot;</span>
+
+<span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;PORT&quot;</span><span class="o">]?.</span><span class="n">try</span><span class="p">(</span><span class="o">&amp;.</span><span class="n">to_i</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mi">3000</span>
+<span class="n">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ActionController</span><span class="o">::</span><span class="n">Server</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">)</span>
+<span class="n">ActionController</span><span class="o">::</span><span class="n">MCPServer</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">server</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/mcp&quot;</span><span class="p">)</span>
+
+<span class="n">Signal</span><span class="o">::</span><span class="n">INT</span><span class="o">.</span><span class="n">trap</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">server</span><span class="o">.</span><span class="n">close</span><span class="w"> </span><span class="p">}</span>
+<span class="n">server</span><span class="o">.</span><span class="n">run</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;Listening on </span><span class="si">#{</span><span class="n">server</span><span class="o">.</span><span class="n">print_addresses</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+</details>
+<h3 id="3-signing-in-with-multi_auth">3. Signing in with multi_auth<a class="headerlink" href="#3-signing-in-with-multi_auth" title="Permanent link">#</a></h3>
+<p>multi_auth handles the provider round trip. It doesn't validate the OAuth <code>state</code>
+parameter, so store a random value in the session and check it in the callback. That
+stops an attacker from logging a victim in to the attacker's account.</p>
+<details class="example" open="open">
+<summary>src/controllers/sessions.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># signs users in with an identity provider, using multi_auth</span>
+<span class="o">@[</span><span class="nd">AC::MCP</span><span class="p">(</span><span class="ss">hide</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="o">]</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Sessions</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Application</span>
+<span class="w">  </span><span class="n">base</span><span class="w"> </span><span class="s2">&quot;/auth&quot;</span>
+
+<span class="w">  </span><span class="no">PROVIDERS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;github&quot;</span><span class="o">]</span>
+
+<span class="w">  </span><span class="c1"># the sign in page</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::GET</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">index</span>
+<span class="w">    </span><span class="n">providers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="no">DEV_LOGIN</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="no">PROVIDERS</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;dev&quot;</span><span class="o">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">PROVIDERS</span>
+<span class="w">    </span><span class="n">links</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">providers</span><span class="o">.</span><span class="n">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">name</span><span class="o">|</span><span class="w"> </span><span class="sx">%(&lt;li&gt;&lt;a href=&quot;/auth/</span><span class="si">#{</span><span class="n">name</span><span class="si">}</span><span class="sx">&quot;&gt;Sign in with </span><span class="si">#{</span><span class="n">name</span><span class="si">}</span><span class="sx">&lt;/a&gt;&lt;/li&gt;)</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">render</span><span class="w"> </span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;Sign in&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&lt;ul&gt;</span><span class="si">#{</span><span class="n">links</span><span class="o">.</span><span class="n">join</span><span class="si">}</span><span class="s2">&lt;/ul&gt;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># redirects to the identity provider</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::GET</span><span class="p">(</span><span class="s2">&quot;/:provider&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">sign_in</span><span class="p">(</span><span class="n">provider</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span>
+<span class="w">    </span><span class="c1"># DEVELOPMENT ONLY: sign in without an identity provider</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">provider</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="no">DEV_LOGIN</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">signed_in</span><span class="w"> </span><span class="n">User</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;dev:developer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Developer&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1"># multi_auth doesn&#39;t validate `state`, we check it in the callback</span>
+<span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Random</span><span class="o">::</span><span class="n">Secure</span><span class="o">.</span><span class="n">urlsafe_base64</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="w">    </span><span class="n">session</span><span class="o">[</span><span class="s2">&quot;oauth_state&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span>
+<span class="w">    </span><span class="n">redirect_to</span><span class="w"> </span><span class="n">engine</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span><span class="o">.</span><span class="n">authorize_uri</span><span class="p">(</span><span class="ss">state</span><span class="p">:</span><span class="w"> </span><span class="n">state</span><span class="p">),</span><span class="w"> </span><span class="ss">:see_other</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># the identity provider redirects back here</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::GET</span><span class="p">(</span><span class="s2">&quot;/:provider/callback&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="n">provider</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">expected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;oauth_state&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">expected</span><span class="o">.</span><span class="n">empty?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">Crypto</span><span class="o">::</span><span class="n">Subtle</span><span class="o">.</span><span class="n">constant_time_compare</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span>
+<span class="w">      </span><span class="n">render</span><span class="w"> </span><span class="ss">:bad_request</span><span class="p">,</span><span class="w"> </span><span class="ss">text</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invalid sign in state, please try again&quot;</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="n">engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">engine</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+<span class="w">    </span><span class="n">auth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">      </span><span class="n">engine</span><span class="o">.</span><span class="n">user</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">query_params</span><span class="p">)</span>
+<span class="w">    </span><span class="k">rescue</span><span class="w"> </span><span class="n">error</span>
+<span class="w">      </span><span class="n">Log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="ss">exception</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">provider</span><span class="si">}</span><span class="s2"> sign in failed&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="n">render</span><span class="w"> </span><span class="ss">:unauthorized</span><span class="p">,</span><span class="w"> </span><span class="ss">text</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sign in failed&quot;</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="n">signed_in</span><span class="w"> </span><span class="n">User</span><span class="o">.</span><span class="n">from</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">engine</span><span class="p">(</span><span class="n">provider</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">MultiAuth</span><span class="o">::</span><span class="n">Engine</span>
+<span class="w">    </span><span class="nb">raise</span><span class="w"> </span><span class="n">AuthServer</span><span class="o">::</span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_request&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;unknown provider&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:not_found</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">provider</span><span class="o">.</span><span class="n">in?</span><span class="p">(</span><span class="no">PROVIDERS</span><span class="p">)</span>
+<span class="w">    </span><span class="n">MultiAuth</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">App</span><span class="o">::</span><span class="no">URL</span><span class="si">}</span><span class="s2">/auth/</span><span class="si">#{</span><span class="n">provider</span><span class="si">}</span><span class="s2">/callback&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># continues the OAuth authorization request that required sign in</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">signed_in</span><span class="p">(</span><span class="n">user</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User</span><span class="p">)</span>
+<span class="w">    </span><span class="n">session</span><span class="o">[</span><span class="s2">&quot;user_id&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
+<span class="w">    </span><span class="n">redirect_to</span><span class="w"> </span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;return_to&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">try</span><span class="p">(</span><span class="o">&amp;.</span><span class="n">to_s</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;/auth&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:see_other</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>src/models/user.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># a signed in person. Stored in memory for the example, use your database</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">User</span>
+<span class="w">  </span><span class="k">include</span><span class="w"> </span><span class="n">JSON</span><span class="o">::</span><span class="n">Serializable</span>
+
+<span class="w">  </span><span class="bp">getter</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">  </span><span class="bp">getter</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">  </span><span class="bp">getter</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String?</span>
+
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="vi">@id</span><span class="p">,</span><span class="w"> </span><span class="vi">@name</span><span class="p">,</span><span class="w"> </span><span class="vi">@email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="no">STORE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">User</span>
+
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">find?</span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User?</span>
+<span class="w">    </span><span class="no">STORE</span><span class="o">[</span><span class="n">id</span><span class="o">]?</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">save</span><span class="p">(</span><span class="n">user</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User</span>
+<span class="w">    </span><span class="no">STORE</span><span class="o">[</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># finds or creates the user for an identity provider account</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nc">self</span><span class="o">.</span><span class="nf">from</span><span class="p">(</span><span class="n">auth</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">MultiAuth</span><span class="o">::</span><span class="n">User</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User</span>
+<span class="w">    </span><span class="n">save</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">auth</span><span class="o">.</span><span class="n">provider</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">auth</span><span class="o">.</span><span class="n">uid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">auth</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">auth</span><span class="o">.</span><span class="n">nickname</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">auth</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="n">auth</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<div class="admonition note">
+<p class="admonition-title">GitHub OAuth app</p>
+<p>Create an OAuth app in GitHub (<strong>Settings → Developer settings → OAuth Apps</strong>) and set
+its callback URL to <code>&lt;APP_URL&gt;/auth/github/callback</code>. multi_auth's GitHub provider
+relies on the registered callback. Then set <code>GITHUB_CLIENT_ID</code> and
+<code>GITHUB_CLIENT_SECRET</code>.</p>
+</div>
+<h3 id="4-the-authorization-server">4. The authorization server<a class="headerlink" href="#4-the-authorization-server" title="Permanent link">#</a></h3>
+<p>These endpoints are what MCP clients talk to:</p>
+<ul>
+<li><strong>Metadata:</strong> <code>/.well-known/oauth-authorization-server</code>, where clients discover the
+  endpoints.</li>
+<li><strong>Registration:</strong> <code>/oauth/register</code>. Every client is public (no secret), so PKCE
+  proves possession.</li>
+<li><strong>Authorize:</strong> <code>/oauth/authorize</code>. It sends the user to sign in if needed, shows a
+  consent page protected by a CSRF token, then issues a code. S256 PKCE is required.</li>
+<li><strong>Token:</strong> <code>/oauth/token</code>. Codes and refresh tokens are single use, and refresh
+  tokens rotate.</li>
+</ul>
+<details class="example" open="open">
+<summary>src/controllers/authorization.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># the OAuth 2 authorization server that MCP clients sign in with</span>
+<span class="o">@[</span><span class="nd">AC::MCP</span><span class="p">(</span><span class="ss">hide</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="o">]</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Authorization</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Application</span>
+<span class="w">  </span><span class="n">base</span><span class="w"> </span><span class="s2">&quot;/&quot;</span>
+
+<span class="w">  </span><span class="k">alias</span><span class="w"> </span><span class="nc">Tokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AuthServer</span><span class="o">::</span><span class="n">Tokens</span>
+<span class="w">  </span><span class="k">alias</span><span class="w"> </span><span class="nc">Error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AuthServer</span><span class="o">::</span><span class="n">Error</span>
+<span class="w">  </span><span class="no">CLIENTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AuthServer</span><span class="o">::</span><span class="no">CLIENTS</span>
+
+<span class="w">  </span><span class="c1"># authorization server metadata (RFC 8414), where MCP clients discover the endpoints</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::GET</span><span class="p">(</span><span class="s2">&quot;/.well-known/oauth-authorization-server&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">metadata</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="ss">issuer</span><span class="p">:</span><span class="w">                                </span><span class="n">App</span><span class="o">::</span><span class="no">URL</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">authorization_endpoint</span><span class="p">:</span><span class="w">                </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">App</span><span class="o">::</span><span class="no">URL</span><span class="si">}</span><span class="s2">/oauth/authorize&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">token_endpoint</span><span class="p">:</span><span class="w">                        </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">App</span><span class="o">::</span><span class="no">URL</span><span class="si">}</span><span class="s2">/oauth/token&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">registration_endpoint</span><span class="p">:</span><span class="w">                 </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">App</span><span class="o">::</span><span class="no">URL</span><span class="si">}</span><span class="s2">/oauth/register&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">scopes_supported</span><span class="p">:</span><span class="w">                      </span><span class="o">[</span><span class="n">App</span><span class="o">::</span><span class="no">SCOPE</span><span class="o">]</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">response_types_supported</span><span class="p">:</span><span class="w">              </span><span class="o">[</span><span class="s2">&quot;code&quot;</span><span class="o">]</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">grant_types_supported</span><span class="p">:</span><span class="w">                 </span><span class="o">[</span><span class="s2">&quot;authorization_code&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;refresh_token&quot;</span><span class="o">]</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">token_endpoint_auth_methods_supported</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;none&quot;</span><span class="o">]</span><span class="p">,</span>
+<span class="w">      </span><span class="ss">code_challenge_methods_supported</span><span class="p">:</span><span class="w">      </span><span class="o">[</span><span class="s2">&quot;S256&quot;</span><span class="o">]</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># dynamic client registration (RFC 7591)</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::POST</span><span class="p">(</span><span class="s2">&quot;/oauth/register&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">body</span><span class="p">:</span><span class="w"> </span><span class="ss">:client_metadata</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">CREATED</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">client_metadata</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Hash</span><span class="p">(</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">JSON</span><span class="o">::</span><span class="n">Any</span><span class="p">))</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Authly</span><span class="o">::</span><span class="n">DynamicClient</span>
+<span class="w">    </span><span class="n">CLIENTS</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">client_metadata</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># the user signs in and approves the client, which receives an authorization code</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::GET</span><span class="p">(</span><span class="s2">&quot;/oauth/authorize&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::POST</span><span class="p">(</span><span class="s2">&quot;/oauth/authorize&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">authorize</span><span class="p">(</span>
+<span class="w">    </span><span class="n">response_type</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">client_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">redirect_uri</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">code_challenge</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">code_challenge_method</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">scope</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">resource</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">decision</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">csrf_token</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">    </span><span class="c1"># errors are never redirected to an unverified redirect_uri</span>
+<span class="w">    </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CLIENTS</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">client_id</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_request&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;unknown client or redirect_uri&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">client</span><span class="o">.</span><span class="n">redirect_uris</span><span class="o">.</span><span class="n">includes?</span><span class="p">(</span><span class="n">redirect_uri</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;unsupported_response_type&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">response_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;code&quot;</span>
+<span class="w">    </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_request&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;PKCE with S256 is required&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">code_challenge</span><span class="o">.</span><span class="n">empty?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">code_challenge_method</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s2">&quot;S256&quot;</span>
+<span class="w">    </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_target&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">resource</span><span class="o">.</span><span class="n">empty?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">App</span><span class="o">.</span><span class="n">resource?</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+<span class="w">    </span><span class="n">scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scope</span><span class="o">.</span><span class="n">presence</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="no">SCOPE</span>
+<span class="w">    </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_scope&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">CLIENTS</span><span class="o">.</span><span class="n">allowed_scopes?</span><span class="p">(</span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="n">scope</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c1"># sign in first, then return here</span>
+<span class="w">    </span><span class="k">unless</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session_user</span>
+<span class="w">      </span><span class="n">session</span><span class="o">[</span><span class="s2">&quot;return_to&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="o">.</span><span class="n">resource</span>
+<span class="w">      </span><span class="n">redirect_to</span><span class="w"> </span><span class="s2">&quot;/auth&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:see_other</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1"># ask the user to approve the client</span>
+<span class="w">    </span><span class="n">csrf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">session</span><span class="o">[</span><span class="s2">&quot;csrf_token&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">||=</span><span class="w"> </span><span class="n">Random</span><span class="o">::</span><span class="n">Secure</span><span class="o">.</span><span class="n">urlsafe_base64</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">to_s</span>
+<span class="w">    </span><span class="k">unless</span><span class="w"> </span><span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">decision</span><span class="o">.</span><span class="n">in?</span><span class="p">(</span><span class="s2">&quot;allow&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">Crypto</span><span class="o">::</span><span class="n">Subtle</span><span class="o">.</span><span class="n">constant_time_compare</span><span class="p">(</span><span class="n">csrf</span><span class="p">,</span><span class="w"> </span><span class="n">csrf_token</span><span class="p">)</span>
+<span class="w">      </span><span class="n">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="ss">client_id</span><span class="p">:</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="ss">redirect_uri</span><span class="p">:</span><span class="w"> </span><span class="n">redirect_uri</span><span class="p">,</span><span class="w"> </span><span class="ss">response_type</span><span class="p">:</span><span class="w"> </span><span class="n">response_type</span><span class="p">,</span><span class="w"> </span><span class="ss">code_challenge</span><span class="p">:</span><span class="w"> </span><span class="n">code_challenge</span><span class="p">,</span>
+<span class="w">                </span><span class="ss">code_challenge_method</span><span class="p">:</span><span class="w"> </span><span class="n">code_challenge_method</span><span class="p">,</span><span class="w"> </span><span class="ss">scope</span><span class="p">:</span><span class="w"> </span><span class="n">scope</span><span class="p">,</span><span class="w"> </span><span class="ss">state</span><span class="p">:</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="ss">resource</span><span class="p">:</span><span class="w"> </span><span class="n">resource</span><span class="p">,</span><span class="w"> </span><span class="ss">csrf_token</span><span class="p">:</span><span class="w"> </span><span class="n">csrf</span><span class="p">}</span>
+<span class="w">      </span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;Content-Security-Policy&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;frame-ancestors &#39;none&#39;&quot;</span>
+<span class="w">      </span><span class="n">render</span><span class="w"> </span><span class="ss">html</span><span class="p">:</span><span class="w"> </span><span class="n">consent_page</span><span class="p">(</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="n">fields</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="n">redirect_to</span><span class="w"> </span><span class="n">with_params</span><span class="p">(</span><span class="n">redirect_uri</span><span class="p">,</span><span class="w"> </span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;access_denied&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">state</span><span class="p">:</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">decision</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
+
+<span class="w">    </span><span class="n">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">code</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="n">redirect_uri</span><span class="p">,</span><span class="w"> </span><span class="n">scope</span><span class="p">,</span><span class="w"> </span><span class="n">code_challenge</span><span class="p">,</span><span class="w"> </span><span class="n">code_challenge_method</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="kp">.as</span><span class="p">(</span><span class="n">Authly</span><span class="o">::</span><span class="n">Code</span><span class="p">)</span>
+<span class="w">    </span><span class="n">redirect_to</span><span class="w"> </span><span class="n">with_params</span><span class="p">(</span><span class="n">redirect_uri</span><span class="p">,</span><span class="w"> </span><span class="ss">code</span><span class="p">:</span><span class="w"> </span><span class="n">code</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span><span class="w"> </span><span class="ss">state</span><span class="p">:</span><span class="w"> </span><span class="n">state</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># exchanges an authorization code or refresh token for tokens</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::POST</span><span class="p">(</span><span class="s2">&quot;/oauth/token&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">token</span><span class="p">(</span>
+<span class="w">    </span><span class="n">grant_type</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">client_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">code</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">redirect_uri</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">code_verifier</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">refresh_token</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">resource</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Tokens</span><span class="o">::</span><span class="n">Response</span>
+<span class="w">    </span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;Cache-Control&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;no-store&quot;</span>
+<span class="w">    </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_target&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">resource</span><span class="o">.</span><span class="n">empty?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">App</span><span class="o">.</span><span class="n">resource?</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">grant_type</span>
+<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;authorization_code&quot;</span>
+<span class="w">      </span><span class="c1"># authly validates the code, client, redirect_uri and PKCE verifier</span>
+<span class="w">      </span><span class="n">Authly</span><span class="o">::</span><span class="n">AuthorizationCode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">redirect_uri</span><span class="p">,</span><span class="w"> </span><span class="n">code</span><span class="p">,</span><span class="w"> </span><span class="n">code_verifier</span><span class="p">)</span><span class="o">.</span><span class="n">authorized?</span>
+<span class="w">      </span><span class="n">claims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">jwt_decode</span><span class="p">(</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+<span class="w">      </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_grant&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;client_id&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">client_id</span>
+<span class="w">      </span><span class="n">Tokens</span><span class="o">.</span><span class="n">spend!</span><span class="p">(</span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;jti&quot;</span><span class="o">].</span><span class="n">as_s</span><span class="p">)</span>
+<span class="w">      </span><span class="n">Tokens</span><span class="o">.</span><span class="n">issue</span><span class="p">(</span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;user_id&quot;</span><span class="o">].</span><span class="n">as_s</span><span class="p">,</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;scope&quot;</span><span class="o">].</span><span class="n">as_s</span><span class="p">)</span>
+<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;refresh_token&quot;</span>
+<span class="w">      </span><span class="c1"># authly validates the token signature, expiry and the client</span>
+<span class="w">      </span><span class="n">Authly</span><span class="o">::</span><span class="n">RefreshToken</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">refresh_token</span><span class="p">)</span><span class="o">.</span><span class="n">authorized?</span>
+<span class="w">      </span><span class="n">claims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">jwt_decode</span><span class="p">(</span><span class="n">refresh_token</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+<span class="w">      </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_grant&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;typ&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;refresh&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;cid&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">client_id</span>
+<span class="w">      </span><span class="n">Tokens</span><span class="o">.</span><span class="n">spend!</span><span class="p">(</span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;jti&quot;</span><span class="o">].</span><span class="n">as_s</span><span class="p">)</span><span class="w"> </span><span class="c1"># refresh tokens rotate</span>
+<span class="w">      </span><span class="n">Tokens</span><span class="o">.</span><span class="n">issue</span><span class="p">(</span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;sub&quot;</span><span class="o">].</span><span class="n">as_s</span><span class="p">,</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;scope&quot;</span><span class="o">].</span><span class="n">as_s</span><span class="p">)</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">      </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;unsupported_grant_type&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">rescue</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Authly</span><span class="o">::</span><span class="n">Error</span>
+<span class="w">    </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">code</span><span class="p">))</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">consent_page</span><span class="p">(</span><span class="n">client</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Authly</span><span class="o">::</span><span class="n">DynamicClient</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User</span><span class="p">,</span><span class="w"> </span><span class="n">fields</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">    </span><span class="n">hidden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fields</span><span class="o">.</span><span class="n">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="o">|</span><span class="w"> </span><span class="sx">%(&lt;input type=&quot;hidden&quot; name=&quot;</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="sx">&quot; value=&quot;</span><span class="si">#{</span><span class="n">HTML</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="sx">&quot;&gt;)</span><span class="w"> </span><span class="p">}</span><span class="o">.</span><span class="n">join</span>
+<span class="w">    </span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;Allow access?&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">HTML</span><span class="p">)</span>
+<span class="sh">      &lt;p&gt;Signed in as &lt;b&gt;#{HTML.escape(user.name)}&lt;/b&gt;.&lt;/p&gt;</span>
+<span class="sh">      &lt;p&gt;&lt;b&gt;#{HTML.escape(client.client_name || client.client_id)}&lt;/b&gt; wants to use your account</span>
+<span class="sh">         (scope: #{HTML.escape(fields[:scope])}) and will return to #{HTML.escape(fields[:redirect_uri])}&lt;/p&gt;</span>
+<span class="sh">      &lt;form method=&quot;post&quot; action=&quot;/oauth/authorize&quot;&gt;#{hidden}</span>
+<span class="sh">        &lt;button name=&quot;decision&quot; value=&quot;allow&quot;&gt;Allow&lt;/button&gt;</span>
+<span class="sh">        &lt;button name=&quot;decision&quot; value=&quot;deny&quot;&gt;Deny&lt;/button&gt;</span>
+<span class="sh">      &lt;/form&gt;</span>
+<span class="dl">      HTML</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">with_params</span><span class="p">(</span><span class="n">uri</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="o">**</span><span class="n">params</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">    </span><span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">URI</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+<span class="w">    </span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uri</span><span class="o">.</span><span class="n">query_params</span>
+<span class="w">    </span><span class="n">params</span><span class="o">.</span><span class="n">each</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="o">|</span><span class="w"> </span><span class="n">query</span><span class="o">[</span><span class="n">key</span><span class="o">.</span><span class="n">to_s</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">value</span><span class="o">.</span><span class="n">empty?</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">uri</span><span class="o">.</span><span class="n">query_params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">query</span>
+<span class="w">    </span><span class="n">uri</span><span class="o">.</span><span class="n">to_s</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>src/oauth/clients.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="k">module</span><span class="w"> </span><span class="nn">AuthServer</span>
+<span class="w">  </span><span class="c1"># OAuth clients, registered by MCP clients using dynamic client registration (RFC 7591).</span>
+<span class="w">  </span><span class="c1"># Authly calls these methods when validating authorization and token requests.</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Clients</span>
+<span class="w">    </span><span class="k">include</span><span class="w"> </span><span class="n">Authly</span><span class="o">::</span><span class="n">AuthorizableClient</span>
+
+<span class="w">    </span><span class="c1"># authly&#39;s device flow handler, which we don&#39;t use, needs `any?` to compile</span>
+<span class="w">    </span><span class="k">include</span><span class="w"> </span><span class="n">Enumerable</span><span class="p">(</span><span class="n">Authly</span><span class="o">::</span><span class="n">Client</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Authly</span><span class="o">::</span><span class="n">Client</span><span class="w"> </span><span class="o">-&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Nil</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="no">GRANT_TYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;authorization_code&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;refresh_token&quot;</span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1"># every client is public: they can&#39;t keep a secret, so PKCE proves the</span>
+<span class="w">    </span><span class="c1"># code is being redeemed by the client that requested it</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">metadata</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Hash</span><span class="p">(</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">JSON</span><span class="o">::</span><span class="n">Any</span><span class="p">))</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Authly</span><span class="o">::</span><span class="n">DynamicClient</span>
+<span class="w">      </span><span class="n">metadata</span><span class="o">[</span><span class="s2">&quot;token_endpoint_auth_method&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSON</span><span class="o">::</span><span class="n">Any</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">        </span><span class="n">Authly</span><span class="o">::</span><span class="n">DynamicClient</span><span class="o">.</span><span class="n">from_registration_request</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+<span class="w">      </span><span class="k">rescue</span><span class="w"> </span><span class="n">error</span>
+<span class="w">        </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_client_metadata&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_client_metadata&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">client</span><span class="o">.</span><span class="n">valid?</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">supported?</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+
+<span class="w">      </span><span class="n">Authly</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">client_store</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+<span class="w">      </span><span class="n">client</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="n">client_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Authly</span><span class="o">::</span><span class="n">DynamicClient?</span>
+<span class="w">      </span><span class="n">Authly</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">client_store</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">client_id</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">valid_redirect?</span><span class="p">(</span><span class="n">client_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">redirect_uri</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Bool</span>
+<span class="w">      </span><span class="o">!!</span><span class="n">find</span><span class="p">(</span><span class="n">client_id</span><span class="p">)</span><span class="o">.</span><span class="n">try</span><span class="p">(</span><span class="o">&amp;.</span><span class="n">redirect_uris</span><span class="o">.</span><span class="n">includes?</span><span class="p">(</span><span class="n">redirect_uri</span><span class="p">))</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1"># public clients have no secret</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">authorized?</span><span class="p">(</span><span class="n">client_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">client_secret</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span>
+<span class="w">      </span><span class="o">!</span><span class="n">find</span><span class="p">(</span><span class="n">client_id</span><span class="p">)</span><span class="kp">.nil?</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">allowed_scopes?</span><span class="p">(</span><span class="n">client_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">scopes</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Bool</span>
+<span class="w">      </span><span class="n">scopes</span><span class="o">.</span><span class="n">split</span><span class="o">.</span><span class="n">all?</span><span class="p">(</span><span class="n">App</span><span class="o">::</span><span class="no">SCOPE</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">allowed_grant_type?</span><span class="p">(</span><span class="n">client_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">grant_type</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Bool</span>
+<span class="w">      </span><span class="o">!!</span><span class="n">find</span><span class="p">(</span><span class="n">client_id</span><span class="p">)</span><span class="o">.</span><span class="n">try</span><span class="p">(</span><span class="o">&amp;.</span><span class="n">grant_types</span><span class="o">.</span><span class="n">includes?</span><span class="p">(</span><span class="n">grant_type</span><span class="p">))</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">supported?</span><span class="p">(</span><span class="n">client</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Bool</span>
+<span class="w">      </span><span class="n">client</span><span class="o">.</span><span class="n">grant_types</span><span class="o">.</span><span class="n">all?</span><span class="p">(</span><span class="o">&amp;.</span><span class="n">in?</span><span class="p">(</span><span class="no">GRANT_TYPES</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">        </span><span class="n">client</span><span class="o">.</span><span class="n">response_types</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;code&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">        </span><span class="n">client</span><span class="o">.</span><span class="n">redirect_uris</span><span class="o">.</span><span class="n">all?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">uri</span><span class="o">|</span><span class="w"> </span><span class="n">safe_redirect?</span><span class="p">(</span><span class="n">URI</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">uri</span><span class="p">))</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1"># https, or http on the loopback interface for native apps (RFC 8252)</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">safe_redirect?</span><span class="p">(</span><span class="n">uri</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">URI</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Bool</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">uri</span><span class="o">.</span><span class="n">fragment</span>
+<span class="w">      </span><span class="n">uri</span><span class="o">.</span><span class="n">scheme</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;https&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">scheme</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">uri</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">in?</span><span class="p">(</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;[::1]&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="no">CLIENTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Clients</span><span class="o">.</span><span class="n">new</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>src/oauth/tokens.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="k">module</span><span class="w"> </span><span class="nn">AuthServer</span>
+<span class="w">  </span><span class="c1"># access and refresh tokens are JWTs signed by authly.</span>
+<span class="w">  </span><span class="c1"># We mint them here as authly&#39;s `AccessToken` doesn&#39;t record the user (`sub`)</span>
+<span class="w">  </span><span class="k">module</span><span class="w"> </span><span class="nn">Tokens</span>
+<span class="w">    </span><span class="k">extend</span><span class="w"> </span><span class="k">self</span>
+
+<span class="w">    </span><span class="c1"># the token endpoint response (RFC 6749 section 5.1)</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Response</span>
+<span class="w">      </span><span class="k">include</span><span class="w"> </span><span class="n">JSON</span><span class="o">::</span><span class="n">Serializable</span>
+
+<span class="w">      </span><span class="bp">getter</span><span class="w"> </span><span class="n">access_token</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">      </span><span class="bp">getter</span><span class="w"> </span><span class="n">token_type</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Bearer&quot;</span>
+<span class="w">      </span><span class="bp">getter</span><span class="w"> </span><span class="n">expires_in</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Int64</span>
+<span class="w">      </span><span class="bp">getter</span><span class="w"> </span><span class="n">refresh_token</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">      </span><span class="bp">getter</span><span class="w"> </span><span class="n">scope</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="vi">@access_token</span><span class="p">,</span><span class="w"> </span><span class="vi">@expires_in</span><span class="p">,</span><span class="w"> </span><span class="vi">@refresh_token</span><span class="p">,</span><span class="w"> </span><span class="vi">@scope</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">issue</span><span class="p">(</span><span class="n">user_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">client_id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">scope</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Response</span>
+<span class="w">      </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">config</span>
+<span class="w">      </span><span class="n">Response</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+<span class="w">        </span><span class="ss">access_token</span><span class="p">:</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;access&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="n">scope</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="n">access_ttl</span><span class="p">),</span>
+<span class="w">        </span><span class="ss">expires_in</span><span class="p">:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="n">access_ttl</span><span class="o">.</span><span class="n">total_seconds</span><span class="o">.</span><span class="n">to_i64</span><span class="p">,</span>
+<span class="w">        </span><span class="ss">refresh_token</span><span class="p">:</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;refresh&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="n">scope</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="n">refresh_ttl</span><span class="p">),</span>
+<span class="w">        </span><span class="ss">scope</span><span class="p">:</span><span class="w"> </span><span class="n">scope</span><span class="p">,</span>
+<span class="w">      </span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1"># returns the claims of a valid access token issued for this app</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">verify</span><span class="p">(</span><span class="n">token</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">JSON</span><span class="o">::</span><span class="n">Any?</span>
+<span class="w">      </span><span class="n">claims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">jwt_decode</span><span class="p">(</span><span class="n">token</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+<span class="w">      </span><span class="n">claims</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;typ&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;access&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">claims</span><span class="o">[</span><span class="s2">&quot;aud&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="no">URL</span>
+<span class="w">    </span><span class="k">rescue</span><span class="w"> </span><span class="n">JWT</span><span class="o">::</span><span class="n">Error</span>
+<span class="w">      </span><span class="kc">nil</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1"># authorization codes and refresh tokens can only be used once</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">spend!</span><span class="p">(</span><span class="n">jti</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Nil</span>
+<span class="w">      </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">token_store</span>
+<span class="w">      </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;invalid_grant&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;already used&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">store</span><span class="o">.</span><span class="n">revoked?</span><span class="p">(</span><span class="n">jti</span><span class="p">)</span>
+<span class="w">      </span><span class="n">store</span><span class="o">.</span><span class="n">revoke</span><span class="p">(</span><span class="n">jti</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="n">scope</span><span class="p">,</span><span class="w"> </span><span class="n">ttl</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Time</span><span class="o">::</span><span class="n">Span</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">      </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Time</span><span class="o">.</span><span class="n">utc</span>
+<span class="w">      </span><span class="n">Authly</span><span class="o">.</span><span class="n">jwt_encode</span><span class="p">({</span>
+<span class="w">        </span><span class="s2">&quot;typ&quot;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">type</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;iss&quot;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">issuer</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;aud&quot;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="no">URL</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;sub&quot;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;cid&quot;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;scope&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">scope</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;jti&quot;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Random</span><span class="o">::</span><span class="n">Secure</span><span class="o">.</span><span class="n">hex</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
+<span class="w">        </span><span class="s2">&quot;iat&quot;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">now</span><span class="o">.</span><span class="n">to_unix</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;exp&quot;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ttl</span><span class="p">)</span><span class="o">.</span><span class="n">to_unix</span><span class="p">,</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>src/oauth/error.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="k">module</span><span class="w"> </span><span class="nn">AuthServer</span>
+<span class="w">  </span><span class="c1"># an OAuth error response (RFC 6749 section 5.2)</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Error</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Exception</span>
+<span class="w">    </span><span class="bp">getter</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">    </span><span class="bp">getter</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="vi">@error</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="vi">@status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">BAD_REQUEST</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">error</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<h3 id="5-the-protected-api">5. The protected API<a class="headerlink" href="#5-the-protected-api" title="Permanent link">#</a></h3>
+<p>A <code>before_action</code> verifies the access token, so every route is protected, and so is every
+MCP tool call, because tool calls run the same filters. <code>auth_probe</code> points at
+<code>/api/users/current</code>, so the MCP endpoint uses exactly the same check.</p>
+<details class="example" open="open">
+<summary>src/controllers/api.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># the protected API, every request requires an access token from our authorization server</span>
+<span class="k">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Api</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Application</span>
+<span class="w">  </span><span class="bp">getter!</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User</span>
+
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Filter</span><span class="p">(</span><span class="ss">:before_action</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">authenticate</span>
+<span class="w">    </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;Authorization&quot;</span><span class="o">]?</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">    </span><span class="n">claims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AuthServer</span><span class="o">::</span><span class="n">Tokens</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">lchop</span><span class="p">(</span><span class="s2">&quot;Bearer &quot;</span><span class="p">))</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">header</span><span class="o">.</span><span class="n">starts_with?</span><span class="p">(</span><span class="s2">&quot;Bearer &quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">claims</span><span class="o">.</span><span class="n">try</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">token</span><span class="o">|</span><span class="w"> </span><span class="n">User</span><span class="o">.</span><span class="n">find?</span><span class="p">(</span><span class="n">token</span><span class="o">[</span><span class="s2">&quot;sub&quot;</span><span class="o">].</span><span class="n">as_s</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">render</span><span class="w"> </span><span class="ss">:unauthorized</span><span class="p">,</span><span class="w"> </span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invalid_token&quot;</span><span class="p">}</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@user</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># the signed in user</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Users</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Api</span>
+<span class="w">  </span><span class="n">base</span><span class="w"> </span><span class="s2">&quot;/api/users&quot;</span>
+
+<span class="w">  </span><span class="c1"># returns the user the access token was issued to</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::MCP</span><span class="p">(</span><span class="ss">root</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::GET</span><span class="p">(</span><span class="s2">&quot;/current&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">current</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User</span>
+<span class="w">    </span><span class="n">user</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># your notes</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Notes</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Api</span>
+<span class="w">  </span><span class="n">base</span><span class="w"> </span><span class="s2">&quot;/api/notes&quot;</span>
+
+<span class="w">  </span><span class="no">NOTES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hash</span><span class="p">(</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Array</span><span class="p">(</span><span class="n">String</span><span class="p">))</span><span class="o">.</span><span class="n">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="o">|</span><span class="w"> </span><span class="n">hash</span><span class="o">[</span><span class="n">key</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1"># lists your notes</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::GET</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Array</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+<span class="w">    </span><span class="no">NOTES</span><span class="o">[</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="o">]</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1"># saves a note</span>
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::POST</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">status_code</span><span class="p">:</span><span class="w"> </span><span class="n">HTTP</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="no">CREATED</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span>
+<span class="w">    </span><span class="o">@[</span><span class="nd">AC::Param::Info</span><span class="p">(</span><span class="ss">description</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;the text of the note&quot;</span><span class="p">)</span><span class="o">]</span>
+<span class="w">    </span><span class="n">text</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Array</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+<span class="w">    </span><span class="no">NOTES</span><span class="o">[</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">text</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<details class="example">
+<summary>src/controllers/application.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="k">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Application</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ActionController</span><span class="o">::</span><span class="n">Base</span>
+<span class="w">  </span><span class="c1"># the user signed in to this browser session</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">session_user</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">User?</span>
+<span class="w">    </span><span class="n">session</span><span class="o">[</span><span class="s2">&quot;user_id&quot;</span><span class="o">]?.</span><span class="n">try</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">id</span><span class="o">|</span><span class="w"> </span><span class="n">User</span><span class="o">.</span><span class="n">find?</span><span class="p">(</span><span class="n">id</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="o">@[</span><span class="nd">AC::Route::Exception</span><span class="p">(</span><span class="n">AuthServer</span><span class="o">::</span><span class="n">Error</span><span class="p">)</span><span class="o">]</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">oauth_error</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<span class="w">    </span><span class="n">render</span><span class="w"> </span><span class="ss">status</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="ss">json</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">error</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="ss">error_description</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">protected</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">page</span><span class="p">(</span><span class="n">title</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
+<span class="w">    </span><span class="o">&lt;&lt;-</span><span class="dl">HTML</span>
+<span class="sh">      &lt;!doctype html&gt;</span>
+<span class="sh">      &lt;html&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;title&gt;#{title}&lt;/title&gt;&lt;/head&gt;</span>
+<span class="sh">      &lt;body style=&quot;font-family: sans-serif; max-width: 32rem; margin: 4rem auto&quot;&gt;</span>
+<span class="sh">        &lt;h1&gt;#{title}&lt;/h1&gt;</span>
+<span class="sh">        #{body}</span>
+<span class="sh">      &lt;/body&gt;&lt;/html&gt;</span>
+<span class="dl">      HTML</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<h3 id="6-authly-fixes">6. authly fixes<a class="headerlink" href="#6-authly-fixes" title="Permanent link">#</a></h3>
+<p>At the time of writing, authly <code>master</code> needs three fixes to be secure for this flow.
+Include this file, and remove each fix once it's fixed upstream:</p>
+<details class="example" open="open">
+<summary>src/oauth/authly_patches.cr</summary>
+<div class="highlight"><pre><span></span><code><span class="k">require</span><span class="w"> </span><span class="s2">&quot;base64&quot;</span>
+<span class="k">require</span><span class="w"> </span><span class="s2">&quot;digest/sha256&quot;</span>
+
+<span class="c1"># Fixes for authly (azutoolkit/authly master), remove them once fixed upstream.</span>
+<span class="k">module</span><span class="w"> </span><span class="nn">Authly</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">Code</span>
+<span class="w">    </span><span class="c1"># upstream reads the issuer and TTL from constants captured when authly is</span>
+<span class="w">    </span><span class="c1"># required, before `Authly.configure` runs, so codes failed `jwt_decode`.</span>
+<span class="w">    </span><span class="c1"># We also bind the code to its client.</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">jwt</span>
+<span class="w">      </span><span class="n">Authly</span><span class="o">.</span><span class="n">jwt_encode</span><span class="p">({</span>
+<span class="w">        </span><span class="s2">&quot;jti&quot;</span><span class="w">          </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Random</span><span class="o">::</span><span class="n">Secure</span><span class="o">.</span><span class="n">hex</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+<span class="w">        </span><span class="s2">&quot;code&quot;</span><span class="w">         </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">code</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;client_id&quot;</span><span class="w">    </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">client_id</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;challenge&quot;</span><span class="w">    </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">challenge</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;method&quot;</span><span class="w">       </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">method</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;scope&quot;</span><span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">scope</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;user_id&quot;</span><span class="w">      </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;redirect_uri&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">redirect_uri</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;iat&quot;</span><span class="w">          </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Time</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">to_unix</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;iss&quot;</span><span class="w">          </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">issuer</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;exp&quot;</span><span class="w">          </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Authly</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">code_ttl</span><span class="o">.</span><span class="n">from_now</span><span class="o">.</span><span class="n">to_unix</span><span class="p">,</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nn">CodeChallengeBuilder::</span><span class="nc">S256</span>
+<span class="w">    </span><span class="c1"># RFC 7636: BASE64URL(SHA256(verifier)) without padding.</span>
+<span class="w">    </span><span class="c1"># Upstream compares against standard, padded base64</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">valid?</span><span class="p">(</span><span class="n">code_verifier</span><span class="p">)</span>
+<span class="w">      </span><span class="n">code</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Base64</span><span class="o">.</span><span class="n">urlsafe_encode</span><span class="p">(</span><span class="n">Digest</span><span class="o">::</span><span class="n">SHA256</span><span class="o">.</span><span class="n">digest</span><span class="p">(</span><span class="n">code_verifier</span><span class="p">),</span><span class="w"> </span><span class="ss">padding</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">AuthorizationCode</span>
+<span class="w">    </span><span class="c1"># upstream skips the PKCE check when the client omits `code_verifier`.</span>
+<span class="w">    </span><span class="c1"># We require S256 PKCE for every code</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">verify_challenge!</span>
+<span class="w">      </span><span class="n">valid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;S256&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">verifier</span><span class="o">.</span><span class="n">empty?</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">code_challenge</span><span class="o">.</span><span class="n">valid?</span><span class="p">(</span><span class="n">verifier</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">raise</span><span class="w"> </span><span class="n">Error</span><span class="o">.</span><span class="n">invalid_grant</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="n">valid</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</details>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>issuer and code TTL captured before <code>Authly.configure</code> runs</td>
+<td>every code fails to decode</td>
+</tr>
+<tr>
+<td>S256 challenge compared as padded, standard base64</td>
+<td>no standards-compliant client can redeem a code</td>
+</tr>
+<tr>
+<td>PKCE skipped when <code>code_verifier</code> is omitted</td>
+<td>a stolen code can be redeemed without the verifier</td>
+</tr>
+</tbody>
+</table>
+<p>Other things to know:</p>
+<ul>
+<li><strong>Don't use <code>Authly::Handler</code>:</strong> its authorize handler takes the user from the query
+  string.</li>
+<li><strong>Mint your own tokens:</strong> authly's own access tokens don't identify the user, so
+  <code>AuthServer::Tokens</code> mints JWTs with <code>sub</code>, <code>aud</code> and a <code>typ</code> claim.</li>
+<li><strong>Use one HS256 key:</strong> the HS256 <code>secret_key</code> and <code>public_key</code> must be the same value.</li>
+<li><strong>Convert authly errors:</strong> authly raises the generic <code>Authly::Error(Code)</code>. The token
+  action rescues it and re-raises it as <code>AuthServer::Error</code> with the error's own status
+  code. An <code>@[AC::Route::Exception(Authly::Error)]</code> handler works too (action-controller
+  8.3.3+), but its status code is fixed.</li>
+<li><strong>Annotate each controller:</strong> controller-level <code>@[AC::MCP(hide: true)]</code> isn't
+  inherited, so annotate each controller you want hidden.</li>
+</ul>
+<h3 id="7-try-it">7. Try it<a class="headerlink" href="#7-try-it" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code>shards<span class="w"> </span>install
+<span class="nv">DEV_LOGIN</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>crystal<span class="w"> </span>run<span class="w"> </span>src/app.cr
+</code></pre></div>
+<p>Then connect a client:</p>
+<div class="highlight"><pre><span></span><code>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>notes<span class="w"> </span>http://localhost:3000/mcp
+</code></pre></div>
+<p>A browser opens to sign in. <code>DEV_LOGIN=1</code> adds a "Sign in with dev" option that skips
+GitHub during development. <strong>Never set it in production.</strong> After approving the client, the
+model starts with <code>users_current</code> (a root tool), and can open the <code>notes</code> toolbox to list
+and create notes as you.</p>
+<h2 id="production-checklist">Production checklist<a class="headerlink" href="#production-checklist" title="Permanent link">#</a></h2>
+<p>The example keeps everything in memory, to stay readable. Before production:</p>
+<ul>
+<li><strong>Persist</strong> users, clients, spent codes and refresh tokens in a database or Redis
+  (with TTLs), so restarts and multiple instances work. MCP sessions also need sticky
+  routing when you run more than one instance.</li>
+<li><strong>Load secrets</strong> (<code>JWT_SECRET</code>, <code>SESSION_SECRET</code>) from your secret store, and prefer
+  RS256/ES256 keys with rotation and a JWKS endpoint if other services verify tokens.</li>
+<li><strong>Accept any loopback port</strong> for <code>http://127.0.0.1</code> and <code>localhost</code> redirect URIs
+  (<a href="https://www.rfc-editor.org/rfc/rfc8252#section-7.3">RFC 8252 §7.3</a>). Native MCP
+  clients choose their callback port at runtime.</li>
+<li><strong>Support <a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization">client ID metadata documents</a></strong>
+  (MCP's preferred registration method), and rate limit dynamic registration and clean
+  up unused clients.</li>
+<li><strong>Remember consent</strong> per user and client, with a page to review and revoke access.</li>
+<li><strong>Add revocation</strong>, CORS on the metadata, registration and token endpoints (for
+  browser-based clients such as the MCP Inspector), and rate limits on authorize and
+  token.</li>
+<li><strong>Generate <code>mcp.yml</code></strong> at build time so the model sees your tool descriptions.</li>
+<li><strong>Serve over HTTPS</strong>, and remove the <code>DEV_LOGIN</code> shortcut.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">A production reference</p>
+<p><a href="https://github.com/PlaceOS">PlaceOS auth</a> is a production authorization server built
+on the same pieces (authly + multi_auth). It adds client ID metadata documents, dynamic
+registration with rate limits, loopback port matching, consent, PKCE enforcement and
+RFC 8707 resource checks. <a href="https://github.com/PlaceOS/rest-api">PlaceOS REST API</a> shows
+the resource server side, with <code>auth_probe</code> and <code>resource_metadata</code>.</p>
+</div>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="../configuration/">Configuration reference</a></li>
+<li><a href="../../guides/filters/">Filters</a></li>
+<li><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization">MCP authorization specification</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../ui/" class="md-footer__link md-footer__link--prev" aria-label="Previous: UI cards">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                UI cards
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Configuration
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/spider-gazelle" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.footer", "navigation.top", "content.code.copy", "content.tabs.link", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
