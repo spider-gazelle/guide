@@ -4,6 +4,7 @@
     * [Configuration](getting_started/configuration.md)
 * [Guides](guides/README.md)
     * [Controllers & routing](guides/routing.md)
+    * [Composable applications](guides/composition.md)
     * [Parameters](guides/parameters.md)
     * [Responses](guides/responses.md)
     * [Filters](guides/filters.md)

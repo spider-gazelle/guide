@@ -6,6 +6,7 @@ Each builds on the last. If you're experienced, jump to the topic you need.
 | Guide | You'll learn |
 |---|---|
 | [Controllers & routing](routing.md) | defining routes with annotations, paths, verbs and redirect helpers |
+| [Composable applications](composition.md) | combining apps, mounting controller subtrees, unified catalogs and the tradeoffs of handler chains |
 | [Parameters](parameters.md) | typed parameters, converters, headers and request bodies |
 | [Responses](responses.md) | responders, status codes, rendering, files and headers |
 | [Filters](filters.md) | running code before, around and after actions |

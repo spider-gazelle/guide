@@ -74,6 +74,7 @@ plugins:
         Guides:
           - guides/README.md
           - guides/routing.md
+          - guides/composition.md
           - guides/parameters.md
           - guides/responses.md
           - guides/filters.md
