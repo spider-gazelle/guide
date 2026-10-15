@@ -33,28 +33,30 @@ Large APIs have hundreds of routes, and listing them all would fill the model's 
 before it does any work. Spider-Gazelle uses **progressive disclosure** instead:
 
 - **Toolboxes:** each controller is a toolbox, described by the controller's doc comment.
-- **Starting tools:** a session starts with just five tools (three with
-  `tool_proxy = false`), plus any [root items](prompts.md):
+- **Listed tools:** the tool list has just four tools, plus any
+  [root items](prompts.md):
 
   | Tool | Purpose |
   |---|---|
   | `list_toolboxes` | lists the toolboxes, their descriptions, and tool and prompt counts |
-  | `open_toolbox(name)` | adds a toolbox's tools and prompts to the session, returning the tool definitions |
-  | `close_toolbox(name)` | removes them again |
-  | `call_read_only(name, arguments)` | runs a read only tool from an open toolbox, or a root tool |
-  | `call_tool(name, arguments)` | runs any tool from an open toolbox, or a root tool. Tools marked `visibility: :card` are refused by both proxies |
+  | `open_toolbox(name)` | returns the definitions of a toolbox's tools, and the names of its prompts |
+  | `call_read_only(name, arguments)` | runs a read only tool from a toolbox |
+  | `call_tool(name, arguments)` | runs any tool from a toolbox. Tools marked `visibility: :card` are refused by both proxies |
 
-- **Loading on demand:** the model opens only the toolboxes it needs. The client is
-  notified (`tools/list_changed`) and refreshes its tool list.
-- **Clients that don't refresh:** some clients (currently including Claude and ChatGPT)
-  ignore `tools/list_changed`, so opened tools never appear. `open_toolbox` also returns
-  each tool's name, description, input schema and the proxy to run it with:
-  `call_read_only` for [read only tools](prompts.md#behaviour), which clients can
-  run without asking for confirmation, and `call_tool` for the rest. Proxied calls behave
-  exactly like direct ones. Turn them off with `tool_proxy = false` once your clients
-  support `list_changed`.
-- **Root items:** anything marked `root: true` is always available without opening a
-  toolbox. Use it for the few tools and prompts most sessions need.
+- **Loading on demand:** the model opens only the toolboxes it needs. `open_toolbox`
+  returns each tool's name, description, input schema and the proxy to run it with:
+  `call_read_only` for [read only tools](prompts.md#behaviour), which clients can run
+  without asking for confirmation, and `call_tool` for the rest. Proxied calls behave
+  exactly like direct ones, and clients can also call any tool directly.
+- **Root items:** anything marked `root: true` is always listed. Use it for the few tools
+  and prompts most conversations need.
+- **Prompts:** every prompt is listed. Users pick prompts, so they don't use the model's
+  context.
+- **Stateless:** opening a toolbox doesn't change anything on the server, so the tool
+  list is the same for every request. There are no MCP sessions, and any instance of
+  your app can serve any request.
+
+To list every tool instead of using toolboxes, set `tool_proxy = false`.
 
 ```crystal
 # Manage meeting rooms and their bookings
@@ -70,7 +72,7 @@ end
 ```
 
 Here the toolbox is `rooms` ("Manage meeting rooms and their bookings"), and opening it
-adds the `rooms_index` tool ("Lists the rooms in a building").
+returns the `rooms_index` tool ("Lists the rooms in a building").
 
 ## Naming
 

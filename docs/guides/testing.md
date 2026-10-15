@@ -212,18 +212,14 @@ describe "MCP server" do
     JSON.parse(response.body)["result"]
   end
 
-  # every request after `initialize` must send the session id
-  before_all do
-    body = {jsonrpc: "2.0", id: 1, method: "initialize", params: {protocolVersion: "2025-11-25"}}.to_json
-    response = client.post("/mcp", headers: headers, body: body)
-    headers["Mcp-Session-Id"] = response.headers["Mcp-Session-Id"]
-  end
-
   it "exposes the routes as tools" do
-    rpc.call("tools/call", JSON.parse(%({"name": "open_toolbox", "arguments": {"name": "welcome"}})))
-
+    # `welcome_api` has a UI card, which makes it a root item: always listed
     tools = rpc.call("tools/list", JSON.parse("{}"))["tools"].as_a.map(&.["name"].as_s)
     tools.should contain "welcome_api"
+
+    # other tools are in the controller's toolbox, opening it returns their definitions
+    opened = rpc.call("tools/call", JSON.parse(%({"name": "open_toolbox", "arguments": {"name": "welcome"}})))
+    opened["structuredContent"]["tools"].as_a.map(&.["name"].as_s).should contain "welcome_index"
 
     result = rpc.call("tools/call", JSON.parse(%({"name": "welcome_api", "arguments": {"example": 42}})))
     result["structuredContent"].should eq({"status" => 200, "body" => {"result" => 42}})
@@ -236,6 +232,8 @@ end
   MCP server on.
 * `ActionController::MCPServer` comes from `require "action-controller/mcp"`,
   which the template's `config.cr` already includes.
+* The MCP server is stateless, so there's no `initialize` or session to set up:
+  each request stands alone.
 * Tool calls go through your routes, so filters and exception handlers apply, as
   they do in production.
 * Tool descriptions come from `mcp.yml`. If it hasn't been generated, the tools

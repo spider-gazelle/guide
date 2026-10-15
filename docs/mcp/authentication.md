@@ -25,8 +25,8 @@ responds with HTTP `401` and a `WWW-Authenticate` challenge. With route auth alo
 connecting always succeeds, and a `401` from a route reaches the model as a failed tool
 call it can't fix. Enabling authentication moves the check to the endpoint:
 
-- **Every request is checked:** `initialize`, tool calls, and the notification stream.
-  Failures get a real `401`.
+- **Every request is checked:** discovery, tool lists, tool calls and prompts. Failures
+  get a real `401`.
 - **Token expiry is caught:** if a route rejects a tool call with `401` (an expired
   token, say), the endpoint answers `401` so the client refreshes and retries.
 - **Checks are cached:** successful checks are cached for each credential for
@@ -145,7 +145,7 @@ A small notes API that MCP clients sign in to with GitHub. It's one app that is 
     dependencies:
       action-controller:
         github: spider-gazelle/action-controller
-        version: ~> 8.14
+        version: ~> 9.2
 
       # OAuth 2 authorization server library
       authly:
@@ -842,14 +842,14 @@ and create notes as you.
 The example keeps everything in memory, to stay readable. Before production:
 
 - **Persist** users, clients, spent codes and refresh tokens in a database or Redis
-  (with TTLs), so restarts and multiple instances work. MCP sessions also need sticky
-  routing when you run more than one instance.
+  (with TTLs), so restarts and multiple instances work. The MCP server itself is
+  stateless, so any instance can serve any request.
 - **Load secrets** (`JWT_SECRET`, `SESSION_SECRET`) from your secret store, and prefer
   RS256/ES256 keys with rotation and a JWKS endpoint if other services verify tokens.
 - **Accept any loopback port** for `http://127.0.0.1` and `localhost` redirect URIs
   ([RFC 8252 §7.3](https://www.rfc-editor.org/rfc/rfc8252#section-7.3)). Native MCP
   clients choose their callback port at runtime.
-- **Support [client ID metadata documents](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization)**
+- **Support [client ID metadata documents](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)**
   (MCP's preferred registration method), and rate limit dynamic registration and clean
   up unused clients.
 - **Remember consent** per user and client, with a page to review and revoke access.
@@ -870,4 +870,4 @@ The example keeps everything in memory, to stay readable. Before production:
 
 - [Configuration reference](configuration.md)
 - [Filters](../guides/filters.md)
-- [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization)
+- [MCP authorization specification](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)

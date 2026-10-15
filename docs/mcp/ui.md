@@ -209,9 +209,8 @@ deploy:
 - **Content security policy:** the card runs in a sandboxed iframe with the policy built
   from its [card settings](#card-settings). A request to a domain the card hasn't
   declared is blocked.
-- **Tool calls:** a card can only call the tools in the session's tool list, and not
-  `visibility: :model` tools. Calls go through the same MCP session and headers as the
-  page.
+- **Tool calls:** a card can only call the tools in the tool list, and not
+  `visibility: :model` tools. Calls are sent with the same headers as the page.
 - **Host messages:** the previewer answers `ui/initialize` with the theme, CSS variables,
   viewport and platform, resizes the card on `ui/notifications/size-changed`, and
   supports fullscreen, opening links and downloads. Anything it doesn't support is logged
@@ -335,10 +334,11 @@ error response and `#stage` has `data-tool-error`.
 
 ## Things to know
 
-- **Root by default:** hosts only render cards for, and let cards call, the tools in
-  their tool list, and some clients don't refresh their tools when a toolbox opens. So
-  tools with `ui:` or `visibility: :card` are root items, always listed, unless you annotate
-  them `root: false`.
+- **Root by default:** hosts only render cards for the tools in their tool list, and
+  toolbox tools aren't listed (the model runs them through the proxies). So tools with
+  `ui:` are root items, always listed, unless you annotate them `root: false`. Tools with
+  `visibility: :card` are always listed, so cards can call them, and hosts hide them from
+  the model.
 - **Caching:** hosts cache cards by URI, so tools advertise
   `ui://bookings/card.html?v=<content hash>`. Deploying a changed card changes its URI.
 - **Safety:** `ui:` paths must be relative `.html` paths (checked at compile time), and

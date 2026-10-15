@@ -7,7 +7,7 @@ All options are class properties on `ActionController::MCPServer`, usually set i
 ActionController::MCPServer.tap do |mcp|
   mcp.server_name = "my-app"
   mcp.server_version = "1.0.0"
-  # describe your domain, then how to use toolboxes (which explains the proxies when enabled)
+  # describe your domain, then how to use toolboxes
   mcp.instructions = "Manages meeting rooms and bookings.\n\n#{mcp.toolbox_instructions}"
 end
 ```
@@ -16,14 +16,14 @@ end
 
 | Option | Default | Purpose |
 |---|---|---|
-| `server_name` | `"action-controller"` | reported to clients on `initialize` |
-| `server_version` | `"1.0.0"` | reported to clients on `initialize` |
-| `instructions` | `nil` (`toolbox_instructions`) | text given to the model on `initialize`. Describe your domain here and append `toolbox_instructions`. `""` sends none |
+| `server_name` | `"action-controller"` | the server name reported to clients |
+| `server_version` | `"1.0.0"` | the server version reported to clients |
+| `instructions` | `nil` (`toolbox_instructions`) | text given to the model when it connects. Describe your domain here and append `toolbox_instructions`. `""` sends none |
 | `ui_base` | `nil` | the folder of [UI cards](ui.md), `ui://` paths resolve against it |
 | `ui_meta` | `nil` | the default card settings (`UIMeta`: CSP domains, permissions, border) |
-| `tool_proxy` | `true` | adds the `call_read_only` and `call_tool` meta tools, for clients that ignore `tools/list_changed` |
+| `tool_proxy` | `true` | groups tools into toolboxes, run with the `call_read_only` and `call_tool` meta tools. `false` lists every tool instead |
 | `description_path` | `"mcp.yml"` | the generated tool descriptions, relative to the working directory |
-| `session_timeout` | `30.minutes` | idle sessions are discarded |
+| `cache_ttl` | `5.minutes` | how long clients may cache the server description and the tool, prompt and resource lists (`ttlMs`) |
 | `allowed_origins` | `[]` | browser origins allowed in addition to same-origin. `"*"` allows any |
 | `forward_headers` | `["Authorization", "Cookie", "X-API-Key"]` | request headers copied onto tool calls and prompts |
 | `excluded_response_headers` | noise, credentials, transport and browser policy headers | response headers left out of [tool results](#tool-results), matched case-insensitively. A trailing `*` matches a prefix |
@@ -48,22 +48,32 @@ Authentication is optional and off by default. It's enabled when `auth_probe`,
 | `mount_endpoints(router)` | registers just the [controller endpoints](endpoints.md) |
 | `endpoint_paths` | the path templates of the controller endpoints |
 | `icon(src, **fields)` | adds an icon for the global server, see [icons](prompts.md#icons) |
-| `toolbox_instructions` | the toolbox usage instructions, to append to your own `instructions` |
+| `toolbox_instructions` | the toolbox usage instructions, to append to your own `instructions`. Empty when `tool_proxy` is `false` |
 | `write_description(path)` | generates `mcp.yml` from the code. Needs the source code |
 | `generate_description` | the same, returning the `Description` |
 | `description=` | replaces the loaded description (`nil` reloads it), useful in specs |
 
 ## Transport details
 
-- **Transport:** Streamable HTTP, for protocol versions `2025-11-25`, `2025-06-18` and
-  `2025-03-26`.
-- **`POST`:** returns `application/json`. When a request produces notifications (e.g.
-  opening a toolbox) and the client accepts `text/event-stream`, the notifications are
-  streamed ahead of the result.
-- **`GET`:** with `Accept: text/event-stream`, opens a stream for server notifications.
-- **`DELETE`:** ends the session.
-- **Sessions:** identified by the `Mcp-Session-Id` header and stored in memory for each
-  process. Deployments with multiple instances need sticky sessions.
+- **Transport:** Streamable HTTP, for protocol versions `2026-07-28`, `2025-11-25`,
+  `2025-06-18` and `2025-03-26`.
+- **Stateless:** the server keeps nothing between requests, so there are no MCP
+  sessions. Run as many instances as you like behind a load balancer, no sticky sessions
+  or shared storage needed.
+- **`POST`:** every request is a `POST`, answered with `application/json`. `GET` and
+  `DELETE` respond `405 Method Not Allowed`.
+- **`2026-07-28` requests:** carry their protocol version and client capabilities in
+  `_meta`, and the `MCP-Protocol-Version`, `Mcp-Method` and `Mcp-Name` headers must match
+  the request body, otherwise the response is `400 Bad Request`. Clients describe the
+  server with `server/discover`. Results include `resultType` and the server info in
+  `_meta`, and lists include `ttlMs` (from `cache_ttl`) and `cacheScope` (`private` when
+  authentication is enabled, as results depend on the user, otherwise `public`).
+- **Earlier versions:** start with `initialize`. No `Mcp-Session-Id` is issued, and one
+  sent by a client is ignored. Requests without an `MCP-Protocol-Version` header are
+  treated as `2025-03-26`.
+- **Notifications:** the tool, prompt and resource lists never change, so there's
+  nothing to notify. `subscriptions/listen` is acknowledged with no notifications.
+- **Authentication:** when enabled, every request is authenticated.
 - **`Origin` headers:** must be same-origin or listed in `allowed_origins`, which
   protects against DNS rebinding.
 - **Unhandled exceptions:** are logged and returned as a generic `500` tool error.

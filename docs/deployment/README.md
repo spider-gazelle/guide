@@ -176,9 +176,10 @@ When you run several containers behind a load balancer:
 
 * Session cookies work on any instance, as long as they share the same
   `COOKIE_SESSION_SECRET`.
-* [WebSocket](../guides/websockets.md) connections and MCP sessions live in the
-  process that accepted them. MCP clients need sticky sessions, see
-  [MCP](../mcp/README.md).
+* [WebSocket](../guides/websockets.md) connections live in the process that accepted
+  them.
+* The [MCP server](../mcp/README.md) is stateless, so any instance can serve any MCP
+  request.
 
 ## Pushing to a registry
 

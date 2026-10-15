@@ -35,7 +35,7 @@ end
 
 ## Prompts
 
-[Prompts](https://modelcontextprotocol.io/specification/2025-11-25/server/prompts) are
+[Prompts](https://modelcontextprotocol.io/specification/2026-07-28/server/prompts) are
 reusable message templates that users pick in their MCP client, often shown as slash
 commands. They're a good way to package your domain knowledge: what to ask, which tools to
 use, and in what order.
@@ -102,7 +102,7 @@ user's permissions enforced.
 ## Root tools and prompts
 
 Toolboxes keep the model's context small, but a few tools are needed in almost every
-session. Mark them `root: true`:
+conversation. Mark them `root: true`:
 
 ```crystal
 class Rooms < AC::Base
@@ -186,9 +186,9 @@ end
 | `:idempotent` | `idempotentHint: true` |
 | `:open_world` / `:closed_world` | `openWorldHint: true` / `false`, whether it reaches outside your system |
 
-Clients that can't see opened tools run read only tools through `call_read_only`, which
-ChatGPT, for example, runs without asking the user to confirm. Everything else goes
-through `call_tool`. See [how agents see your API](README.md#how-agents-see-your-api).
+The model runs read only toolbox tools through `call_read_only`, which ChatGPT, for
+example, runs without asking the user to confirm. Everything else goes through
+`call_tool`. See [how agents see your API](README.md#how-agents-see-your-api).
 
 !!! warning "Mark GET routes with side effects"
     `call_read_only` runs any read only tool without the client asking for

@@ -34,16 +34,16 @@ client connecting to `/rooms/boardroom/mcp` sees two tools, `state()` and
 | | Global server | Controller endpoint |
 |---|---|---|
 | URL | `/mcp` (configurable) | `<base>/mcp`, or `<base>/sub/path` with `endpoint: "/sub/path"` |
-| Tools | toolboxes, opened on demand, plus the proxies | every route and prompt of the controller, listed directly |
+| Tools | toolboxes, opened on demand and run through the proxies | every route and prompt of the controller, listed directly |
 | Tool names | `<toolbox>_<method>` | `<method>` |
 | Instructions | `MCPServer.instructions` | the controller's doc comment, or its [`instructions` method](#dynamic-instructions) |
 | Server name | `MCPServer.server_name` | the controller's toolbox name, i.e. `room` |
 
 - **Bound path params:** path params in the base path (`:room_id`) are taken from the
-  endpoint URL. They're removed from the tool arguments, so the model can't pick a
-  different room, and a session can only be used at the URL it was created at.
-- **Nothing to open:** there are no toolboxes, meta tools or proxies, so it works with
-  clients that ignore `tools/list_changed`.
+  endpoint URL of each request. They're removed from the tool arguments, so the model
+  can't pick a different room.
+- **Nothing to open:** there are no toolboxes, meta tools or proxies, the model calls
+  the tools directly.
 - **Visibility:** an endpoint controller is hidden from the global server. Annotate it
   `@[AC::MCP(endpoint: true, hide: false)]` to keep it there too. A method annotated
   `hide: true` is hidden from both. `behaviour:`, `visibility:`, `title:`, `ui:`, icons and `prompt: true` work as
@@ -54,7 +54,7 @@ client connecting to `/rooms/boardroom/mcp` sees two tools, `state()` and
 
 ## Dynamic instructions
 
-The instructions tell the model what it's working with. To build them for each session,
+The instructions tell the model what it's working with. To build them for each client,
 for example from the room's name and features, define an `instructions` method on the
 endpoint controller:
 
@@ -75,8 +75,8 @@ end
   and resource lookups work, and path params can be arguments.
 - **It's internal:** it isn't an HTTP route, a tool or a prompt.
 - **Failures stop the connection:** if it doesn't succeed, for example a filter responds
-  403 or the room doesn't exist, `initialize` returns the error and no session is
-  created. A 401 challenges the client to sign in again.
+  403 or the room doesn't exist, the client receives the error when it connects. A 401
+  challenges the client to sign in again.
 - **It must return a `String`:** this is checked at compile time. Return an empty string
   for no instructions.
 

@@ -217,8 +217,8 @@ declared action arguments can fall back to query parameters.
 Optional mount segments (`?:name`) preserve the action's argument requirements:
 an argument required by the action remains required when the segment is omitted,
 so the caller must provide it through its query form. At a parameterized MCP
-controller endpoint, only arguments bound by the current session URL are removed
-from that session's tool schema. Other arguments remain available, and bound URL
+controller endpoint, only arguments bound by the request URL are removed from the
+tool schema. Other arguments remain available, and bound URL
 values take precedence when tools or prompts are invoked.
 
 ## Generate URLs for a placement

@@ -33,9 +33,9 @@ ActionController::MCPServer.mount(server, "/mcp")
 server.run
 ```
 
-`mount` registers `POST`, `GET` and `DELETE` handlers at the path for the
-[Streamable HTTP](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#streamable-http)
-transport, the OAuth protected resource metadata at
+`mount` registers the
+[Streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http)
+transport at the path (MCP requests are `POST`s), the OAuth protected resource metadata at
 `/.well-known/oauth-protected-resource<path>`, and any
 [controller endpoints](endpoints.md) (`endpoints: false` skips them). In the template the path comes from `SG_MCP_PATH`; set it to an empty string
 to disable MCP.
@@ -127,7 +127,8 @@ model sees no descriptions.
 
 ## 5. Test it
 
-The spec helper drives the MCP endpoint in-process like any other route:
+The spec helper drives the MCP endpoint in-process like any other route. The server is
+stateless, so each request stands alone:
 
 ```crystal
 require "./spec_helper"
@@ -140,13 +141,8 @@ describe "MCP" do
   headers = HTTP::Headers{"Content-Type" => "application/json", "Accept" => "application/json"}
 
   it "lists the toolboxes" do
-    init = client.post("/mcp", headers: headers, body: {
-      jsonrpc: "2.0", id: 1, method: "initialize", params: {protocolVersion: "2025-11-25"},
-    }.to_json)
-    headers["Mcp-Session-Id"] = init.headers["Mcp-Session-Id"]
-
     response = client.post("/mcp", headers: headers, body: {
-      jsonrpc: "2.0", id: 2, method: "tools/call",
+      jsonrpc: "2.0", id: 1, method: "tools/call",
       params: {name: "list_toolboxes", arguments: {} of String => String},
     }.to_json)
 

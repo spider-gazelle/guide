@@ -260,15 +260,14 @@ server.threads(thread_count)
 `threads` resizes Crystal's default execution context to `count` threads. `0` or less
 uses the CPU count, and `1` (the default) keeps the app single threaded.
 
-Threads share memory: a cache, or the in-memory sessions of the MCP server, is shared by
-every request. Any state you change from requests, such as class variables or mutable
+Threads share memory: a cache, for example, is shared by every request. Any state you change from requests, such as class variables or mutable
 constants, must be protected with a `Mutex` (or held in a database or Redis).
 
 !!! note "Processes instead of threads"
     The template also includes a commented-out `server.cluster(thread_count, "-w", "--workers")`,
     which starts separate processes sharing the port instead. Forking is deprecated in
-    Crystal, so prefer threads. With processes nothing is shared, so caches and MCP
-    sessions exist once per process.
+    Crystal, so prefer threads. With processes nothing is shared, so caches exist once
+    per process.
 
 `threads` resizes Crystal's default
 [execution context](https://crystal-lang.org/reference/latest/guides/concurrency.html).

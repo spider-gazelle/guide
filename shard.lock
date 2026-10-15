@@ -2,7 +2,7 @@ version: 2.0
 shards:
   action-controller:
     git: https://github.com/spider-gazelle/action-controller.git
-    version: 9.0.0
+    version: 9.2.0
 
   backtracer:
     git: https://github.com/sija/backtracer.cr.git
@@ -26,5 +26,5 @@ shards:
 
   lucky_router:
     git: https://github.com/luckyframework/lucky_router.git
-    version: 0.6.2
+    version: 0.6.2+git.commit.fb9ee92d12dc1bf24a309a5c1f9aeb07a68ecfe2
 
