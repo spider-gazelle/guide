@@ -239,6 +239,10 @@ end
 * Tool descriptions come from `mcp.yml`. If it hasn't been generated, the tools
   still work but have no descriptions, and a warning is logged. Generate it with
   `crystal run src/app.cr -- --mcp=mcp.yml` if your specs check descriptions.
+* [Resource reads](../mcp/resources.md) work the same way, with `resources/read`.
+  A `subscriptions/listen` stream stays open until the client disconnects, so test
+  it against a real `ActionController::Server` on a spare port: post from a
+  `TCPSocket` and read the events as they arrive, with a read timeout.
 
 The template's spec also checks [prompts](../mcp/prompts.md#prompts) with `prompts/list` and
 `prompts/get`, and that routes hidden with `@[AC::MCP(hide: true)]` aren't listed.

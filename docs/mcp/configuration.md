@@ -23,7 +23,11 @@ end
 | `ui_meta` | `nil` | the default card settings (`UIMeta`: CSP domains, permissions, border) |
 | `tool_proxy` | `true` | groups tools into toolboxes, run with the `call_read_only` and `call_tool` meta tools. `false` lists every tool instead |
 | `description_path` | `"mcp.yml"` | the generated tool descriptions, relative to the working directory |
-| `cache_ttl` | `5.minutes` | how long clients may cache the server description and the tool, prompt and resource lists (`ttlMs`) |
+| `cache_ttl` | `5.minutes` | how long clients may cache the server description and the tool, prompt and resource lists (`ttlMs`), and resource reads without their own `cache_ttl:` |
+| `keep_alive` | `15.seconds` | how often an SSE comment is sent on [listen streams and long running requests](resources.md) |
+| `listen_timeout` | `nil` | ends [subscription](resources.md#subscriptions) streams after this long. `nil` never does |
+| `update_debounce` | `250.milliseconds` | coalesces bursts of resource changes into one notification |
+| `max_subscriptions` | `100` | the most resources one `subscriptions/listen` can watch |
 | `allowed_origins` | `[]` | browser origins allowed in addition to same-origin. `"*"` allows any |
 | `forward_headers` | `["Authorization", "Cookie", "X-API-Key"]` | request headers copied onto tool calls and prompts |
 | `excluded_response_headers` | noise, credentials, transport and browser policy headers | response headers left out of [tool results](#tool-results), matched case-insensitively. A trailing `*` matches a prefix |
@@ -48,6 +52,7 @@ Authentication is optional and off by default. It's enabled when `auth_probe`,
 | `mount_endpoints(router)` | registers just the [controller endpoints](endpoints.md) |
 | `endpoint_paths` | the path templates of the controller endpoints |
 | `icon(src, **fields)` | adds an icon for the global server, see [icons](prompts.md#icons) |
+| `watch(template, &block)` | registers the watcher for a subscribable resource template, see [subscriptions](resources.md#subscriptions) |
 | `toolbox_instructions` | the toolbox usage instructions, to append to your own `instructions`. Empty when `tool_proxy` is `false` |
 | `write_description(path)` | generates `mcp.yml` from the code. Needs the source code |
 | `generate_description` | the same, returning the `Description` |
@@ -61,7 +66,9 @@ Authentication is optional and off by default. It's enabled when `auth_probe`,
   sessions. Run as many instances as you like behind a load balancer, no sticky sessions
   or shared storage needed.
 - **`POST`:** every request is a `POST`, answered with `application/json`. `GET` and
-  `DELETE` respond `405 Method Not Allowed`.
+  `DELETE` respond `405 Method Not Allowed`. `subscriptions/listen` and
+  [long running](resources.md#long-running-routes) requests from clients that accept
+  `text/event-stream` are answered with an event stream.
 - **`2026-07-28` requests:** carry their protocol version and client capabilities in
   `_meta`, and the `MCP-Protocol-Version`, `Mcp-Method` and `Mcp-Name` headers must match
   the request body, otherwise the response is `400 Bad Request`. Clients describe the
@@ -72,7 +79,11 @@ Authentication is optional and off by default. It's enabled when `auth_probe`,
   sent by a client is ignored. Requests without an `MCP-Protocol-Version` header are
   treated as `2025-03-26`.
 - **Notifications:** the tool, prompt and resource lists never change, so there's
-  nothing to notify. `subscriptions/listen` is acknowledged with no notifications.
+  nothing to notify about them. `subscriptions/listen` streams
+  `notifications/resources/updated` for [subscribable resources](resources.md#subscriptions)
+  (`2026-07-28` clients), and `notifications/progress` is sent for long running requests
+  that include a `progressToken`. The deprecated `notifications/message` (logging) isn't
+  supported.
 - **Authentication:** when enabled, every request is authenticated.
 - **`Origin` headers:** must be same-origin or listed in `allowed_origins`, which
   protects against DNS rebinding.

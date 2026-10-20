@@ -22,6 +22,7 @@
     * [Annotation options](mcp/prompts.md)
     * [Controller endpoints](mcp/endpoints.md)
     * [UI cards](mcp/ui.md)
+    * [Resources and subscriptions](mcp/resources.md)
     * [Authentication](mcp/authentication.md)
     * [Configuration](mcp/configuration.md)
 * [Deployment](deployment/README.md)

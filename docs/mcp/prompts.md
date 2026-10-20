@@ -12,6 +12,9 @@
 | `visibility: :card` | controllers or methods | who can call the tool: `:model`, `:card` or both (the default) |
 | `endpoint: true` | controllers | also serves the controller as its own MCP server, see [controller endpoints](endpoints.md) |
 | `ui: "path.html"` | controllers or methods | renders an HTML card for the tool's results, see [UI cards](ui.md) |
+| `resource: "app://widgets/{id}"` | GET methods | also exposes the route as a resource template, see [resources](resources.md) |
+| `mime_type:`, `cache_ttl:`, `subscribe: true` | resource methods | the contents type, how long reads may be cached, and whether clients can [subscribe](resources.md#subscriptions) |
+| `long_running: true`, `max_bytes:` | methods | spools the response to disk and streams progress, see [long running routes](resources.md#long-running-routes) |
 
 Tools with `ui:` or `visibility: :card` are root items unless annotated `root: false`.
 Icons have their own annotation, see [icons](#icons).

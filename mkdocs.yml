@@ -94,6 +94,7 @@ plugins:
           - mcp/prompts.md
           - mcp/endpoints.md
           - mcp/ui.md
+          - mcp/resources.md
           - mcp/authentication.md
           - mcp/configuration.md
         Deployment:

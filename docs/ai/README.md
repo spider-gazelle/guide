@@ -1,6 +1,6 @@
 # Agent reference
 
-A dense, self-contained summary of Spider-Gazelle (action-controller ~> 9.2) for AI coding
+A dense, self-contained summary of Spider-Gazelle (action-controller ~> 9.3) for AI coding
 agents and experienced developers. Paste it into an agent's context, or point the agent at
 [`/llms.txt`](https://spider-gazelle.net/llms.txt) (an index of the site) or
 [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) (the whole site as Markdown).
@@ -125,6 +125,9 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
 @[AC::MCP(ui: "x/card.html")]     # MCP Apps card in MCPServer.ui_base, rendered for the results (root by default)
 @[AC::MCP(visibility: :card)]     # only cards call it, hidden from the model (always listed); :model = cards can't
 @[AC::MCP(prompt: true)]          # a prompt; must return String or Array(AC::PromptMessage)
+@[AC::MCP(resource: "app://w/{id}{?q}", mime_type: "application/json", cache_ttl: 0)] # GET only: also a resource template; vars = path params + optional query params
+@[AC::MCP(resource: "...", subscribe: true)]  # + MCPServer.watch(template) { |vars, request, changed| ...; -> { stop } }
+@[AC::MCP(long_running: true, max_bytes: 1_048_576)] # spooled to a tempfile, SSE progress/keep-alive; mcp_context.progress/cancelled?/full?
 ```
 
 - Controllers are toolboxes and each route method is one tool named
@@ -146,6 +149,11 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
   protocol `2026-07-28` (`_meta` + `MCP-Protocol-Version`/`Mcp-Method`/`Mcp-Name` headers,
   `server/discover`, `ttlMs` from `cache_ttl`) and `2025-11-25`/`2025-06-18`/`2025-03-26`
   (`initialize`, no `Mcp-Session-Id`).
+- Resources: `resources/read` runs the route in-process (404 = unknown resource, other
+  errors are JSON-RPC errors starting with the status). Subscriptions only notify
+  (`notifications/resources/updated`), the client re-reads. Listen streams end on
+  disconnect, `listen_timeout` (nil = never) or `Transport#close_subscriptions`. Watchers
+  only see changes on their instance, use redis pub/sub or similar across instances.
 - Tool results are `{status, headers, body}` (text and `structuredContent`). Headers
   matching `excluded_response_headers` (noise, cookies, credentials, transport) are left
   out, so return pagination as headers (`Link`, `X-Total-Count`) or in the body.

@@ -84,7 +84,7 @@ cd my_app
 dependencies:
   action-controller:
     github: spider-gazelle/action-controller
-    version: ~> 9.2
+    version: ~> 9.3
 ```
 
 Run `shards install`, then replace `src/my_app.cr` with:

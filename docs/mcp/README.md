@@ -90,6 +90,7 @@ returns the `rooms_index` tool ("Lists the rooms in a building").
 |---|---|
 | Annotated routes (`@[AC::Route::GET]` etc.) | yes, as tools |
 | Methods marked `@[AC::MCP(prompt: true)]` | yes, as [prompts](prompts.md) |
+| GET routes marked `@[AC::MCP(resource: "app://...")]` | yes, as [resource templates](resources.md) as well as tools |
 | Routes marked `@[AC::MCP(hide: true)]` | no |
 | WebSocket and `OPTIONS` routes | no |
 | Macro DSL routes (`get "/" do`) | no |
@@ -109,6 +110,8 @@ clients, see [Authentication](authentication.md).
 - [Controller endpoints](endpoints.md): serving a controller as its own MCP server, such
   as one per room or account.
 - [UI cards](ui.md): interactive HTML cards for tool results (MCP Apps).
+- [Resources and subscriptions](resources.md): resource templates, notifying clients
+  of changes, and long running routes that stream progress.
 - [Authentication](authentication.md): API keys, and OAuth sign-in with multi_auth and
   authly.
 - [Configuration](configuration.md): every option, and transport details.
