@@ -43,7 +43,7 @@ The foreign key defaults to `<name>_id` and the class to the camelcased name; ov
 
 ## has_one
 
-Declares a one-to-one where the *other* table holds the foreign key. `has_one :supplier` on `Account` generates `supplier`, `supplier=`, `build_supplier`, `create_supplier`, `create_supplier!` and `reload_supplier`. When the account is persisted, assigning through `supplier=` sets the foreign key on the new record and saves it, applying the `dependent` behaviour to the record it replaces (nullifying its foreign key when `dependent` isn't set). `create_supplier` and `create_supplier!` raise `PgORM::Error::RecordNotSaved` if the account has no id yet.
+Declares a one-to-one where the *other* table holds the foreign key. `has_one :supplier` on `Account` generates `supplier`, `supplier=`, `build_supplier`, `create_supplier`, `create_supplier!` and `reload_supplier`. When the account is persisted, assigning through `supplier=` sets the foreign key on the new record and saves it, applying the `dependent` behaviour to the record it replaces (nullifying its foreign key when `dependent` isn't set). `create_supplier` and `create_supplier!` both raise `PgORM::Error::RecordInvalid` when validation fails, and `PgORM::Error::RecordNotSaved` if the account has no id yet.
 
 ```crystal
 account.create_supplier!(name: "ACME")
@@ -57,11 +57,13 @@ Declares a one-to-many. `has_many :children` on `Parent` generates a single meth
 ```crystal
 parent = Parent.create!(name: "Phil")
 
-parent.children.create(age: 6)      # INSERT with parent_id set
+parent.children.create(age: 6)      # INSERT with parent_id set, raises RecordInvalid if invalid
 parent.children.build(age: 3)       # unsaved, parent_id set
 parent.children.where_gt(:age, 5).to_a  # queries the database
 parent.children.to_a.size               # => 2, includes the unsaved built child
 ```
+
+`create` and `create!` behave the same: like `Model.create`, they raise `PgORM::Error::RecordInvalid` when validation fails (before pg-orm 2.5.2, `create` returned the unsaved record instead).
 
 Once loaded (or after `build`/`create`), the relation caches its records, so `to_a` returns that cache, including unsaved built records, until you call `reload`. Chaining a query method such as `where_gt` runs a fresh query.
 
@@ -73,7 +75,7 @@ Pass `serialize: true` to include the loaded children in the parent's `to_json` 
 | --- | --- | --- | --- |
 | `belongs_to` | `name` / `name?` | `build_name`, `create_name`, `create_name!` | `reload_name` |
 | `has_one` | `name` / `name?` | `build_name`, `create_name`, `create_name!` | `reload_name` |
-| `has_many` | `name` → `Relation` | `name.build`, `name.create` | — |
+| `has_many` | `name` → `Relation` | `name.build`, `name.create`, `name.create!` | — |
 
 ## Dependency handling
 

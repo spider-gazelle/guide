@@ -125,19 +125,29 @@ result.page    # => 3 (offset / limit + 1)
 
 ### Cursor-based
 
-Efficient for large datasets. Order by the cursor column, then walk forward with `after` or back with `before`. The `after`/`before` values are compared against `cursor_column` (default `:id`).
+Efficient for large datasets. Order by the cursor column, then walk forward with `after: page.next_cursor` or back with `before: page.prev_cursor`. The cursors are the `cursor_column` (default `:id`) values of the first and last records, and the `after`/`before` values are compared against that column.
 
 ```crystal
 page = Article.order(:id).paginate_cursor(limit: 20)
 page.records
 page.has_next?     # => true
-page.next_cursor   # => "123"
+page.next_cursor   # => "123", the id of the last record
 
-Article.order(:id).paginate_cursor(after: page.next_cursor, limit: 20)
+next_page = Article.order(:id).paginate_cursor(after: page.next_cursor, limit: 20)
+Article.order(:id).paginate_cursor(before: next_page.prev_cursor, limit: 20) # the first page again
+```
+
+- **Direction:** pages follow the query's order of the cursor column, ascending or descending. A query that isn't ordered by it is ordered by it ascending.
+- **`before`:** returns the page immediately before the cursor, in the same order as the other pages.
+- **Other columns:** with `cursor_column: :created_at`, the cursors are `created_at` values. Times keep their microsecond precision, so no row is repeated or skipped at the page boundary.
+
+```crystal
+page = Article.order(created_at: :desc).paginate_cursor(limit: 20, cursor_column: :created_at)
+Article.order(created_at: :desc).paginate_cursor(after: page.next_cursor, limit: 20, cursor_column: :created_at)
 ```
 
 !!! warning
-    `next_cursor` and `prev_cursor` always hold the record's primary key, whatever `cursor_column` is. Only pass them back with a different `cursor_column` if that column orders the same way as the primary key.
+    Use a unique cursor column. Rows that share the boundary value with the last row of a page are skipped by the next one. These rules need pg-orm 2.5.2 or later. Earlier releases always used the primary key for cursors, and `before` returned the first rows rather than the previous page.
 
 `limit` defaults to `25` for all three strategies. Over a join, counting uses `COUNT(DISTINCT ...)` so duplicated join rows don't inflate `total`.
 
