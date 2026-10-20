@@ -1,34 +1,101 @@
-An elegant web framework designed to be simple, powerful and fast.
+# Spider-Gazelle
 
-## Feature Overview
+A fast, type-safe web framework for [Crystal](https://crystal-lang.org). You write
+ordinary, documented methods; Spider-Gazelle turns them into HTTP routes, validated
+parameters, an [OpenAPI](openapi/README.md) description and [MCP](mcp/README.md)
+tools for AI agents, all from that one source.
 
-Spider-Gazelle employs some unique concepts, features, and design principles:
+## One method, four jobs
 
-* Self documenting, can generate an [OpenAPI](https://swagger.io/specification/) description of your project
-* Annotations are used to define & configure routes, filters and error handlers
-* Implements strong parameter typing with customisable parsing
-* Parses request bodies and serialises responses based on [Accept](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept) and [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) headers
-* Specs are simple to write, leveraging [HotTopic](https://github.com/jgaskins/hot_topic)
-* Exceptions in development are helpful, leveraging [Exception Page](https://github.com/crystal-loot/exception_page)
-* Puts you in control, customise command line options, when the server is started, how your app is configured etc
+```crystal
+class Rooms < AC::Base
+  base "/rooms"
 
-## Who builds it?
+  # Books a meeting room
+  @[AC::Route::POST("/:id/bookings", body: :booking, status_code: HTTP::Status::CREATED)]
+  def book(
+    @[AC::Param::Info(description: "the room to book", example: "lvl3-boardroom")]
+    id : String,
+    booking : Booking,
+  ) : Booking
+    Room.find!(id).book(booking)
+  end
+end
+```
 
-[Place Technology](https://place.technology/) are a fast-paced team of developers and designers based in Sydney and Brisbane, Australia.
+From that method you get:
 
-* [Github Organization](https://github.com/spider-gazelle)
+| | What you get | Driven by |
+|---|---|---|
+| **HTTP route** | `POST /rooms/:id/bookings`, returning `201 Created` | the route annotation |
+| **Validation** | `id` and the JSON body are parsed and type checked before your code runs. Bad input gets a 4xx with a helpful error | argument types |
+| **OpenAPI** | an operation with a summary, a described path parameter, and request and response schemas | the doc comment, `Param::Info` and types |
+| **MCP tool** | `rooms_book`, which an AI agent can call with the same validation and the same filters | all of the above |
+
+!!! tip "Why this matters"
+    Hand-written API docs and agent tool definitions drift from the code, and
+    drifted docs are worse than none. Spider-Gazelle derives them from the code
+    itself. Rename a parameter, change a type or update a comment, and the OpenAPI
+    document and MCP tools update with it. There's one source of truth to review
+    and test, and no second copy to forget.
+
+## Highlights
+
+* **Type-safe routing.** Parameters arrive as method arguments, already converted
+  to `Int32`, `UUID`, `Time`, enums or your own types. There's no `params["id"]`
+  boilerplate.
+* **Self documenting.** [OpenAPI 3](openapi/README.md) is generated from your
+  comments and types. Generate API clients in any language from it.
+* **AI ready.** A built-in [MCP server](mcp/README.md) exposes your API to Claude,
+  VS Code, Cursor and other agents. It includes progressive tool discovery,
+  prompts, and OAuth sign-in.
+* **Content negotiation.** Request bodies are parsed by `Content-Type` and responses
+  rendered by `Accept`. JSON is the default; add YAML, XML or your own formats.
+* **Fast.** It's compiled Crystal, with [LuckyRouter](https://github.com/luckyframework/lucky_router)
+  route matching and optional multi-core execution contexts.
+* **Simple to test.** The spec helper drives your app in-process, with no server to
+  start.
+* **You're in control.** There's no hidden magic in your project: you own the entry
+  point, the CLI, the configuration and the server lifecycle.
+
+## Choose your path
+
+<div class="grid cards" markdown>
+
+* **New to Spider-Gazelle?**
+
+    Start with [Your first app](getting_started/README.md), then work through the
+    [Guides](guides/README.md) in order.
+
+* **Experienced Crystal developer?**
+
+    Jump to [Routing](guides/routing.md), [Parameters](guides/parameters.md),
+    [OpenAPI](openapi/README.md) and [MCP](mcp/README.md). The
+    [API reference](Config/environment.md) has every macro and type.
+
+* **Building with an AI agent?**
+
+    Give your agent the [agent reference](ai/README.md), or point it at
+    [`/llms-full.txt`](https://spider-gazelle.net/llms-full.txt) for the whole site in
+    one file.
+
+</div>
+
+## Built by
+
+[Place Technology](https://place.technology/), a team in Sydney and Brisbane,
+Australia. Spider-Gazelle powers the [PlaceOS](https://github.com/PlaceOS) smart
+building platform. The framework is developed on
+[GitHub](https://github.com/spider-gazelle).
 
 ## Example apps
 
-* [Spider-Gazelle Template](https://github.com/spider-gazelle/spider-gazelle)
-* [Apple/Google Wallet Abstraction](https://github.com/PlaceOS/wallet)
-* [PlaceOS](https://github.com/PlaceOS/rest-api)
-  * [Core](https://github.com/PlaceOS/core)
-  * [Staff API](https://github.com/PlaceOS/staff-api)
-
-## Example OpenAPI docs
-
-Note that the editor allows you to generate API clients in many languages, which can be a massive time saver.
-
-* [PlaceOS](https://editor.swagger.io/?url=https://raw.githubusercontent.com/PlaceOS/rest-api/master/OPENAPI_DOC.yml)
-* [Staff-API](https://editor.swagger.io/?url=https://raw.githubusercontent.com/PlaceOS/staff-api/master/OPENAPI_DOC.yml)
+* [Spider-Gazelle template](https://github.com/spider-gazelle/spider-gazelle): the
+  starting point for new apps, with OpenAPI, MCP and Docker set up.
+* [PlaceOS REST API](https://github.com/PlaceOS/rest-api): a large production API,
+  with its [OpenAPI document](https://editor.swagger.io/?url=https://raw.githubusercontent.com/PlaceOS/rest-api/master/OPENAPI_DOC.yml)
+  and an MCP server with OAuth sign-in.
+* [PlaceOS Staff API](https://github.com/PlaceOS/staff-api), with its
+  [OpenAPI document](https://editor.swagger.io/?url=https://raw.githubusercontent.com/PlaceOS/staff-api/master/OPENAPI_DOC.yml).
+* [PlaceOS Core](https://github.com/PlaceOS/core).
+* [Apple/Google Wallet abstraction](https://github.com/PlaceOS/wallet).
