@@ -84,11 +84,40 @@ person.name    # => "Bob Jane"
 person.to_json # => {"name":"Bob Jane"}
 
 # from HTTP::Params (also accepts Hash(String, String)) — mass-assignable fields only
-person = Person.new(params)
+person = Person.new(HTTP::Params.parse("name=Bob+Jane"))
 ```
 
 !!! note
-    `from_json` / `from_yaml` treat input as untrusted: fields with `mass_assignment: false` (and not `show: true`) are ignored and fall back to their default. Use `from_trusted_json` / `from_trusted_yaml` for internal sources. `assign_attributes` updates an existing instance in place (mass-assignable fields only), and `assign_attributes_from_json` / `assign_attributes_from_yaml` do the same from a payload. The `HTTP::Params` constructor only handles scalar fields: calling it on a model with an `Array` attribute doesn't compile.
+    `from_json` / `from_yaml` treat input as untrusted: fields with `mass_assignment: false` (and not `show: true`) are ignored and fall back to their default. Use `from_trusted_json` / `from_trusted_yaml` for internal sources. `assign_attributes` updates an existing instance in place (mass-assignable fields only), and `assign_attributes_from_json` / `assign_attributes_from_yaml` do the same from a payload.
+
+### HTTP params
+
+`new(params)` and `assign_attributes(params)` take `HTTP::Params`, a `Hash(String, String)` or a `{key, value}` tuple, and parse each value into the attribute's type:
+
+* **Scalars:** strings, numbers, `Bool`, `Char`, `URI` and `Time` (a unix timestamp), and unions of them.
+* **Enums:** by member name (case-insensitive) or value. An unknown value raises `TypeCastError`.
+* **Arrays and sets** of those types: repeat the key, or use `key[]`, for each element (`ids=1&ids=2`). A hash provides a single element.
+* **Nilable attributes:** an empty value sets `nil`.
+
+Attributes that can't be expressed as form values, such as hashes, `JSON::Any` and other models, are ignored. This needs active-model 4.7.1 or later.
+
+```crystal
+class Search < ActiveModel::Model
+  enum Sort
+    Newest
+    Oldest
+  end
+
+  attribute ids : Array(Int64) = [] of Int64
+  attribute sort : Sort = Sort::Newest
+  attribute query : String?
+end
+
+search = Search.new(HTTP::Params.parse("ids=1&ids=2&sort=oldest&query="))
+search.ids   # => [1, 2]
+search.sort  # => Search::Sort::Oldest
+search.query # => nil
+```
 
 Introspection helpers: `attributes` (Hash), `attributes_tuple` (NamedTuple), `Person.attributes` (Array of Symbol keys), and `persistent_attributes` (only fields without `persistence: false`).
 
