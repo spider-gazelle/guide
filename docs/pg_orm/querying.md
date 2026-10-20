@@ -1,3 +1,5 @@
+# Querying
+
 PgORM ships an ActiveRecord-style query DSL. Every method returns a new scope, so you compose queries by chaining and only touch the database when you load results (`to_a`, `first`, `each`, `count`, …).
 
 ```crystal
@@ -64,15 +66,16 @@ User.reorder(:created_at)              # replaces any prior order
 
 ## Joins
 
-`join` takes the join type, the model to join, and the foreign key (or an `on` string). Supported types are `:inner`, `:left`, `:right` and `:full`.
+`join` takes the join type, the model to join, and the foreign-key column on the joined table (or an `on` string). Supported types are `:inner`, `:left`, `:right` and `:full`.
 
 ```crystal
+# LEFT JOIN "book" ON book.author_id = author.id ... GROUP BY author.id
 Author.join(:left, Book, :author_id)
-      .where("books.published = ?", true)
+      .where("book.published = ?", true)
       .to_a
 ```
 
-When you load through a join, the linked association rows are cached, so accessing that association afterwards does not issue a second query.
+Raw SQL fragments must use the real table names (`book` here, since inferred table names aren't pluralised). Results are grouped by the primary key, so each author appears once, and the joined rows are aggregated into a JSON column. If the model declares a matching `has_many`, accessing it afterwards uses those rows instead of issuing a second query.
 
 ## Aggregates and bulk operations
 
@@ -93,7 +96,7 @@ User.where(group_id: 1).exists?
 
 ## Pagination
 
-Three strategies, all lazy — metadata is computed up front and records load only when accessed. Chain `paginate*` onto any scope.
+Three strategies. Page and offset pagination are lazy: the total count runs up front and records load only when accessed. Cursor pagination loads its records immediately. Chain `paginate*` onto any scope.
 
 ### Page-based
 
@@ -122,7 +125,7 @@ result.page    # => 3 (offset / limit + 1)
 
 ### Cursor-based
 
-Efficient for large datasets. Order by the cursor column, then walk forward with `after` or back with `before`.
+Efficient for large datasets. Order by the cursor column, then walk forward with `after` or back with `before`. The `after`/`before` values are compared against `cursor_column` (default `:id`).
 
 ```crystal
 page = Article.order(:id).paginate_cursor(limit: 20)
@@ -131,10 +134,12 @@ page.has_next?     # => true
 page.next_cursor   # => "123"
 
 Article.order(:id).paginate_cursor(after: page.next_cursor, limit: 20)
-Article.order(:created_at).paginate_cursor(after: cursor, cursor_column: :created_at)
 ```
 
-`limit` defaults to `25` for page and offset pagination. Over a join, counting uses `COUNT(DISTINCT ...)` so duplicated join rows don't inflate `total`.
+!!! warning
+    `next_cursor` and `prev_cursor` always hold the record's primary key, whatever `cursor_column` is. Only pass them back with a different `cursor_column` if that column orders the same way as the primary key.
+
+`limit` defaults to `25` for all three strategies. Over a join, counting uses `COUNT(DISTINCT ...)` so duplicated join rows don't inflate `total`.
 
 ### JSON
 
@@ -142,13 +147,14 @@ Both result types serialise their records under `data` with a `pagination` block
 
 ```crystal
 Article.where(published: true).paginate(page: 2, limit: 10).to_json
-# { "data": [...], "pagination": { "total": 150, "page": 2, "total_pages": 15,
-#   "has_next": true, "has_prev": true, "next_page": 3, "from": 11, "to": 20, ... } }
+# { "data": [...], "pagination": { "total": 150, "limit": 10, "offset": 10, "page": 2,
+#   "total_pages": 15, "has_next": true, "has_prev": true, "next_page": 3,
+#   "prev_page": 1, "from": 11, "to": 20 } }
 ```
 
 ## Full-text search
 
-Search uses PostgreSQL `tsvector`/`tsquery`. Columns can be symbols, strings or an array; the query supports the boolean operators `&`, `|` and `!`.
+Search uses PostgreSQL `tsvector`/`tsquery`. Columns can be symbols, strings or an array. The query is passed to `to_tsquery`, so it must be valid `tsquery` syntax: join words with the boolean operators `&`, `|` and `!` (a bare `"crystal programming"` is a syntax error). Use `search_plain` for free text such as user input.
 
 ```crystal
 Article.search("crystal", :title, :content)
@@ -161,7 +167,7 @@ Article.search("running", :content, config: "simple")       # no stemming
 
 ```crystal
 # order by relevance (ts_rank / ts_rank_cd)
-Article.search_ranked("crystal programming", :title, :content)
+Article.search_ranked("crystal & programming", :title, :content)
 
 # per-column weights (A=1.0, B=0.4, C=0.2, D=0.1)
 weights = {
@@ -176,7 +182,7 @@ Article.search_ranked_weighted("crystal", weights)
 
 ```crystal
 Article.search_phrase("crystal programming language", :content)  # exact phrase
-Article.search_proximity("crystal", "programming", 5, :content)  # within N words
+Article.search_proximity("crystal", "programming", 5, :content)  # exactly N positions apart (<N>)
 Article.search_prefix("cryst", :title, :content)                 # crystal, crystalline…
 Article.search_plain("crystal programming", :title, :content)    # plainto_tsquery
 ```
@@ -202,4 +208,12 @@ Article.where(published: true)
 ```
 
 !!! note
-    Use `.to_sql` to inspect the generated query, or `.explain` on a search scope to see PostgreSQL's execution plan.
+    Use `.to_sql` to inspect the generated query, or `.explain` to see PostgreSQL's execution plan. `explain` runs `EXPLAIN ANALYZE`, so it executes the query.
+
+!!! warning
+    The search query and column names are escaped, but `config` is interpolated into the SQL as-is. Never pass user input as `config`.
+
+## See also
+
+- [PgORM](README.md)
+- [Associations](associations.md)

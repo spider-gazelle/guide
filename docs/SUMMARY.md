@@ -16,7 +16,7 @@
 * [Active Model](active_model/README.md)
     * [Validations](active_model/validations.md)
     * [Callbacks](active_model/callbacks.md)
-    * [Serialization](active_model/serialization.md)
+    * [Serialisation](active_model/serialization.md)
 * [PgORM](pg_orm/README.md)
     * [Associations](pg_orm/associations.md)
     * [Querying](pg_orm/querying.md)

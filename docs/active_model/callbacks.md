@@ -1,3 +1,5 @@
+# Callbacks
+
 `ActiveModel::Callbacks` lets you register hooks that run around your CRUD methods. Include the mix-in, then register callbacks and wrap your own logic in the matching `run_*_callbacks` helper.
 
 ```crystal
@@ -17,8 +19,9 @@ class Person < ActiveModel::Model
 
   def save
     run_save_callbacks do
-      # persist to the database
-      @backend.save(attributes)
+      # persist to the database here
+      puts "saving #{attributes}"
+      true
     end
   end
 end
@@ -51,9 +54,15 @@ end
 !!! note
     You must define the method you want to guard (`save`, `create`, …) yourself and wrap its body in the matching runner — ActiveModel does not define these CRUD methods for you. The runners nest cleanly, so an `update` that also saves can wrap `run_update_callbacks { run_save_callbacks { ... } }`.
 
-Register with a method name, several names, or a block. Callbacks fire in declaration order, and a subclass runs its ancestors' callbacks as well as its own.
+Register with a method name, several names, or a block. Callbacks fire in declaration order. A subclass runs its own callbacks first, then its ancestors'. A block callback's body is inlined into the model, so `self` is the instance.
 
 ```crystal
 before_create :assign_id, :stamp_created_at
-after_save { logger.info { "saved #{id}" } }
+after_save { puts "saved #{name}" }
 ```
+
+## See also
+
+* [Active Model](README.md)
+* [Validations](validations.md)
+* [PgORM](../pg_orm/README.md)
