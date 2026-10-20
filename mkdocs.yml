@@ -83,6 +83,15 @@ plugins:
           - guides/websockets.md
           - guides/logging.md
           - guides/testing.md
+        Active Model:
+          - active_model/README.md
+          - active_model/validations.md
+          - active_model/callbacks.md
+          - active_model/serialization.md
+        PgORM:
+          - pg_orm/README.md
+          - pg_orm/associations.md
+          - pg_orm/querying.md
         OpenAPI:
           - openapi/README.md
           - openapi/descriptions.md
