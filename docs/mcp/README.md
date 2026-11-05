@@ -114,4 +114,6 @@ clients, see [Authentication](authentication.md).
   of changes, and long running routes that stream progress.
 - [Authentication](authentication.md): API keys, and OAuth sign-in with multi_auth and
   authly.
+- [Server Cards](discovery.md): the public card that tells clients and registries how
+  to connect, and making your servers discoverable.
 - [Configuration](configuration.md): every option, and transport details.

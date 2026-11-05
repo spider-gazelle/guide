@@ -105,6 +105,7 @@ plugins:
           - mcp/ui.md
           - mcp/resources.md
           - mcp/authentication.md
+          - mcp/discovery.md
           - mcp/configuration.md
         Deployment:
           - deployment/*.md

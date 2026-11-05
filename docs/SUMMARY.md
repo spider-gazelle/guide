@@ -31,6 +31,7 @@
     * [UI cards](mcp/ui.md)
     * [Resources and subscriptions](mcp/resources.md)
     * [Authentication](mcp/authentication.md)
+    * [Server Cards](mcp/discovery.md)
     * [Configuration](mcp/configuration.md)
 * [Deployment](deployment/README.md)
 * [AI agents](ai/README.md)

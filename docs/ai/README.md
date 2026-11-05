@@ -138,6 +138,13 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
   `Authorization`, `Cookie` and `X-API-Key` are forwarded.
 - Auth is optional: `auth_probe = "/users/current"` (or a custom `authenticator`), plus
   `resource_metadata` for OAuth.
+- Server Cards (SEP-2127): every mounted server serves `GET <path>/server-card`
+  (`application/mcp-server-card+json`, public, CORS `*`, `ETag`/304, `server_card_ttl`),
+  built from `server_name`, `server_version`, `server_title`, `server_description`,
+  `website_url` and icons, with a `streamable-http` remote at the public URL. A
+  `server_name` without a `/` gets the reversed request host as its namespace
+  (`com.example.mcp/my-app`, `local/...` for localhost/IPs); endpoints are
+  `<namespace>/<controller>`. No primitives. `server_card = false` disables it.
 - Meta tools: `list_toolboxes`, `open_toolbox` (returns tool definitions, changes nothing)
   and two proxies that run toolbox tools: `call_read_only` (read only tools,
   `readOnlyHint: true`) and `call_tool` (any tool the model can see; `visibility: :card`

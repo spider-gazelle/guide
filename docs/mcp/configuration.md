@@ -16,8 +16,13 @@ end
 
 | Option | Default | Purpose |
 |---|---|---|
-| `server_name` | `"action-controller"` | the server name reported to clients |
+| `server_name` | `"action-controller"` | the server name reported to clients. [Server Cards](discovery.md#naming) add the request host's namespace when it has none |
 | `server_version` | `"1.0.0"` | the server version reported to clients |
+| `server_title` | `nil` | the display name, reported to clients and in the [Server Card](discovery.md) |
+| `website_url` | `nil` | the server's homepage or documentation, reported to clients and in the Server Card |
+| `server_description` | `nil` | the Server Card's description, 100 characters or less. Defaults to `server_title`, then `server_name` |
+| `server_card` | `true` | serves a [Server Card](discovery.md) at `<path>/server-card` for each mounted server. Set it before `mount` |
+| `server_card_ttl` | `1.hour` | how long clients and caches can keep a Server Card (`Cache-Control: max-age`) |
 | `instructions` | `nil` (`toolbox_instructions`) | text given to the model when it connects. Describe your domain here and append `toolbox_instructions`. `""` sends none |
 | `ui_base` | `nil` | the folder of [UI cards](ui.md), `ui://` paths resolve against it |
 | `ui_meta` | `nil` | the default card settings (`UIMeta`: CSP domains, permissions, border) |
@@ -48,7 +53,7 @@ Authentication is optional and off by default. It's enabled when `auth_probe`,
 
 | Method | Purpose |
 |---|---|
-| `mount(router, path = "/mcp", endpoints = true)` | registers the endpoint (and the protected resource metadata), plus the [controller endpoints](endpoints.md) |
+| `mount(router, path = "/mcp", endpoints = true)` | registers the endpoint (with its protected resource metadata and [Server Card](discovery.md)), plus the [controller endpoints](endpoints.md) |
 | `mount_endpoints(router)` | registers just the [controller endpoints](endpoints.md) |
 | `endpoint_paths` | the path templates of the controller endpoints |
 | `icon(src, **fields)` | adds an icon for the global server, see [icons](prompts.md#icons) |
@@ -66,7 +71,8 @@ Authentication is optional and off by default. It's enabled when `auth_probe`,
   sessions. Run as many instances as you like behind a load balancer, no sticky sessions
   or shared storage needed.
 - **`POST`:** every request is a `POST`, answered with `application/json`. `GET` and
-  `DELETE` respond `405 Method Not Allowed`. `subscriptions/listen` and
+  `DELETE` respond `405 Method Not Allowed`. The [Server Card](discovery.md) is a `GET`
+  of `<path>/server-card`, and needs no authentication. `subscriptions/listen` and
   [long running](resources.md#long-running-routes) requests from clients that accept
   `text/event-stream` are answered with an event stream.
 - **`2026-07-28` requests:** carry their protocol version and client capabilities in
@@ -133,4 +139,5 @@ ActionController::MCPServer.excluded_response_headers += ["X-Runtime", "X-Intern
 
 - [MCP overview](README.md)
 - [Setup](setup.md)
+- [Server Cards](discovery.md)
 - [action-controller README](https://github.com/spider-gazelle/action-controller#mcp-server)
