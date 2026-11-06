@@ -148,7 +148,7 @@ end
 * **Clearing.** `session.clear` on an existing session sends an empty cookie that
   expires immediately, which removes it from the browser.
 * **Size limit.** An encoded session larger than 4096 bytes raises
-  `ActionController::CookieSizeExceeded`. Encryption adds overhead, so the usable
+  `ActionController::Error::CookieSizeExceeded`. Encryption adds overhead, so the usable
   space is closer to 3 KB. Store IDs and look the data up, rather than storing
   the data itself.
 * **WebSockets.** [WebSocket routes](websockets.md) can read the session, but don't
