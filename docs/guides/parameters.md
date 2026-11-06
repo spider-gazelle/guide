@@ -597,6 +597,43 @@ end
   that only consumes binary types, or has no `consumes:`, isn't a tool, as a model
   can't write raw bytes in a JSON string.
 
+### Binary types
+
+A body argument whose type is IO serialisable, with a `T.from_io(io, format)` class
+method, is read straight from the request body with no parser. A
+[BinData](https://github.com/spider-gazelle/bindata) class is the usual example:
+
+```crystal
+require "bindata"
+
+class Packet < BinData
+  endian big
+
+  field id : UInt16
+  field flags : UInt8
+end
+
+class Devices < Application
+  base "/devices"
+
+  # Accepts a packet and replies with it
+  @[AC::Route::POST("/packets", body: :packet, consumes: "application/x-packet", content_type: "application/x-packet")]
+  def echo(packet : Packet) : Packet
+    packet
+  end
+end
+```
+
+- `byte_format:` sets the byte order passed to `from_io`, `IO::ByteFormat::SystemEndian`
+  by default. A BinData class ignores it and uses its own `endian`, so it's for types
+  that read the format they're given, e.g. `byte_format: IO::ByteFormat::LittleEndian`.
+- Numbers are IO serialisable too, but stay JSON. So do `JSON::Serializable` types that
+  also define `from_io`.
+- These bodies behave like [raw bodies](#raw-bodies): `consumes:` is optional and
+  requires a matching `Content-Type`, `max_body_bytes:` applies, the body isn't read as
+  form data, and the OpenAPI document describes it as `type: string, format: binary`.
+- The same types can be returned as [binary responses](responses.md#binary-responses).
+
 ### Limiting body size
 
 `max_body_bytes:` limits a route's body argument, raw or parsed. A body over the limit

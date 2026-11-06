@@ -147,7 +147,8 @@ The request body schema is the argument's type. It's listed once for each conten
 your app can parse (JSON by default; see [parsers](../guides/parameters.md)), or for
 each type in the route's [`consumes:`](../guides/parameters.md#restricting-content-types).
 
-A [raw body](../guides/parameters.md#raw-bodies), typed `IO` or `Bytes`, is described as
+A [raw body](../guides/parameters.md#raw-bodies), typed `IO` or `Bytes`, or an
+[IO serialisable type](../guides/parameters.md#binary-types), is described as
 `type: string, format: binary` in each type the route consumes, or as
 `application/octet-stream` when it doesn't say.
 
@@ -178,7 +179,8 @@ def show(id : Int64) : Comment | CommentRedirect
 
 Responses are listed for each content type your app can render (see
 [responders](../guides/responses.md)). JSON and YAML responses reference the schema;
-`text/*` responses are strings.
+`text/*` responses are strings. A [binary response](../guides/responses.md#binary-responses)
+is `type: string, format: binary` in the route's content type.
 
 ### Error responses
 

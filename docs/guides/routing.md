@@ -245,6 +245,7 @@ the linked page.
 | `body:` | `body: :comment` | Parse the request body into this argument. See [parameters](parameters.md#request-bodies). |
 | `consumes:` | `consumes: "application/json"` | The content types the body may arrive in, one or an array. See [parameters](parameters.md#restricting-content-types). |
 | `max_body_bytes:` | `max_body_bytes: 1_048_576` | Refuse a larger body. See [parameters](parameters.md#limiting-body-size). |
+| `byte_format:` | `byte_format: IO::ByteFormat::LittleEndian` | The byte order for an IO serialisable body or response. See [parameters](parameters.md#binary-types). |
 | `status_code:` | `status_code: HTTP::Status::CREATED` | The response status, `200 OK` by default. See [responses](responses.md#status-codes). |
 | `status:` | `status: {Error => HTTP::Status::NOT_FOUND}` | Map return types to status codes. See [responses](responses.md#status-codes). |
 | `content_type:` | `content_type: "text/plain"` | Always respond with this content type, skipping `Accept` negotiation. See [responses](responses.md#fixed-content-types). |

@@ -51,6 +51,7 @@ document and the [MCP](../mcp/README.md) tool's result.
 |---|---|
 | an object | Serialised by the selected [responder](#responders). JSON by default, using `to_json`. |
 | a `String` | Also serialised, so the default JSON responder sends `"text"` with quotes. Use a [`text/plain` responder](#fixed-content-types) for plain text. |
+| `Bytes`, an `IO` or an IO serialisable object | Written as it is. See [binary responses](#binary-responses). |
 | `nil` | No body. The status code and headers are still sent. |
 | anything, for a `HEAD` request | No body. |
 
@@ -313,6 +314,44 @@ def show(id : Int64) : Comment?
 end
 ```
 
+## Binary responses
+
+A route that returns `Bytes`, an `IO`, or an IO serialisable object (one with
+`to_io(io, format)`, such as a [BinData](https://github.com/spider-gazelle/bindata)
+class) writes it to the response as it is, with no responder. The content type is
+`application/octet-stream` unless the route sets `content_type:`:
+
+```crystal
+# Sends a generated image
+@[AC::Route::GET("/:id/thumbnail", content_type: "image/png")]
+def thumbnail(id : Int64) : Bytes
+  Thumbnails.render(id)
+end
+
+# Streams a file, which is closed once it's sent
+@[AC::Route::GET("/:id/download", content_type: "application/pdf")]
+def download(id : Int64) : File
+  File.open("/data/reports/#{id}.pdf")
+end
+
+# Sends a BinData packet
+@[AC::Route::GET("/:id/status", content_type: "application/x-packet")]
+def status(id : UInt16) : Packet
+  Packet.new.tap { |packet| packet.id = id }
+end
+```
+
+- A returned `IO` is copied to the response and then closed, including for a `HEAD`
+  request, which sends no body.
+- `byte_format:` sets the byte order passed to `to_io`, `IO::ByteFormat::SystemEndian`
+  by default. A BinData class uses its own `endian`.
+- Numbers and `JSON::Serializable` types are still serialised by the responder.
+- A nilable return type is fine: `nil` sends no body.
+- The OpenAPI document describes the response as `type: string, format: binary` in the
+  route's content type.
+- A route with a binary response isn't an [MCP tool](../mcp/README.md#whats-exposed),
+  unless its content type is an image or audio type.
+
 ## Files and streams
 
 To send a file or other large data, set the headers, mark the response as rendered and
@@ -335,7 +374,8 @@ end
 
 Set `@__render_called__ = true` before writing. Otherwise Spider-Gazelle tries to set
 the status and content type after your data has been sent. For data already in memory
-as a `String`, `render binary: data` is simpler.
+as a `String`, `render binary: data` is simpler, and a route can also
+[return a `File` or other `IO`](#binary-responses).
 
 ## CORS
 
