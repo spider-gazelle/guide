@@ -264,7 +264,7 @@ and adding any others as a query string:
 ```crystal
 Features.show(photo_id: 1, id: 2)              # => "/photos/1/features/2"
 Features.show(photo_id: 1, id: 2, full: true)  # => "/photos/1/features/2?full=true"
-Features.show(photo_id: 1)                     # raises AC::InvalidRoute (missing :id)
+Features.show(photo_id: 1)                     # raises AC::Error::InvalidRoute (missing :id)
 ```
 
 Arguments must be named. Combine the helper with `redirect_to`:
