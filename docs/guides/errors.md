@@ -139,11 +139,13 @@ Spider-Gazelle raises these while handling a request:
 | `AC::Route::Param::MissingError` | a required parameter or header is missing | `422` |
 | `AC::Route::Param::ValueError` | a parameter can't be converted to its type | `400` |
 | `AC::Route::NotAcceptable` | no responder matches the `Accept` header | `406` |
-| `AC::Route::UnsupportedMediaType` | no parser matches the request body's `Content-Type` | `415` |
+| `AC::Route::UnsupportedMediaType` | no parser matches the request body's `Content-Type`, or the route doesn't [consume](parameters.md#restricting-content-types) it | `415` |
+| `AC::Route::PayloadTooLarge` | the request body is larger than the route's [`max_body_bytes:`](parameters.md#limiting-body-size) | `413` |
 
 Both parameter errors inherit from `AC::Route::Param::Error`, which has `parameter`
-(the name) and `restriction` (the expected type). Both media type errors inherit from
-`AC::Route::Error`, which has `accepts`, the list of supported types.
+(the name) and `restriction` (the expected type). The other three inherit from
+`AC::Route::Error`. The media type errors set its `accepts`, the list of supported
+types, and `PayloadTooLarge` has `limit`, the limit in bytes.
 
 These are provided for your own code, with no built-in handlers:
 
@@ -206,6 +208,12 @@ abstract class Application < AC::Base
   @[AC::Route::Exception(AC::Route::UnsupportedMediaType, status_code: HTTP::Status::UNSUPPORTED_MEDIA_TYPE)]
   def bad_media_type(error) : AC::Error::ContentResponse
     AC::Error::ContentResponse.new(error: error.message.as(String), accepts: error.accepts)
+  end
+
+  # the request body is larger than the route accepts
+  @[AC::Route::Exception(AC::Route::PayloadTooLarge, status_code: HTTP::Status::PAYLOAD_TOO_LARGE)]
+  def body_too_large(error) : AC::Error::CommonResponse
+    AC::Error::CommonResponse.new(error, backtrace: false)
   end
 
   # a parameter is missing or can't be parsed

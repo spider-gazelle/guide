@@ -92,6 +92,7 @@ returns the `rooms_index` tool ("Lists the rooms in a building").
 | Methods marked `@[AC::MCP(prompt: true)]` | yes, as [prompts](prompts.md) |
 | GET routes marked `@[AC::MCP(resource: "app://...")]` | yes, as [resource templates](resources.md) as well as tools |
 | Routes marked `@[AC::MCP(hide: true)]` | no |
+| Routes whose [raw body](../guides/parameters.md#raw-bodies) (`IO` or `Bytes`) consumes no text type | no, a model can't write raw bytes in a JSON string |
 | WebSocket and `OPTIONS` routes | no |
 | Macro DSL routes (`get "/" do`) | no |
 

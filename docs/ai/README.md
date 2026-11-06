@@ -29,6 +29,9 @@ spec/               spec_helper.cr requires src/config.cr; AC::SpecHelper.client
 def show(id : Int64) : Model                   # args are params; the return type is the response schema
 @[AC::Route::POST("/", body: :model, status_code: HTTP::Status::CREATED)]
 def create(model : Model) : Model              # body: names the argument parsed from the request body
+@[AC::Route::POST("/", body: :model, consumes: "application/json")]  # only these body types (one or an array)
+@[AC::Route::POST("/up", body: :file, max_body_bytes: 1_000_000)]   # larger bodies raise AC::Route::PayloadTooLarge
+def upload(file : Bytes) : Nil                 # IO or Bytes: the raw body, no parser, no form parsing
 @[AC::Route::GET("/", status: {A => HTTP::Status::OK, B => HTTP::Status::ACCEPTED})]
 def index : A | B                              # status codes mapped by return type
 @[AC::Route::GET("/raw", content_type: "text/plain")]   # force the response type
@@ -43,7 +46,10 @@ def index : A | B                              # status codes mapped by return t
 - A parameter is required unless it's nilable or has a default.
 - Built-in conversions: numbers, `String`, `Char`, `Bool`, `Time`, `Enum`, `UUID`,
   and unions. `Bool` is `true` only for `true` (any case); any other value is `false`.
-  Arrays need a custom converter.
+- `Array(T)` and `Set(T)` query/form params read every repetition (`?id=1&id=2`), each
+  element converted as `T` (with `config:`). Bad element: `ValueError` naming its index
+  and value. Path/header collections and nested collections don't compile. A custom
+  converter instead receives the whole value (e.g. comma separated).
 - `@[AC::Param::Info(description:, example:, name:, header:, class:, config:)]` sits on
   an argument. There's **no `required:`**.
 - Multiple route annotations on one method are allowed. MCP exposes them as one tool
@@ -107,7 +113,9 @@ end
 - Optional (`?:`) segments match where they're written, one after another, and a glob
   (`*:`) may be left off; the document lists a path per matched route
   (`<operationId>_without_<x>` for the shorter ones). `Param::Info` examples are written as in a URL and typed by the
-  schema; array query params are comma separated (`explode: false`).
+  schema; `Array`/`Set` query params are `explode: true` (repeated names), or
+  `explode: false` (comma separated) when a custom converter reads them. A raw body
+  (`IO`/`Bytes`) is `format: binary`; `consumes:` limits the listed body types.
 
 ## MCP
 
@@ -161,6 +169,10 @@ ActionController::MCPServer.write_description("mcp.yml")    # at build time (nee
   (`notifications/resources/updated`), the client re-reads. Listen streams end on
   disconnect, `listen_timeout` (nil = never) or `Transport#close_subscriptions`. Watchers
   only see changes on their instance, use redis pub/sub or similar across instances.
+- Tool arguments: an `Array`/`Set` param is a JSON array, sent as one query value per
+  element (joined with commas for a custom converter). A raw body (`IO`/`Bytes`) is a
+  plain string sent in the first text type it consumes (`text/*`, JSON, XML, YAML, form);
+  a route consuming only binary types, or with no `consumes:`, isn't a tool.
 - Tool results are `{status, headers, body}` (text and `structuredContent`). Headers
   matching `excluded_response_headers` (noise, cookies, credentials, transport) are left
   out, so return pagination as headers (`Link`, `X-Total-Count`) or in the body.
@@ -185,6 +197,8 @@ controller = Users.spec_instance(HTTP::Request.new("GET", "/"))   # unit test an
 | Expecting `hide: true` to block access | it only hides the MCP tool; the HTTP route still works |
 | A GET route that changes data | give it a `behaviour:`, e.g. `@[AC::MCP(behaviour: [:additive, :open_world])]`, or `call_read_only` runs it without confirmation |
 | No handler for `Param::MissingError` / `ValueError` | bad input becomes a `500`; add `@[AC::Route::Exception]` handlers in the base class |
+| A converter that splits `?tags=a,b` for an `Array(String)` | not needed when clients repeat the name (`?tags=a&tags=b`); `Array(T)` reads that natively |
+| Parsing a webhook body before checking its signature | type the body `Bytes` (raw, unparsed), verify, then parse |
 | Setting a cookie with `cookies["x"] = ...` | `cookies` is the request's; use `response.cookies << HTTP::Cookie.new(...)` |
 | `session["id"] = 42` (an `Int32`) | doesn't compile; store `42_i64` |
 

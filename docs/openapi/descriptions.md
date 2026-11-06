@@ -107,9 +107,12 @@ The full path keeps the method's `operationId`. A shorter path gets
 
 ### Array parameters
 
-An array parameter is sent as a single comma separated value, `?tags=a,b`, so the
-document marks it `style: form` and `explode: false`. Client generators then build the
-query string the way action-controller reads it.
+An `Array(T)` or `Set(T)` parameter is read from every repetition of its name,
+`?tags=a&tags=b`, so the document marks it `style: form` and `explode: true`, OpenAPI's
+default for arrays. A parameter read by a [custom converter](../guides/parameters.md#custom-converters)
+is a single comma separated value, `?tags=a,b`, and is marked `explode: false`. Either
+way, client generators build the query string the way action-controller reads it. See
+[arrays and sets](../guides/parameters.md#arrays-and-sets).
 
 ### Parameters from filters
 
@@ -141,7 +144,12 @@ def create(comment : Comment) : Comment
 ```
 
 The request body schema is the argument's type. It's listed once for each content type
-your app can parse (JSON by default; see [parsers](../guides/parameters.md)).
+your app can parse (JSON by default; see [parsers](../guides/parameters.md)), or for
+each type in the route's [`consumes:`](../guides/parameters.md#restricting-content-types).
+
+A [raw body](../guides/parameters.md#raw-bodies), typed `IO` or `Bytes`, is described as
+`type: string, format: binary` in each type the route consumes, or as
+`application/octet-stream` when it doesn't say.
 
 ## Responses
 

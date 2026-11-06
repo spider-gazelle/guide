@@ -51,7 +51,8 @@ Each argument is looked up by its name:
    `multipart/form-data` request body.
 
 Path parameters take precedence over query parameters, which take precedence over
-form fields. If a name appears more than once, the first value is used.
+form fields. If a name appears more than once, the first value is used, except by an
+[`Array` or `Set` argument](#arrays-and-sets), which takes every value.
 
 Two kinds of argument are read from elsewhere:
 
@@ -101,10 +102,10 @@ includes handlers that respond with `422` and `400`.
 | `UUID` | UUID strings | |
 | any `Enum` | a member name or its integer value | Names ignore case and underscores: `dark_green`, `DarkGreen` and `DARKGREEN` all work. |
 | a union, e.g. `Int64 | String` | any member type | The first successful conversion wins, see below. |
+| `Array(T)`, `Set(T)` | every repetition of the name | Each element is converted as a `T`. See [arrays and sets](#arrays-and-sets). |
 | no type | anything | Treated as `String?`. |
 
-Any other type needs a [custom converter](#custom-converters). That includes arrays:
-`Array(String)` has no built-in converter.
+Any other type needs a [custom converter](#custom-converters).
 
 Union members are tried in Crystal's internal union order, which isn't necessarily the
 order you wrote. `String | Int64` tries `Int64` first, so `"12"` becomes an `Int64`,
@@ -136,6 +137,57 @@ class Lookup < AC::Base
   end
 end
 ```
+
+## Arrays and sets
+
+An `Array(T)` or `Set(T)` argument is read from every repetition of its name, as in
+`?tag=new&tag=sale`. That's how browsers (`URLSearchParams`) and clients generated from
+the OpenAPI document send lists. Each element is converted as a `T` argument would be:
+
+```crystal
+class Products < AC::Base
+  base "/products"
+
+  enum Size
+    Small
+    Medium
+    Large
+  end
+
+  # GET /products?tag=new&tag=sale&size=small&size=small&size=large
+  #   # => {"tag":["new","sale"],"size":["small","large"]}
+  # GET /products
+  #   # => {"tag":[],"size":null}
+  @[AC::Route::GET("/")]
+  def index(
+    tag : Array(String) = [] of String,
+    size : Set(Size)? = nil,
+  ) : NamedTuple(tag: Array(String), size: Set(Size)?)
+    {tag: tag, size: size}
+  end
+end
+```
+
+The rules:
+
+- Elements can be any [supported type](#supported-types) except another array or set.
+  A `Set` drops repeated values.
+- Repeated fields in a form body (`application/x-www-form-urlencoded` or
+  `multipart/form-data`) are read the same way.
+- A missing name works as it does for other parameters: the default, `nil`, or a
+  `MissingError` when the argument has neither.
+- An element that can't be converted raises `ValueError`, and the message names its
+  index and value: `invalid parameter value for 'id' at index 1: "x"`.
+- [Converter options](#converter-options) apply to each element. `strict:` makes no
+  difference, as an element that can't be converted always raises.
+- Only query and form parameters can be collections. A path or header argument typed
+  `Array` or `Set`, or a collection of collections such as `Array(Set(String))`, is a
+  compile-time error naming the argument.
+- The OpenAPI document describes the parameter as an array with `style: form` and
+  `explode: true`. An MCP tool takes it as a JSON array, sending one value per element.
+
+To read a single comma separated value instead, `?tag=new,sale`, give the argument a
+[custom converter](#custom-converters). A converter always receives the whole value.
 
 ## Converter options
 
@@ -174,7 +226,9 @@ end
 | enums | `from_value` | `false` | Only accept the integer value. |
 | | `strict` | `false` | Raise `ValueError` for an unparsable value instead of resolving to `nil`. |
 
-When `config:` is given, only the first non-nil type of a union is used.
+When `config:` is given, only the first non-nil type of a union is used. For an
+[array or set](#arrays-and-sets), the options apply to each element:
+`config: {size: {from_value: true}}` reads `?size=0&size=2` as `[Small, Large]`.
 
 The `strict: true` enum option matters for nilable enums. Without it, an unknown value
 is silently ignored:
@@ -312,7 +366,11 @@ A converter is any class or struct with a `convert(raw : String)` method. Its
 `initialize` arguments are the options that `config:` can pass. Return `nil` when the
 value can't be converted, and Spider-Gazelle raises the usual parameter errors.
 
-Attach a converter to an argument with `class:`, or to a route with `converters:`:
+Attach a converter to an argument with `class:`, or to a route with `converters:`.
+A converter receives the whole value, so a converter for an `Array` reads one comma
+separated value rather than [repeated names](#arrays-and-sets). The OpenAPI document
+then marks the parameter `explode: false`, and an MCP tool sends its elements joined
+with commas (so an element can't contain a comma):
 
 ```crystal
 # Parses comma separated lists, e.g. "red, green,blue"
@@ -413,12 +471,16 @@ How the body is parsed:
 - The parser is chosen by the request's `Content-Type`. Requests without one use the
   default parser (`application/json`).
 - An unsupported `Content-Type` raises `AC::Route::UnsupportedMediaType`, whose
-  `accepts` lists the supported types.
+  `accepts` lists the supported types. [`consumes:`](#restricting-content-types)
+  narrows the types a route accepts.
 - A `String` body argument also accepts `text/plain`, and receives the raw body.
+- A body argument typed `IO` or `Bytes` isn't parsed at all, see
+  [raw bodies](#raw-bodies).
 - A body that doesn't match the type raises the parser's error, e.g.
   `JSON::SerializableError` (a `JSON::ParseException`). Handle it to return a `400`,
   see [errors](errors.md#recommended-handlers).
-- A request without a body uses the argument's default, if it has one.
+- A request without a body uses the argument's default, if it has one. Otherwise it
+  raises `MissingError`: `missing request body for 'user'`.
 - The body type becomes the OpenAPI request body schema, and the MCP tool's `body`
   input.
 
@@ -449,12 +511,109 @@ end
 
 Any route's body can arrive in any registered format, so every body type in the
 application must then support YAML too, e.g. by including `YAML::Serializable`, or the
-application won't compile.
+application won't compile. A route whose [`consumes:`](#restricting-content-types)
+leaves YAML out only needs the formats it lists.
 
 !!! note "Parsers and responders are application-wide"
     `add_parser`, `default_parser`, `add_responder` and `default_responder` register
     globally, whichever controller they appear in. Declare them once, in your base
     class.
+
+### Restricting content types
+
+`consumes:` lists the content types a route's body may arrive in: one type or an array.
+It's the request's counterpart of `content_type:`. A request in any other type raises
+`AC::Route::UnsupportedMediaType`, whose `accepts` lists the route's types, and the
+OpenAPI document lists only those types for the request body:
+
+```crystal
+class Members < Application
+  base "/members"
+
+  # JSON only, even though the application also parses YAML,
+  # so NewUser doesn't need to support YAML
+  @[AC::Route::POST("/", body: :user, consumes: "application/json")]
+  def create(user : NewUser) : String
+    "welcome #{user.name}"
+  end
+
+  # JSON, or plain text with no parser
+  @[AC::Route::POST("/notes", body: :note, consumes: ["application/json", "text/plain"])]
+  def note(note : String) : String
+    note
+  end
+end
+```
+
+Every type must have a registered parser. The exception is `text/plain` for a `String`
+body, which needs none. Listing a type with no parser, or using `consumes:` on a route
+without a `body:`, is a compile-time error.
+
+### Raw bodies
+
+A body argument typed `IO` or `Bytes` receives the request body as it is, with no
+parser. Use it for uploads, streams and anything you must read byte for byte, such as a
+webhook whose signature covers the exact body:
+
+```crystal
+class Webhooks < Application
+  base "/webhooks"
+
+  # Receives a signed payment event
+  @[AC::Route::POST("/payments", body: :payload, consumes: "application/json")]
+  def payment(
+    payload : Bytes,
+    @[AC::Param::Info(header: "X-Signature")]
+    signature : String,
+  ) : Nil
+    # verify `signature` against `payload` before parsing it
+  end
+
+  # Imports rows from a CSV file, without holding it all in memory
+  @[AC::Route::POST("/import", body: :csv, consumes: "text/csv", content_type: "text/plain")]
+  def import(csv : IO) : String
+    count = 0
+    while csv.gets
+      count += 1
+    end
+    "imported #{count} rows"
+  end
+end
+```
+
+- `Bytes` reads the whole body. `IO` is the request body itself, so read it once and
+  in the route.
+- The argument must be typed exactly `IO` or `Bytes` (nilable is fine). A subclass such
+  as `IO::Memory` is a compile-time error.
+- Without `consumes:`, any content type is accepted. With it, a request in another type,
+  or with no `Content-Type`, raises `UnsupportedMediaType`.
+- The body isn't read as form data, even when its type is
+  `application/x-www-form-urlencoded`, so filters and query parameters can't consume it
+  before the route runs.
+- The OpenAPI document describes the body as `type: string, format: binary`, in each
+  type the route consumes, or as `application/octet-stream` without `consumes:`.
+- As an [MCP tool](../mcp/README.md#whats-exposed), a raw body is a plain string sent in
+  the first text type the route consumes (`text/*`, JSON, XML, YAML or a form). A route
+  that only consumes binary types, or has no `consumes:`, isn't a tool, as a model
+  can't write raw bytes in a JSON string.
+
+### Limiting body size
+
+`max_body_bytes:` limits a route's body argument, raw or parsed. A body over the limit
+raises `AC::Route::PayloadTooLarge`, whose `limit` is the limit in bytes. Handle it to
+respond with `413`, see [errors](errors.md#built-in-errors):
+
+```crystal
+@[AC::Route::POST("/attachments", body: :file, consumes: ["application/pdf", "image/png"], max_body_bytes: 10_000_000)]
+def attach(file : Bytes) : Int32
+  file.size
+end
+```
+
+A `Content-Length` over the limit is refused before any of the body is read. A body
+without one, such as a chunked upload, is counted as it's read, and refused as soon as it
+goes over. `max_body_bytes:` needs a `body:` argument; form data is read separately and
+isn't limited by it.
 
 ## Form data and file uploads
 
@@ -516,7 +675,8 @@ controller:
 | `action_name` | The name of the route method being run, as a `Symbol`. |
 
 `request.body` can only be read once, so don't read it in a route that also uses
-`body:` or form parameters.
+`body:` or form parameters. To work with the body yourself, prefer a
+[raw body](#raw-bodies) argument.
 
 ## See also
 
